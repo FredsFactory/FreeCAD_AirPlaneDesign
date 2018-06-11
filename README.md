@@ -1,2 +1,3 @@
 # FreeCAD_AirPlaneDesign
-FreeCAD WorkBench Air Plane Design
+FreeCADAir Plane Design WorkBench for FreeCAD v0.17 and v0.18.
+
