@@ -23,17 +23,17 @@ from PySide.QtGui import QLineEdit, QRadioButton
 import FreeCAD, FreeCADGui, Draft, Part
 import importAirfoilDAT
 
+#################################################
+# Init Sheet and all parameter (waiting to finalise QT5 HMI
+#################################################
+
 def airPlaneDesignInitPlane(filename):
  FreeCAD.newDocument("AirPlane")
  FreeCAD.setActiveDocument("AirPlane") 
  #FreeCAD.ActiveDocument=FreeCAD.getDocument("AirPlane")
  #Gui.ActiveDocument=Gui.getDocument("AirPlane")
-#################################################
-# Init Sheet
-#################################################
-
+ 
  FreeCAD.activeDocument().addObject('Spreadsheet::Sheet','AirPlaneData')
-
  FreeCAD.ActiveDocument.AirPlaneData.setStyle('A1:A20', 'italic', 'add')
  FreeCAD.ActiveDocument.AirPlaneData.setStyle('A1:A20', 'bold', 'add')
  FreeCAD.ActiveDocument.AirPlaneData.setStyle('A6:E6', 'italic', 'add')
@@ -64,10 +64,10 @@ def airPlaneDesignInitPlane(filename):
  
  #A10-E10
  FreeCAD.ActiveDocument.AirPlaneData.set('A6','file_name')
- FreeCAD.ActiveDocument.AirPlaneData.set('B6','/Users/fredericnivoix/Documents/888-Aeromodelisme/MesAvions/ASK13/montage/montageV0.2/aile/e207.dat')
- #FreeCAD.ActiveDocument.AirPlaneData.set('B6','D:\users\PuyDeSancy\BureauFrederic\MesAvions\ASK13\montage\montageV0.2\aile\e207.dat')
- FreeCAD.ActiveDocument.AirPlaneData.set('C6', '/Users/fredericnivoix/Documents/888-Aeromodelisme/MesAvions/ASK13/montage/montageV0.2/aile/e205.dat')
- #FreeCAD.ActiveDocument.AirPlaneData.set('C6', 'D:/users/PuyDeSancy/BureauFrederic/MesAvions/ASK13/montage/montageV0.2/aile/e205.dat')
+ #FreeCAD.ActiveDocument.AirPlaneData.set('B6','/Users/fredericnivoix/Documents/888-Aeromodelisme/MesAvions/ASK13/montage/montageV0.2/aile/e207.dat')
+ FreeCAD.ActiveDocument.AirPlaneData.set('B6','D:\users\PuyDeSancy\BureauFrederic\MesAvions\ASK13\montage\montageV0.2\aile\e207.dat')
+ #FreeCAD.ActiveDocument.AirPlaneData.set('C6', '/Users/fredericnivoix/Documents/888-Aeromodelisme/MesAvions/ASK13/montage/montageV0.2/aile/e205.dat')
+ FreeCAD.ActiveDocument.AirPlaneData.set('C6', 'D:/users/PuyDeSancy/BureauFrederic/MesAvions/ASK13/montage/montageV0.2/aile/e205.dat')
  FreeCAD.ActiveDocument.AirPlaneData.set('D6', '-')
  FreeCAD.ActiveDocument.AirPlaneData.set('E6', '-')
  FreeCAD.ActiveDocument.AirPlaneData.set('F6', '-')
@@ -86,32 +86,24 @@ def airPlaneDesignInitPlane(filename):
  FreeCAD.ActiveDocument.AirPlaneData.set('E8', '-')
  FreeCAD.ActiveDocument.AirPlaneData.set('F8', '-')
 
-
-
- #A6-E7
  FreeCAD.ActiveDocument.AirPlaneData.set('A10', 'Affectation profil/paneau')
  FreeCAD.ActiveDocument.AirPlaneData.set('B10', 'Panel 1')
  FreeCAD.ActiveDocument.AirPlaneData.set('C10', 'Panel 2')
  FreeCAD.ActiveDocument.AirPlaneData.set('D10', 'Panel 3')
  FreeCAD.ActiveDocument.AirPlaneData.set('E10', 'Panel 4')
 
- #A7-E7
  FreeCAD.ActiveDocument.AirPlaneData.set('A11', 'profilToPanel')
  FreeCAD.ActiveDocument.AirPlaneData.set('B11', '1')
  FreeCAD.ActiveDocument.AirPlaneData.set('C11', '1')
  FreeCAD.ActiveDocument.AirPlaneData.set('D11', '2')
  FreeCAD.ActiveDocument.AirPlaneData.set('E11', '2')
- #A8-E8
+
  FreeCAD.ActiveDocument.AirPlaneData.set('A12', 'Profil Name')
  FreeCAD.ActiveDocument.AirPlaneData.set('B12', 'Eppler207')
  FreeCAD.ActiveDocument.AirPlaneData.set('C12', 'Eppler207')
  FreeCAD.ActiveDocument.AirPlaneData.set('D12', 'Eppler205')
  FreeCAD.ActiveDocument.AirPlaneData.set('E12', 'Eppler205')
 
-
-
-
- #A11-E11
  FreeCAD.ActiveDocument.AirPlaneData.set('A15', 'longueur_panneau(mm)')
  FreeCAD.ActiveDocument.AirPlaneData.set('B15', '100')
  FreeCAD.ActiveDocument.AirPlaneData.set('C15', '700')
@@ -126,10 +118,10 @@ def airPlaneDesignInitPlane(filename):
  FreeCAD.ActiveDocument.AirPlaneData.set('E16', '150')
 
  FreeCAD.ActiveDocument.AirPlaneData.set('A17', 'Corde emplature')
- FreeCAD.ActiveDocument.AirPlaneData.set('B17', '463')#380.78')#+82
- FreeCAD.ActiveDocument.AirPlaneData.set('C17', '300') #'341.43')
- FreeCAD.ActiveDocument.AirPlaneData.set('D17', '250')#263.84')
- FreeCAD.ActiveDocument.AirPlaneData.set('E17', '180')#176.24')
+ FreeCAD.ActiveDocument.AirPlaneData.set('B17', '463')
+ FreeCAD.ActiveDocument.AirPlaneData.set('C17', '300')
+ FreeCAD.ActiveDocument.AirPlaneData.set('D17', '250')
+ FreeCAD.ActiveDocument.AirPlaneData.set('E17', '180')
 
  FreeCAD.ActiveDocument.AirPlaneData.set('A18', 'Corde saumon')
  FreeCAD.ActiveDocument.AirPlaneData.set('B18', '300')#
@@ -167,8 +159,6 @@ def airPlaneDesignInitPlane(filename):
  FreeCAD.ActiveDocument.AirPlaneData.set('D23', '-')
  FreeCAD.ActiveDocument.AirPlaneData.set('E23', '-')
 
-
-
  FreeCAD.ActiveDocument.AirPlaneData.set('A25', 'Aerofrein')
  FreeCAD.ActiveDocument.AirPlaneData.set('B25', 'No')
  FreeCAD.ActiveDocument.AirPlaneData.set('C25', 'No')
@@ -188,9 +178,6 @@ def airPlaneDesignInitPlane(filename):
  FreeCAD.ActiveDocument.AirPlaneData.set('E27', '150')
 
  FreeCAD.ActiveDocument.recompute()
- #################################################
- # Init Sheet
- #################################################
  
  return
  
