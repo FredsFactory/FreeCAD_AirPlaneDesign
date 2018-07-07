@@ -44,8 +44,8 @@ def airPlaneDesignInitPlane(filename):
  FreeCAD.ActiveDocument.AirPlaneData.set('B1', 'AirPlane')
  FreeCAD.ActiveDocument.AirPlaneData.setAlias('B3', 'AirPlane')
  FreeCAD.ActiveDocument.AirPlaneData.set('D1', 'Folder')
- FreeCAD.ActiveDocument.AirPlaneData.set('E1', '/Users/fredericnivoix/Documents/888-Aeromodelisme/MesAvions/ASK13/montage/montageV0.2/aile/')
- #FreeCAD.ActiveDocument.AirPlaneData.set('E1', 'D:\users\PuyDeSancy\BureauFrederic\MesAvions\ASK13\montage\montageV0.2\aile\e207.dat')
+ FreeCAD.ActiveDocument.AirPlaneData.set('B6',FreeCAD.getUserAppDataDir())
+
  FreeCAD.ActiveDocument.AirPlaneData.setAlias('E3', 'Folder')
 
  FreeCAD.ActiveDocument.AirPlaneData.set('A3', 'number_of_panels')
@@ -64,10 +64,10 @@ def airPlaneDesignInitPlane(filename):
  
  #A10-E10
  FreeCAD.ActiveDocument.AirPlaneData.set('A6','file_name')
- #FreeCAD.ActiveDocument.AirPlaneData.set('B6','/Users/fredericnivoix/Documents/888-Aeromodelisme/MesAvions/ASK13/montage/montageV0.2/aile/e207.dat')
- FreeCAD.ActiveDocument.AirPlaneData.set('B6','D:\users\PuyDeSancy\BureauFrederic\MesAvions\ASK13\montage\montageV0.2\aile\e207.dat')
- #FreeCAD.ActiveDocument.AirPlaneData.set('C6', '/Users/fredericnivoix/Documents/888-Aeromodelisme/MesAvions/ASK13/montage/montageV0.2/aile/e205.dat')
- FreeCAD.ActiveDocument.AirPlaneData.set('C6', 'D:/users/PuyDeSancy/BureauFrederic/MesAvions/ASK13/montage/montageV0.2/aile/e205.dat')
+ 
+ FreeCAD.ActiveDocument.AirPlaneData.set('B6',FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/wingribprofil/e207.dat')
+ 
+ FreeCAD.ActiveDocument.AirPlaneData.set('B6',FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/wingribprofil/e205.dat')
  FreeCAD.ActiveDocument.AirPlaneData.set('D6', '-')
  FreeCAD.ActiveDocument.AirPlaneData.set('E6', '-')
  FreeCAD.ActiveDocument.AirPlaneData.set('F6', '-')
