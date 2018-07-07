@@ -28,10 +28,11 @@ class AirPlaneDesignWorkbench(Workbench):
 
     def Initialize(self):
         #"This function is executed when FreeCAD starts"
-        import airPlaneDesignInitPlane, generateWing 
+        import airPlaneDesignInitPlane, generateWing,airPlaneDesignUI
        #self.list 
         commandslist= [
             'airPlaneDesignInitPlane',
+            'airPlaneDesignEdit',
             'generateWing'
             ] 
                     
