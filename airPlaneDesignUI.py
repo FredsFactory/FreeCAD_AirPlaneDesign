@@ -122,7 +122,7 @@ class CommandWizard():
             pass
 
     def GetResources(self):
-     return {'MenuText': "Wizard"}
+     return {'MenuText': "Wizard(under dev)"}
 
     def IsActive(self):
         return not FreeCAD.ActiveDocument is None #Si pas de document ouvert, le menu est grisé
