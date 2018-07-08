@@ -11,9 +11,6 @@ FreeCAD Air Plane Design WorkBench for FreeCAD v0.17 and v0.18.
 # Installation Instructions
 Simply use AddOn Manager (from Tools menu).
 
-# Release Notes
-V0.001 11 July 2018: Initial version
-
 # How to use it ?
 After installation a new menu appears :
 0. Wizard : do not use it ! This UI is under heavy developpement !
@@ -26,3 +23,5 @@ After installation a new menu appears :
 * you can choose the number of profil : cell B4
 * you can choose the profils you want to import : B6 (.dat format), two profils are installed with the workbench (eppler 205 and eppler 207); If you want use another profil simply download it in the folder : wingribprofil
 
+# Release Notes
+V0.001 11 July 2018: Initial version
