@@ -16,13 +16,13 @@ V0.001 11 July 2018: Initial version
 
 # How to use it ?
 After installation a new menu appears :
--Wizard : do not use it ! This UI is under heavy developpement !
--Init New Plane : init a new document, with a sheet with lot of parameters
--Generate Wing : generate the wing based on the parameters in the sheet AirPlaneData
--Generat Wing Rib : under developement 
+0. Wizard : do not use it ! This UI is under heavy developpement !
+1. Init New Plane : init a new document, with a sheet with lot of parameters
+2. Generate Wing : generate the wing based on the parameters in the sheet AirPlaneData
+3. Generat Wing Rib : under developement 
 
 
-you can choose the decomposition of the wing panel : cell B3
-you can choose the number of profil : cell B4
-you can choose the profils you want to import : B6 (.dat format), two profils are installed with the workbench (eppler 205 and eppler 207); If you want use another profil simply download it in the folder : wingribprofil
+* you can choose the decomposition of the wing panel : cell B3
+* you can choose the number of profil : cell B4
+* you can choose the profils you want to import : B6 (.dat format), two profils are installed with the workbench (eppler 205 and eppler 207); If you want use another profil simply download it in the folder : wingribprofil
 
