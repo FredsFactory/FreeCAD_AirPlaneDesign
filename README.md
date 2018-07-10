@@ -1,5 +1,5 @@
 # FreeCAD_AirPlaneDesign
-Warning: This is highly experimental. 
+Warning : This is highly experimental. 
 FreeCAD Air Plane Design WorkBench for FreeCAD v0.17 and v0.18.
 
 
