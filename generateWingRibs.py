@@ -68,13 +68,7 @@ def generateWingRibs(name):
         #Gui.ActiveDocument.Extrude.LineColor=Gui.ActiveDocument.Nerv_021.LineColor
         #Gui.ActiveDocument.Extrude.PointColor=Gui.ActiveDocument.Nerv_021.PointColor
     f.Base.ViewObject.hide()
-    FreeCAD.ActiveDocument.recompute()
-    
-    
-    
-    
-    
-    
+    FreeCAD.ActiveDocument.recompute()  
     
     a=FreeCAD.activeDocument().addObject("Part::MultiCommon","Nerv_")#"Common")
     #a.Shapes = [FreeCAD.activeDocument().Rectangle,b,]#FreeCAD.activeDocument().Clone,]
@@ -85,20 +79,6 @@ def generateWingRibs(name):
     pos=pos+distanceinternervure[i+1]
     print pos
     print i
-   
-    
-    
-    #a.Label="Nerv"+str(i)
-
-
-
-
-
-
-#FreeCAD.ActiveDocument().Rectangle.ViewObject.Visibility=False
-#   FreeCAD.ActiveDocument().Clone.Visibility=False
-#   FreeCAD.ActiveDocument.Common.ShapeColor=Gui.ActiveDocument.Rectangle.ShapeColor
-#   FreeCAD.ActiveDocument.Common.DisplayMode=Gui.ActiveDocument.Rectangle.DisplayMode
 
     couple.append(a)
     FreeCAD.ActiveDocument.recompute()
