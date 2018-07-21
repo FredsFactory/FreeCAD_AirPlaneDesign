@@ -39,13 +39,20 @@ anglenervureX=[85.5,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,
 #------------------------------------------------------------------
 def generateWingRibs(name):
  b=Draft.clone(FreeCAD.ActiveDocument.wing_r)
+ xmax=b.Shape.BoundBox.XMax
+ xmin=b.Shape.BoundBox.XMin
+ zmax=b.Shape.BoundBox.ZMax
+ zmin=b.Shape.BoundBox.ZMin
+ xlength=b.Shape.BoundBox.XLength
+ zlength=b.Shape.BoundBox.ZLength
+ 
  pos=distanceinternervure[0]
  for i in range(0,25,1):
     p1=FreeCAD.Placement()
     p1.Rotation.Q=(0.0,1.0,0.0,0.0)
-    p1.Base=FreeCAD.Vector(-300,-100,0.0)
-    Plan_coupe = Draft.makeRectangle(length=500.0,height=70.0,placement=p1,face=True,support=None)
-    Plan_coupe.Placement=FreeCAD.Placement(FreeCAD.Vector(-20,long(pos),-30),FreeCAD.Rotation(FreeCAD.Vector(1,0,0),anglenervureX[i]))
+    p1.Base=FreeCAD.Vector(xmin,zmin,0.0)
+    Plan_coupe = Draft.makeRectangle(xlength,zlength,placement=p1,face=True,support=None)
+    Plan_coupe.Placement=FreeCAD.Placement(FreeCAD.Vector(xmin,long(pos),zmin),FreeCAD.Rotation(FreeCAD.Vector(1,0,0),anglenervureX[i]))
     FreeCAD.ActiveDocument.recompute()
     col=[(1.5,0.5,0.5)]
     FreeCAD.ActiveDocument.Rectangle.ViewObject.DiffuseColor=col
@@ -69,37 +76,21 @@ def generateWingRibs(name):
         #Gui.ActiveDocument.Extrude.PointColor=Gui.ActiveDocument.Nerv_021.PointColor
     f.Base.ViewObject.hide()
     FreeCAD.ActiveDocument.recompute()
-    
-    
-    
-    
-    
-    
-    
+
     a=FreeCAD.activeDocument().addObject("Part::MultiCommon","Nerv_")#"Common")
     #a.Shapes = [FreeCAD.activeDocument().Rectangle,b,]#FreeCAD.activeDocument().Clone,]
     a.Shapes = [b,f,]#Plan_coupe,]
     a.Label="Nerv_"+str(pos)+"mm"
     
-    
     pos=pos+distanceinternervure[i+1]
     print pos
     print i
-   
-    
     
     #a.Label="Nerv"+str(i)
-
-
-
-
-
-
-#FreeCAD.ActiveDocument().Rectangle.ViewObject.Visibility=False
-#   FreeCAD.ActiveDocument().Clone.Visibility=False
-#   FreeCAD.ActiveDocument.Common.ShapeColor=Gui.ActiveDocument.Rectangle.ShapeColor
-#   FreeCAD.ActiveDocument.Common.DisplayMode=Gui.ActiveDocument.Rectangle.DisplayMode
-
+    #FreeCAD.ActiveDocument().Rectangle.ViewObject.Visibility=False
+    #   FreeCAD.ActiveDocument().Clone.Visibility=False
+    #   FreeCAD.ActiveDocument.Common.ShapeColor=Gui.ActiveDocument.Rectangle.ShapeColor
+    #   FreeCAD.ActiveDocument.Common.DisplayMode=Gui.ActiveDocument.Rectangle.DisplayMode
     couple.append(a)
     FreeCAD.ActiveDocument.recompute()
  return
