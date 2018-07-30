@@ -38,7 +38,7 @@ anglenervureX=[85.5,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,
 # Construction des plans de decoupe
 #------------------------------------------------------------------
 def generateWingRibs(name):
- b=Draft.clone(FreeCAD.ActiveDocument.wing_r)
+ b=Draft.clone(FreeCAD.ActiveDocument.getObjectsByLabel(name))#(FreeCAD.ActiveDocument.wing_r)
  xmax=b.Shape.BoundBox.XMax
  xmin=b.Shape.BoundBox.XMin
  zmax=b.Shape.BoundBox.ZMax
@@ -95,6 +95,49 @@ def generateWingRibs(name):
     FreeCAD.ActiveDocument.recompute()
  return
 
+class SelectObjectUI():
+    def __init__(self):
+        path_to_ui = FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/ressources/selectobject.ui'
+        self.form = FreeCADGui.PySideUic.loadUi(path_to_ui)
+        for obj in FreeCAD.ActiveDocument.Objects:
+            self.form.listWidget.addItem(obj.Label)
+            #print obj.Label#item)
+        self.form.listWidget.itemSelectionChanged.connect(self.selectionChanged)
+        sel = FreeCADGui.Selection.getSelection()
+        if sel:
+            selected = sel[0].Label
+        else:
+            selected = None
+
+    def accept(self):
+        return
+    
+    def reject(self):
+        FreeCADGui.Control.closeDialog()
+        FreeCAD.ActiveDocument.recompute()
+        return
+    
+    def getStandardButtons(self):
+        return int(QtGui.QDialogButtonBox.Ok)
+    
+    def loadTable(self):
+        return
+    
+    def selectionChanged(self):
+        a=self.form.listWidget.currentItem()
+        item=a.text()
+        #print("Selected items: ",item)
+        #print filter(lambda obj: obj.Label == label, FreeCAD.ActiveDocument.Objects)[0]
+        return
+    
+    def setupUi(self):
+        # Connect Signals and Slots
+        #self.form.testButton.clicked.connect(self.importFile)
+        #self.loadTable()
+        #self.loadPanelTable()
+        #self.updateGraphicsViewWings()
+        return
+
 class GenerateWingRibsCommand():
 
     def GetResources(self):
@@ -106,7 +149,15 @@ class GenerateWingRibsCommand():
                   }
 
     def Activated(self):
-        generateWingRibs('blabla')
+        editor = SelectObjectUI()
+        editor.setupUi()
+        r = editor.form.exec_()
+        if r:
+           #r=1 => OK
+           a=editor.form.listWidget.currentItem()
+           print a.text()
+           generateWingRibs(a.text())
+           pass
         return
 
     def IsActive(self):
