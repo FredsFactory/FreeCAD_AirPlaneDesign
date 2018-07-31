@@ -12,22 +12,16 @@
 ################################################
 import FreeCAD
 import FreeCADGui
-import Path
-import PathScripts
-import PathScripts.PathLog as PathLog
-import PathScripts.PathUtil as PathUtil
-import PathScripts.PathUtils as PathUtils
 from PySide import QtCore, QtGui
 
 
-LOG_MODULE = 'airPlaneDesingUI'
-PathLog.setLevel(PathLog.Level.INFO, LOG_MODULE)
 
 class EditorPanel():
     def __init__(self):
         path_to_ui = FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/ressources/dialog.ui'
-        #Mod/AirPlaneDesign/ressources/
         self.form = FreeCADGui.PySideUic.loadUi(path_to_ui)
+        self.form.airPlaneName.setText("nom")
+    
 
     def accept(self):
         pass
@@ -60,19 +54,28 @@ class EditorPanel():
 
     def loadPanelTable(self):
         #longueur paneau, delta, corde emplature, corde saumon, angle
-       initPanelTable =[["Eppler207","100","-10","463","300","4.5","0","-","-","-"],
-                        ["Eppler207","700","70","300","250","0","0","-","-","-"],
-                        ["Eppler205","100","-10","463","300","0","0","-","-","-"],
-                        ["Eppler205","100","-10","463","300","0","0","-","-","-"],
-                        ["Eppler205","100","-10","463","300","0","0","-","-","-"],]
+        #initPanelTable =[["Eppler207","100","-10","463","300","4.5","0","-","-","-"],
+        #                ["Eppler207","700","70","300","250","0","0","-","-","-"],
+        #               ["Eppler205","100","-10","463","300","0","0","-","-","-"],
+        #               ["Eppler205","100","-10","463","300","0","0","-","-","-"],
+        #               ["Eppler205","100","-10","463","300","0","0","-","-","-"],]
+       self.form.NumberOfPanel.setText(FreeCAD.ActiveDocument.AirPlaneData.getContents("B3"))
+       initPanelTable =[[FreeCAD.ActiveDocument.AirPlaneData.getContents("B12"),FreeCAD.ActiveDocument.AirPlaneData.getContents("B15"),FreeCAD.ActiveDocument.AirPlaneData.getContents("B16"),FreeCAD.ActiveDocument.AirPlaneData.getContents("B17"),FreeCAD.ActiveDocument.AirPlaneData.getContents("B18"),FreeCAD.ActiveDocument.AirPlaneData.getContents("B19"),FreeCAD.ActiveDocument.AirPlaneData.getContents("B20"),FreeCAD.ActiveDocument.AirPlaneData.getContents("B21")],
+       [FreeCAD.ActiveDocument.AirPlaneData.getContents("C12"),FreeCAD.ActiveDocument.AirPlaneData.getContents("C15"),FreeCAD.ActiveDocument.AirPlaneData.getContents("C16"),FreeCAD.ActiveDocument.AirPlaneData.getContents("C17"),FreeCAD.ActiveDocument.AirPlaneData.getContents("C18"),FreeCAD.ActiveDocument.AirPlaneData.getContents("C19"),FreeCAD.ActiveDocument.AirPlaneData.getContents("C20"),FreeCAD.ActiveDocument.AirPlaneData.getContents("C21")],
+                        
+       [FreeCAD.ActiveDocument.AirPlaneData.getContents("D12"),FreeCAD.ActiveDocument.AirPlaneData.getContents("D15"),FreeCAD.ActiveDocument.AirPlaneData.getContents("D16"),FreeCAD.ActiveDocument.AirPlaneData.getContents("D17"),FreeCAD.ActiveDocument.AirPlaneData.getContents("D18"),FreeCAD.ActiveDocument.AirPlaneData.getContents("D19"),FreeCAD.ActiveDocument.AirPlaneData.getContents("D20"),FreeCAD.ActiveDocument.AirPlaneData.getContents("D21")],
+            
+       [FreeCAD.ActiveDocument.AirPlaneData.getContents("E12"),FreeCAD.ActiveDocument.AirPlaneData.getContents("E15"),FreeCAD.ActiveDocument.AirPlaneData.getContents("E16"),FreeCAD.ActiveDocument.AirPlaneData.getContents("E17"),FreeCAD.ActiveDocument.AirPlaneData.getContents("E18"),FreeCAD.ActiveDocument.AirPlaneData.getContents("E19"),FreeCAD.ActiveDocument.AirPlaneData.getContents("E20"),FreeCAD.ActiveDocument.AirPlaneData.getContents("E21")],]
+       
        self.form.PanelTable.setRowCount(0)
        for row_number,row_data in enumerate(initPanelTable):
             self.form.PanelTable.insertRow(row_number)
             for col_number, data in enumerate(row_data):
                 self.form.PanelTable.setItem(row_number,col_number,QtGui.QTableWidgetItem(str(data)))
 
-    def updateGraphicsViewWings(self):
 
+
+    def updateGraphicsViewWings(self):
         scene=QtGui.QGraphicsScene()
         self.form.WingView.setScene(scene)
         scene.setSceneRect(QtCore.QRectF(-100, -400, 400, 1400))
