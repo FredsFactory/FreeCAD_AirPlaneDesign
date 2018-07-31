@@ -60,13 +60,21 @@ class EditorPanel():
         #               ["Eppler205","100","-10","463","300","0","0","-","-","-"],
         #               ["Eppler205","100","-10","463","300","0","0","-","-","-"],]
        self.form.NumberOfPanel.setText(FreeCAD.ActiveDocument.AirPlaneData.getContents("B3"))
-       initPanelTable =[[FreeCAD.ActiveDocument.AirPlaneData.getContents("B12"),FreeCAD.ActiveDocument.AirPlaneData.getContents("B15"),FreeCAD.ActiveDocument.AirPlaneData.getContents("B16"),FreeCAD.ActiveDocument.AirPlaneData.getContents("B17"),FreeCAD.ActiveDocument.AirPlaneData.getContents("B18"),FreeCAD.ActiveDocument.AirPlaneData.getContents("B19"),FreeCAD.ActiveDocument.AirPlaneData.getContents("B20"),FreeCAD.ActiveDocument.AirPlaneData.getContents("B21")],
-       [FreeCAD.ActiveDocument.AirPlaneData.getContents("C12"),FreeCAD.ActiveDocument.AirPlaneData.getContents("C15"),FreeCAD.ActiveDocument.AirPlaneData.getContents("C16"),FreeCAD.ActiveDocument.AirPlaneData.getContents("C17"),FreeCAD.ActiveDocument.AirPlaneData.getContents("C18"),FreeCAD.ActiveDocument.AirPlaneData.getContents("C19"),FreeCAD.ActiveDocument.AirPlaneData.getContents("C20"),FreeCAD.ActiveDocument.AirPlaneData.getContents("C21")],
+       initPanelTable =[["1",FreeCAD.ActiveDocument.AirPlaneData.getContents("B12"),FreeCAD.ActiveDocument.AirPlaneData.getContents("B15"),FreeCAD.ActiveDocument.AirPlaneData.getContents("B16"),FreeCAD.ActiveDocument.AirPlaneData.getContents("B17"),FreeCAD.ActiveDocument.AirPlaneData.getContents("B18"),FreeCAD.ActiveDocument.AirPlaneData.getContents("B19"),FreeCAD.ActiveDocument.AirPlaneData.getContents("B20"),FreeCAD.ActiveDocument.AirPlaneData.getContents("B21")],
+       ["2",FreeCAD.ActiveDocument.AirPlaneData.getContents("C12"),FreeCAD.ActiveDocument.AirPlaneData.getContents("C15"),FreeCAD.ActiveDocument.AirPlaneData.getContents("C16"),FreeCAD.ActiveDocument.AirPlaneData.getContents("C17"),FreeCAD.ActiveDocument.AirPlaneData.getContents("C18"),FreeCAD.ActiveDocument.AirPlaneData.getContents("C19"),FreeCAD.ActiveDocument.AirPlaneData.getContents("C20"),FreeCAD.ActiveDocument.AirPlaneData.getContents("C21")],
                         
-       [FreeCAD.ActiveDocument.AirPlaneData.getContents("D12"),FreeCAD.ActiveDocument.AirPlaneData.getContents("D15"),FreeCAD.ActiveDocument.AirPlaneData.getContents("D16"),FreeCAD.ActiveDocument.AirPlaneData.getContents("D17"),FreeCAD.ActiveDocument.AirPlaneData.getContents("D18"),FreeCAD.ActiveDocument.AirPlaneData.getContents("D19"),FreeCAD.ActiveDocument.AirPlaneData.getContents("D20"),FreeCAD.ActiveDocument.AirPlaneData.getContents("D21")],
+       ["3",FreeCAD.ActiveDocument.AirPlaneData.getContents("D12"),FreeCAD.ActiveDocument.AirPlaneData.getContents("D15"),FreeCAD.ActiveDocument.AirPlaneData.getContents("D16"),FreeCAD.ActiveDocument.AirPlaneData.getContents("D17"),FreeCAD.ActiveDocument.AirPlaneData.getContents("D18"),FreeCAD.ActiveDocument.AirPlaneData.getContents("D19"),FreeCAD.ActiveDocument.AirPlaneData.getContents("D20"),FreeCAD.ActiveDocument.AirPlaneData.getContents("D21")],
             
-       [FreeCAD.ActiveDocument.AirPlaneData.getContents("E12"),FreeCAD.ActiveDocument.AirPlaneData.getContents("E15"),FreeCAD.ActiveDocument.AirPlaneData.getContents("E16"),FreeCAD.ActiveDocument.AirPlaneData.getContents("E17"),FreeCAD.ActiveDocument.AirPlaneData.getContents("E18"),FreeCAD.ActiveDocument.AirPlaneData.getContents("E19"),FreeCAD.ActiveDocument.AirPlaneData.getContents("E20"),FreeCAD.ActiveDocument.AirPlaneData.getContents("E21")],]
-       
+       ["4",FreeCAD.ActiveDocument.AirPlaneData.getContents("E12"),FreeCAD.ActiveDocument.AirPlaneData.getContents("E15"),FreeCAD.ActiveDocument.AirPlaneData.getContents("E16"),FreeCAD.ActiveDocument.AirPlaneData.getContents("E17"),FreeCAD.ActiveDocument.AirPlaneData.getContents("E18"),FreeCAD.ActiveDocument.AirPlaneData.getContents("E19"),FreeCAD.ActiveDocument.AirPlaneData.getContents("E20"),FreeCAD.ActiveDocument.AirPlaneData.getContents("E21")],]
+       initPanelTable=[]
+       line=[]
+       for j in range(0,int(str(FreeCAD.ActiveDocument.AirPlaneData.getContents("B3")))):
+         line.append(str(j+1))
+         for i in range(9):
+           line.append(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B') + j)+str(12+i)))
+         initPanelTable.append(line)
+         line=[]
+                      
        self.form.PanelTable.setRowCount(0)
        for row_number,row_data in enumerate(initPanelTable):
             self.form.PanelTable.insertRow(row_number)
