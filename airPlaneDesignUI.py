@@ -68,6 +68,8 @@ class EditorPanel():
        ["4",FreeCAD.ActiveDocument.AirPlaneData.getContents("E12"),FreeCAD.ActiveDocument.AirPlaneData.getContents("E15"),FreeCAD.ActiveDocument.AirPlaneData.getContents("E16"),FreeCAD.ActiveDocument.AirPlaneData.getContents("E17"),FreeCAD.ActiveDocument.AirPlaneData.getContents("E18"),FreeCAD.ActiveDocument.AirPlaneData.getContents("E19"),FreeCAD.ActiveDocument.AirPlaneData.getContents("E20"),FreeCAD.ActiveDocument.AirPlaneData.getContents("E21")],]
        initPanelTable=[]
        line=[]
+
+       
        for j in range(0,int(str(FreeCAD.ActiveDocument.AirPlaneData.getContents("B3")))):
          line.append(str(j+1))
          for i in range(9):
@@ -111,6 +113,53 @@ class EditorPanel():
         item = QtGui.QGraphicsEllipseItem(-60, -40, 60, 40)
        
         scene.addItem(item)
+        
+    def updateGraphicsViewWings2(self):
+        scene=QtGui.QGraphicsScene()
+        self.form.WingView.setScene(scene)
+        scene.setSceneRect(QtCore.QRectF(-100, -1500, 3000, 3000))
+        self.setpen = QtGui.QPen(QtCore.Qt.red)
+        item=QtGui.QGraphicsLineItem(-50,  0, 50,  0)
+        item.setPen(QtGui.QPen(QtCore.Qt.red))
+        scene.addItem(item)
+        item=QtGui.QGraphicsLineItem(0,-50,0,50)
+        item.setPen(QtGui.QPen(QtCore.Qt.red))
+        scene.addItem(item)
+        #self.pen = QtGui.QPen(QtCore.Qt.black)
+        line=[]
+        initPanelTable=[]
+        for j in range(0,int(str(FreeCAD.ActiveDocument.AirPlaneData.getContents("B3")))):
+          line.append(str(j+1))
+          for i in range(9):
+            line.append(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B') + j)+str(12+i)))
+          initPanelTable.append(line)
+          line=[]
+        
+        
+        item=QtGui.QGraphicsPolygonItem(QtGui.QPolygonF(
+            [ QtCore.QPointF( 0,  0),
+              QtCore.QPointF(0, float(initPanelTable[0][6])),
+              QtCore.QPointF( float(initPanelTable[0][4]), float(initPanelTable[0][7])-float(initPanelTable[0][5])),
+             QtCore.QPointF( float(initPanelTable[0][4]), -float(initPanelTable[0][5])),
+              QtCore.QPointF( 0, 0)
+            ] ),)
+        item.setPen(QtGui.QPen(QtCore.Qt.blue))
+        print float(initPanelTable[0][5])
+        scene.addItem(item)
+        xref=float(initPanelTable[0][4])
+        yref=-float(initPanelTable[0][5])
+        for j in range(1,int(str(FreeCAD.ActiveDocument.AirPlaneData.getContents("B3")))):
+            item=QtGui.QGraphicsPolygonItem(QtGui.QPolygonF(
+              [ QtCore.QPointF( 0+xref,  0+yref),
+                QtCore.QPointF(0+xref, yref+float(initPanelTable[j][6])),
+                QtCore.QPointF( xref+float(initPanelTable[j][4]), yref+float(initPanelTable[j][7])-float(initPanelTable[j][5])),
+                QtCore.QPointF( xref+float(initPanelTable[j][4]), yref-float(initPanelTable[j][5])),
+                QtCore.QPointF( xref, yref)
+              ] ),)
+            xref=xref+float(initPanelTable[j][4])
+            yref=yref-float(initPanelTable[j][5])
+            item.setPen(QtGui.QPen(QtCore.Qt.blue))
+            scene.addItem(item)
 
 
     def setupUi(self):
@@ -118,7 +167,7 @@ class EditorPanel():
         self.form.testButton.clicked.connect(self.importFile)
         self.loadTable()
         self.loadPanelTable()
-        self.updateGraphicsViewWings()
+        self.updateGraphicsViewWings2()
 
         #self.form.btnCopyTools.setEnabled(False)
 
