@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>955</width>
+    <width>1073</width>
     <height>730</height>
    </rect>
   </property>
@@ -33,9 +33,9 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>40</y>
-     <width>931</width>
-     <height>651</height>
+     <y>30</y>
+     <width>1051</width>
+     <height>661</height>
     </rect>
    </property>
    <property name="currentIndex">
@@ -110,16 +110,6 @@
       </property>
      </column>
     </widget>
-    <widget class="QLineEdit" name="airPlaneName">
-     <property name="geometry">
-      <rect>
-       <x>70</x>
-       <y>10</y>
-       <width>113</width>
-       <height>21</height>
-      </rect>
-     </property>
-    </widget>
    </widget>
    <widget class="QWidget" name="tab_2">
     <attribute name="title">
@@ -129,7 +119,7 @@
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>20</y>
+       <y>10</y>
        <width>131</width>
        <height>16</height>
       </rect>
@@ -142,9 +132,9 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>250</y>
-       <width>901</width>
-       <height>381</height>
+       <y>230</y>
+       <width>1021</width>
+       <height>401</height>
       </rect>
      </property>
      <property name="verticalScrollBarPolicy">
@@ -164,7 +154,7 @@
      <property name="geometry">
       <rect>
        <x>160</x>
-       <y>20</y>
+       <y>10</y>
        <width>113</width>
        <height>21</height>
       </rect>
@@ -174,8 +164,8 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>60</y>
-       <width>901</width>
+       <y>40</y>
+       <width>1021</width>
        <height>181</height>
       </rect>
      </property>
@@ -276,6 +266,16 @@
    </property>
    <property name="text">
     <string>Nom</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="airPlaneName">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>10</y>
+     <width>113</width>
+     <height>21</height>
+    </rect>
    </property>
   </widget>
  </widget>
