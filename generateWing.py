@@ -22,13 +22,14 @@ import os,FreeCAD,FreeCADGui
 
 from PySide import QtCore, QtGui
 from PySide.QtGui import QLineEdit, QRadioButton
-import FreeCAD, FreeCADGui, Draft, Part
+import FreeCAD, FreeCADGui, Draft, Part,PartDesign
 import importAirfoilDAT
 
 def generateWing(name):
  list_profil_1mm_ref=[]
  profil_construction_aile=[] 
  panel=[]
+ panel_body=[]
  wing_right=[]
  number_of_profils=int(FreeCAD.ActiveDocument.AirPlaneData.number_of_profils)
  number_of_panels=int(FreeCAD.ActiveDocument.AirPlaneData.number_of_panels)
@@ -38,10 +39,15 @@ def generateWing(name):
           FreeCAD.ActiveDocument.AirPlaneData.getContents('E6'),
           FreeCAD.ActiveDocument.AirPlaneData.getContents('F6')]
 
- cleaile_radius=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('B27'))
- cleaile_X=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('C27'))
- cleaile_Y=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('D27'))
- cleaile_long=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('E27'))
+
+ cleaile_X=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('B27'))
+ cleaile_Y=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('C27'))
+ cleaile_Z=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('D27'))
+ cleaile_radius=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('E27'))
+ cleaile_long=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('F27'))
+ cleaile_angleX=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('G27'))
+ cleaile_angleY=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('H27'))
+ cleaile_angleZ=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('I27'))
 
  #FreeCAD.ActiveDocument.AirPlaneData.getContents('B10')
 
@@ -56,21 +62,17 @@ def generateWing(name):
       points = FreeCAD.ActiveDocument.ActiveObject.Points
       Draft.makeBSpline(points, closed=True)
       obj_nervure_ref=Draft.scale(FreeCAD.ActiveDocument.ActiveObject,delta=FreeCAD.Vector(scalefactor,scalefactor,scalefactor),center=FreeCAD.Vector(0,0,0),legacy=True)
-      #obj_nervure_ref.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(-1,0,0),270))
+
       obj_nervure_ref.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Vector(0,0,0),0)
       FreeCAD.ActiveDocument.removeObject("DWire")
       FreeCAD.Gui.ActiveDocument.ActiveObject.Visibility=False
       profilname= FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B') + number_profil)+str(7))
 
       obj_nervure_ref.Label="Prof_ref_1mm_"+profilname#+"_000"#+str(number_profil+1)
-             
-
+      
       list_profil_1mm_ref.append(obj_nervure_ref)
-
       print "nom : "+obj_nervure_ref.Label
-      #Position de l'origine du profil a 25% du profil 
-      #obj_nervure_ref.Placement=FreeCAD.Placement(FreeCAD.Vector(-0.25,0,0),FreeCAD.Rotation(FreeCAD.Vector(0,0,0),0))      print 'fin'
-      #FreeCAD.Gui.getDocument("AirPlane").getObject("BSpline").Visibility=False
+
  FreeCAD.ActiveDocument.recompute()
 
 #------------------------------------------------------------------
@@ -85,12 +87,16 @@ def generateWing(name):
    corde_emplature=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B') + i)+str(13+4)))
    corde_saumon=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B') + i)+str(14+4)))
    aa=int(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B')+i)+str(11)))-1 # profil number
-   angle=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B') + i)+str(19)))
+   angleX=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B') + i)+str(19)))
+   angleY=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B') + i)+str(20)))
+   angleZ=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B') + i)+str(21)))
    #nervure emplature
    obj_clone_nervure=Draft.clone(list_profil_1mm_ref[aa]) # creation de la nervure emplature
    obj_clone_nervure.Scale =(corde_emplature,corde_emplature,1) #mise a l echelle
    obj_clone_nervure.Label="Profil_E00"+str(i) #nommage
-   obj_clone_nervure.Placement=FreeCAD.Placement(posvec,rotvec,90-angle)#positionnement dans lespace
+   #obj_clone_nervure.Placement=FreeCAD.Placement(posvec,rotvec,90-angleX)#positionnement dans lespace
+   
+   obj_clone_nervure.Placement=FreeCAD.Placement(posvec,FreeCAD.Rotation(angleY,angleZ,90-angleX), FreeCAD.Vector(0,0,0))
    FreeCAD.Gui.ActiveDocument.ActiveObject.Visibility=False#obj_clone_nervure.Visibility=False
    profil_construction_aile.append(obj_clone_nervure) #sauvegare nervure dans tableau
    #nervure saumon
@@ -121,8 +127,20 @@ def generateWing(name):
     FreeCAD.ActiveDocument.ActiveObject.Solid=True
     FreeCAD.ActiveDocument.ActiveObject.Ruled=False
     FreeCAD.ActiveDocument.ActiveObject.Closed=False
-    #panel_.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(-1,0,0),270))    
-    panel.append(panel_)  
+    panel.append(panel_)
+    #---------
+    # Creation du Body du paneau
+    #---------
+    a=FreeCAD.activeDocument().addObject('PartDesign::Body','Panel_0'+str(i/2))
+    a.BaseFeature = panel_
+    col=[(0.2,0.4,0.6)]
+    a.ViewObject.DiffuseColor=col
+    a.ViewObject.Transparency=70
+    panel_body.append(a)
+    #Gui.activeView().setActiveObject('pdbody', App.activeDocument().Body)
+    #Gui.Selection.clearSelection()
+    #Gui.Selection.addSelection(App.ActiveDocument.Body)
+    #--------Fin creation du Body
     FreeCAD.ActiveDocument.recompute()
     FreeCAD.Gui.SendMsgToActiveView("ViewFit")
  FreeCAD.Gui.activeDocument().activeView().viewAxonometric()
@@ -139,8 +157,7 @@ def generateWing(name):
  col=[(0.2,0.4,0.6)]
  FreeCAD.ActiveDocument.wing_r.ViewObject.DiffuseColor=col
  FreeCAD.ActiveDocument.wing_r.ViewObject.Transparency=70
-
-
+ FreeCAD.ActiveDocument.wing_r.ViewObject.Visibility=False
 
 #------------------------------------------------------------------
 # Construction de la cle d'aile
@@ -149,8 +166,16 @@ def generateWing(name):
  FreeCAD.ActiveDocument.ActiveObject.Label = "CleAile"
  FreeCAD.ActiveDocument.ActiveObject.Radius = cleaile_radius
  FreeCAD.ActiveDocument.ActiveObject.Height = cleaile_long
- cleaileobject.Placement=FreeCAD.Placement(FreeCAD.Vector(cleaile_X,0,0),FreeCAD.Rotation(FreeCAD.Vector(1,0,0),-90))
+ #cleaileobject.Placement=FreeCAD.Placement(FreeCAD.Vector(cleaile_X,0,0),FreeCAD.Rotation(FreeCAD.Vector(1,0,0),-90))
+ angleX=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B'))+str(19)))
+ angleY=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B'))+str(20)))
+ angleZ=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B'))+str(21)))
+ #91 et 4.5
+ cleaileobject.Placement=FreeCAD.Placement(FreeCAD.Vector(cleaile_X,0,0),FreeCAD.Rotation(4.5,angleZ,90+angleX), FreeCAD.Vector(0,0,0))
 
+#------------------------------------------------------------------
+# Construction des longeron
+#------------------------------------------------------------------
 
  longeron01=FreeCAD.ActiveDocument.addObject("Part::Box","Box")
  longeron01.Label = "Longeron01"
@@ -158,6 +183,8 @@ def generateWing(name):
  longeron01.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(0,0,-1),355))
 
  return
+
+
 
 
 class GenerateWingCommand():
@@ -171,6 +198,10 @@ class GenerateWingCommand():
                   }
 
     def Activated(self):
+        #FreeCAD.ActiveDocument=FreeCAD.getDocument("AirPlane")
+        #FreeCAD.Gui.ActiveDocument=FreeCAD.Gui.getDocument("AirPlane")
+        #FreeCAD.ActiveDocument=FreeCAD.getDocument("AirPlane")
+
         generateWing('blabla')
         return
 
