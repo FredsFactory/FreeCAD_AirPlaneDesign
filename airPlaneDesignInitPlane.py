@@ -17,7 +17,8 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
 # GNU Library General Public License for more details. 
 #
-################################################import os,FreeCAD,FreeCADGui
+################################################
+import os,FreeCAD,FreeCADGui
 from PySide import QtCore, QtGui
 from PySide.QtGui import QLineEdit, QRadioButton
 import FreeCAD, FreeCADGui, Draft, Part
@@ -136,16 +137,16 @@ def airPlaneDesignInitPlane(filename):
  FreeCAD.ActiveDocument.AirPlaneData.set('E19', '0')
  
  FreeCAD.ActiveDocument.AirPlaneData.set('A20', 'Rotation Y')
- FreeCAD.ActiveDocument.AirPlaneData.set('B20', '')
- FreeCAD.ActiveDocument.AirPlaneData.set('C20', '')
- FreeCAD.ActiveDocument.AirPlaneData.set('D20', '')
- FreeCAD.ActiveDocument.AirPlaneData.set('E20', '')
+ FreeCAD.ActiveDocument.AirPlaneData.set('B20', '0')
+ FreeCAD.ActiveDocument.AirPlaneData.set('C20', '0')
+ FreeCAD.ActiveDocument.AirPlaneData.set('D20', '0')
+ FreeCAD.ActiveDocument.AirPlaneData.set('E20', '0')
 
  FreeCAD.ActiveDocument.AirPlaneData.set('A21', 'Rotation Z')
- FreeCAD.ActiveDocument.AirPlaneData.set('B21', '')
- FreeCAD.ActiveDocument.AirPlaneData.set('C21', '')
- FreeCAD.ActiveDocument.AirPlaneData.set('D21', '')
- FreeCAD.ActiveDocument.AirPlaneData.set('E21', '')
+ FreeCAD.ActiveDocument.AirPlaneData.set('B21', '0')
+ FreeCAD.ActiveDocument.AirPlaneData.set('C21', '0')
+ FreeCAD.ActiveDocument.AirPlaneData.set('D21', '0')
+ FreeCAD.ActiveDocument.AirPlaneData.set('E21', '0')
 
  FreeCAD.ActiveDocument.AirPlaneData.set('A22', 'Flap')
  FreeCAD.ActiveDocument.AirPlaneData.set('B22', 'No')
@@ -166,16 +167,39 @@ def airPlaneDesignInitPlane(filename):
  FreeCAD.ActiveDocument.AirPlaneData.set('E25', 'No')
 
  FreeCAD.ActiveDocument.AirPlaneData.set('A26', '-')
- FreeCAD.ActiveDocument.AirPlaneData.set('B26', 'Radius')
- FreeCAD.ActiveDocument.AirPlaneData.set('C26', 'X')
- FreeCAD.ActiveDocument.AirPlaneData.set('D26', 'Y')
- FreeCAD.ActiveDocument.AirPlaneData.set('E26', 'Longueur')
+ FreeCAD.ActiveDocument.AirPlaneData.set('B26', 'X')
+ FreeCAD.ActiveDocument.AirPlaneData.set('C26', 'Y')
+ FreeCAD.ActiveDocument.AirPlaneData.set('D26', 'Z')
+ FreeCAD.ActiveDocument.AirPlaneData.set('E26', 'Radius')
+ FreeCAD.ActiveDocument.AirPlaneData.set('F26', 'Longueur')
+ FreeCAD.ActiveDocument.AirPlaneData.set('G26', 'AngleX')
+ FreeCAD.ActiveDocument.AirPlaneData.set('H26', 'AngleY')
+ FreeCAD.ActiveDocument.AirPlaneData.set('I26', 'AngleZ')
  
  FreeCAD.ActiveDocument.AirPlaneData.set('A27', 'cle Aile')
  FreeCAD.ActiveDocument.AirPlaneData.set('B27', '8')
  FreeCAD.ActiveDocument.AirPlaneData.set('C27', '152.91')
  FreeCAD.ActiveDocument.AirPlaneData.set('D27', '0')
- FreeCAD.ActiveDocument.AirPlaneData.set('E27', '150')
+ FreeCAD.ActiveDocument.AirPlaneData.set('E27', '8')
+ FreeCAD.ActiveDocument.AirPlaneData.set('F27', '150')
+ FreeCAD.ActiveDocument.AirPlaneData.set('G27', '0')
+ FreeCAD.ActiveDocument.AirPlaneData.set('H27', '0')
+ FreeCAD.ActiveDocument.AirPlaneData.set('I27', '0')
+
+ FreeCAD.ActiveDocument.AirPlaneData.set('A30', 'Longeron')
+ FreeCAD.ActiveDocument.AirPlaneData.set('B30', 'X')
+ FreeCAD.ActiveDocument.AirPlaneData.set('C30', 'Y')
+ FreeCAD.ActiveDocument.AirPlaneData.set('D30', 'Z')
+ FreeCAD.ActiveDocument.AirPlaneData.set('E30', 'Hauteur')
+ FreeCAD.ActiveDocument.AirPlaneData.set('F30', 'Profondeur')
+ 
+ FreeCAD.ActiveDocument.AirPlaneData.set('A31', '#1')
+ FreeCAD.ActiveDocument.AirPlaneData.set('B31', '')
+ FreeCAD.ActiveDocument.AirPlaneData.set('C31', '')
+ FreeCAD.ActiveDocument.AirPlaneData.set('D31', '')
+ FreeCAD.ActiveDocument.AirPlaneData.set('E31', '3')
+ FreeCAD.ActiveDocument.AirPlaneData.set('F31', '30')
+
 
  FreeCAD.ActiveDocument.recompute()
  
