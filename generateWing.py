@@ -25,6 +25,100 @@ from PySide.QtGui import QLineEdit, QRadioButton
 import FreeCAD, FreeCADGui, Draft, Part,PartDesign,PartDesignGui,Sketcher
 import importAirfoilDAT
 
+def generateprofilgenerique(body,x_saumon,y_saumon,x_emplature, y_emplature, hauteur, largeur,i):
+    nbreOfFaces=len(body.Shape.Faces)
+    FreeCAD.Gui.activeDocument().ActiveView.setActiveObject('pdbody', body) #Active le body
+    b=body.newObject('Sketcher::SketchObject','BordAttaque'+str(i/2)+'_0')
+    print 'BordAttaque'+str(i/2)+'_0, Nombre de faces : '+str(nbreOfFaces)
+    print body.Label+', '+"Face"+str(nbreOfFaces-1)
+    
+    b.Support = (body.BaseFeature,["Face"+str(nbreOfFaces-1)])
+    b.MapMode = 'FlatFace'
+    
+    FreeCAD.ActiveDocument.recompute()
+    geoList = []
+    geoList.append(Part.LineSegment(FreeCAD.Vector(x_emplature,y_emplature-hauteur,0),FreeCAD.Vector(x_emplature+largeur,y_emplature-hauteur,0)))
+    geoList.append(Part.LineSegment(FreeCAD.Vector(x_emplature+largeur,y_emplature-hauteur,0),FreeCAD.Vector(x_emplature+largeur,y_emplature+hauteur,0)))
+    geoList.append(Part.LineSegment(FreeCAD.Vector(x_emplature+largeur,y_emplature+hauteur,0),FreeCAD.Vector(x_emplature,y_emplature+hauteur,0)))
+    geoList.append(Part.LineSegment(FreeCAD.Vector(x_emplature,y_emplature+hauteur,0),FreeCAD.Vector(x_emplature,y_emplature-hauteur,0)))
+    #geoList.append(Part.LineSegment(FreeCAD.Vector(delta_emplature,-hauteur_bordattaque/2,0),FreeCAD.Vector(delta_emplature+profondeur_bordattaque,-hauteur_bordattaque/2,0)))
+    #geoList.append(Part.LineSegment(FreeCAD.Vector(delta_emplature+profondeur_bordattaque,-hauteur_bordattaque/2,0),FreeCAD.Vector(delta_emplature+profondeur_bordattaque,hauteur_bordattaque/2,0)))
+    #geoList.append(Part.LineSegment(FreeCAD.Vector(delta_emplature+profondeur_bordattaque,hauteur_bordattaque/2,0),FreeCAD.Vector(delta_emplature,hauteur_bordattaque/2,0)))
+    #geoList.append(Part.LineSegment(FreeCAD.Vector(delta_emplature,hauteur_bordattaque/2,0),FreeCAD.Vector(delta_emplature,-hauteur_bordattaque/2,0)))
+
+    b.addGeometry(geoList,False)
+    conList = []
+    conList.append(Sketcher.Constraint('Coincident',0,2,1,1))
+    conList.append(Sketcher.Constraint('Coincident',1,2,2,1))
+    conList.append(Sketcher.Constraint('Coincident',2,2,3,1))
+    conList.append(Sketcher.Constraint('Coincident',3,2,0,1))
+    conList.append(Sketcher.Constraint('Horizontal',0))
+    #conList.append(Sketcher.Constraint('Horizontal',2))
+    conList.append(Sketcher.Constraint('Vertical',1))
+    #conList.append(Sketcher.Constraint('Vertical',3))
+    b.addConstraint(conList)
+    #FreeCAD.ActiveDocument.Sketch.addConstraint(Sketcher.Constraint('PointOnObject',0,1,-2))
+    print 'BordAttaque'+str(i/2)+'_1, '+"Face"+str(nbreOfFaces)
+    c=body.newObject('Sketcher::SketchObject','BordAttaque'+str(i/2)+'_1')
+    #c.Support = (FreeCAD.ActiveDocument.BaseFeature,["Face"+str(nbreOfFaces)])
+    c.Support = (body.BaseFeature,["Face"+str(nbreOfFaces)])
+    c.MapMode = 'FlatFace'
+    
+    geoList = []
+    print "delta saumon:"+str(x_saumon)+ ", delta emplature:"+str(y_saumon)
+    geoList.append(Part.LineSegment(FreeCAD.Vector(-x_saumon,y_saumon-hauteur,0),FreeCAD.Vector(-x_saumon-largeur,y_saumon-hauteur,0)))
+    geoList.append(Part.LineSegment(FreeCAD.Vector(-x_saumon-largeur,y_saumon-hauteur,0),FreeCAD.Vector(-x_saumon-largeur,y_saumon+hauteur,0)))
+    geoList.append(Part.LineSegment(FreeCAD.Vector(x_saumon+largeur,y_saumon+hauteur,0),FreeCAD.Vector(-x_saumon,y_saumon+hauteur,0)))
+    geoList.append(Part.LineSegment(FreeCAD.Vector(-x_saumon,y_saumon+hauteur,0),FreeCAD.Vector(-x_saumon,y_saumon-hauteur,0)))
+
+    #geoList.append(Part.LineSegment(FreeCAD.Vector(-delta_saumon,-hauteur_bordattaque/2,0),FreeCAD.Vector(-delta_saumon-profondeur_bordattaque,-hauteur_bordattaque/2,0)))
+    #geoList.append(Part.LineSegment(FreeCAD.Vector(-delta_saumon-profondeur_bordattaque,-hauteur_bordattaque/2,0),FreeCAD.Vector(-delta_saumon-profondeur_bordattaque,hauteur_bordattaque/2,0)))
+    #geoList.append(Part.LineSegment(FreeCAD.Vector(delta_saumon+profondeur_bordattaque,hauteur_bordattaque/2,0),FreeCAD.Vector(-delta_saumon,hauteur_bordattaque/2,0)))
+    #geoList.append(Part.LineSegment(FreeCAD.Vector(-delta_saumon,hauteur_bordattaque/2,0),FreeCAD.Vector(-delta_saumon,-hauteur_bordattaque/2,0)))
+
+    c.addGeometry(geoList,False)
+    print "avant contraintes"
+    conList = []
+    conList.append(Sketcher.Constraint('Coincident',0,2,1,1))
+    conList.append(Sketcher.Constraint('Coincident',1,2,2,1))
+    conList.append(Sketcher.Constraint('Coincident',2,2,3,1))
+    conList.append(Sketcher.Constraint('Coincident',3,2,0,1))
+    conList.append(Sketcher.Constraint('Horizontal',0))
+    #conList.append(Sketcher.Constraint('Horizontal',2))
+    conList.append(Sketcher.Constraint('Vertical',1))
+    conList.append(Sketcher.Constraint('Vertical',3))
+    c.addConstraint(conList)
+    print "apres contraintes"
+    #---------
+    # Suppression du bord d attaque
+    #---------
+    d=body.newObject("PartDesign::SubtractiveLoft","SubtractiveLoft")
+    d.Profile=b#FreeCAD.activeDocument().BordAttaque0
+    d.Sections = [c]
+    FreeCAD.ActiveDocument.recompute()
+    #FreeCAD.Gui.activeDocument().hide('BaseFeature'+str(i/2))
+    #Gui.getDocument("Aile_v0_3").getObject("BaseFeature").Visibility=False
+    FreeCAD.Gui.activeDocument().hide('BordAttaque'+str(i/2)+'_0')
+    FreeCAD.Gui.activeDocument().hide('BordAttaque'+str(i/2)+'_1')
+    FreeCAD.ActiveDocument.recompute()
+    print "end fonction"
+    
+  
+    return
+
+def generateprofilBA(body,hauteur_bordattaque, profondeur_bordattaque, delta_saumon, delta_emplature,i):
+    #---------
+    # Creation du bord d'attaque
+    #---------
+    generateprofilgenerique(body,delta_saumon,0,delta_emplature, 0, hauteur_bordattaque/2, profondeur_bordattaque,i)
+    return
+
+def generateprofilWingsKey(body,x, y, radius, number_of_panels):
+    
+    return
+
+
+
 def generateWing(name):
  list_profil_1mm_ref=[]
  profil_construction_aile=[] 
@@ -38,7 +132,6 @@ def generateWing(name):
           FreeCAD.ActiveDocument.AirPlaneData.getContents('D6'),
           FreeCAD.ActiveDocument.AirPlaneData.getContents('E6'),
           FreeCAD.ActiveDocument.AirPlaneData.getContents('F6')]
-
 
  cleaile_X=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('B27'))
  cleaile_Y=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('C27'))
@@ -107,12 +200,12 @@ def generateWing(name):
    rotvec=FreeCAD.Vector(1,0,0)
 
    obj_clone_nervure=Draft.clone(list_profil_1mm_ref[aa]) # creation de la nervure saumon
-   obj_clone_nervure.Scale =(corde_saumon,corde_saumon,1) #mise a l echelle
-   obj_clone_nervure.Label="Profil_S00"+str(i) #nommage
+   obj_clone_nervure.Scale =(corde_saumon,corde_saumon,1) # mise a l echelle
+   obj_clone_nervure.Label="Profil_S00"+str(i)            # nommage
  
-   obj_clone_nervure.Placement=FreeCAD.Placement(posvec,rotvec,90)#positionnement dans lespace
-   FreeCAD.Gui.ActiveDocument.ActiveObject.Visibility=False#obj_clone_nervure.Visibility=False
-   profil_construction_aile.append(obj_clone_nervure) #sauvegare nervure dans tableau
+   obj_clone_nervure.Placement=FreeCAD.Placement(posvec,rotvec,90)# positionnement dans l espace
+   FreeCAD.Gui.ActiveDocument.ActiveObject.Visibility=False       # obj_clone_nervure.Visibility=False
+   profil_construction_aile.append(obj_clone_nervure)             # sauvegare nervure dans tableau
 
    posvec=FreeCAD.Vector(position_emplature,position_nervure+0.01,0)
    print "corde_emplature :" +str(corde_emplature)+", corde_saumon:"+str(corde_saumon)+", position_emplature:"+str(position_emplature)
@@ -120,7 +213,6 @@ def generateWing(name):
 #------------------------------------------------------------------
 # Construction des paneaux et de l aile
 #------------------------------------------------------------------
-
  delta_emplature=0
  delta_saumon=-float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B'))+str(16)))
  hauteur_bordattaque=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('E'))+str(31)))
@@ -133,114 +225,40 @@ def generateWing(name):
     FreeCAD.ActiveDocument.ActiveObject.Ruled=False
     FreeCAD.ActiveDocument.ActiveObject.Closed=False
     panel.append(panel_)
-    #---------
-    # Creation du Body du paneau
-    #---------
-    a=FreeCAD.activeDocument().addObject('PartDesign::Body','Panel_0'+str(i/2))
-    a.BaseFeature = panel_
+    
+    #------------------------------------
+    # Creation des Bodys du paneau
+    #------------------------------------
+    body=FreeCAD.activeDocument().addObject('PartDesign::Body','Panel_0'+str(i/2))
+    body.BaseFeature = panel_
     col=[(0.2,0.4,0.6)]
-    a.ViewObject.DiffuseColor=col
-    a.ViewObject.Transparency=70
-    panel_body.append(a)
+    body.ViewObject.DiffuseColor=col
+    body.ViewObject.Transparency=70
+    print "Body cree:"
+    print body
+    print body.Label
+    
+    panel_body.append(body)
     FreeCAD.ActiveDocument.recompute()
-    FreeCAD.Gui.activeView().setActiveObject('pdbody', a)
+    FreeCAD.Gui.activeView().setActiveObject('pdbody', body)
     FreeCAD.Gui.Selection.clearSelection()
-    FreeCAD.Gui.Selection.addSelection(a)
-    FreeCAD.ActiveDocument.recompute()
-    #---------
-    # Creation du bord d'attaque
-    #---------
-    nbreOfFaces=len(a.Shape.Faces)
-    print 'BordAttaque'+str(i/2)+'_0'
-    print nbreOfFaces
-    FreeCAD.Gui.activeDocument().ActiveView.setActiveObject('pdbody', a)
-    b=a.newObject('Sketcher::SketchObject','BordAttaque'+str(i/2)+'_0')
-    print a.Label
-    print "Face"+str(nbreOfFaces-1)
-    #b.Support = (FreeCAD.ActiveDocument.BaseFeature,["Face"+str(nbreOfFaces-1)])
-    b.Support = (a,["Face"+str(nbreOfFaces-1)])
-    b.MapMode = 'FlatFace'
-    
-    FreeCAD.ActiveDocument.recompute()
-    geoList = []
- 
-    #hauteur_bordattaque, profondeur_bordattaque, delta_saumon, delta_emplature
-
-    geoList.append(Part.LineSegment(FreeCAD.Vector(delta_emplature,-hauteur_bordattaque/2,0),FreeCAD.Vector(delta_emplature+profondeur_bordattaque,-hauteur_bordattaque/2,0)))
-    geoList.append(Part.LineSegment(FreeCAD.Vector(delta_emplature+profondeur_bordattaque,-hauteur_bordattaque/2,0),FreeCAD.Vector(delta_emplature+profondeur_bordattaque,hauteur_bordattaque/2,0)))
-    geoList.append(Part.LineSegment(FreeCAD.Vector(delta_emplature+profondeur_bordattaque,hauteur_bordattaque/2,0),FreeCAD.Vector(delta_emplature,hauteur_bordattaque/2,0)))
-    geoList.append(Part.LineSegment(FreeCAD.Vector(delta_emplature,hauteur_bordattaque/2,0),FreeCAD.Vector(delta_emplature,-hauteur_bordattaque/2,0)))
-
-
-    b.addGeometry(geoList,False)
-    conList = []
-    conList.append(Sketcher.Constraint('Coincident',0,2,1,1))
-    conList.append(Sketcher.Constraint('Coincident',1,2,2,1))
-    conList.append(Sketcher.Constraint('Coincident',2,2,3,1))
-    conList.append(Sketcher.Constraint('Coincident',3,2,0,1))
-    conList.append(Sketcher.Constraint('Horizontal',0))
-    conList.append(Sketcher.Constraint('Horizontal',2))
-    conList.append(Sketcher.Constraint('Vertical',1))
-    conList.append(Sketcher.Constraint('Vertical',3))
-    b.addConstraint(conList)
-    #FreeCAD.ActiveDocument.Sketch.addConstraint(Sketcher.Constraint('PointOnObject',0,1,-2))
-    print 'BordAttaque'+str(i/2)+'_1'
-    print "Face"+str(nbreOfFaces)
-    c=a.newObject('Sketcher::SketchObject','BordAttaque'+str(i/2)+'_1')
-    #c.Support = (FreeCAD.ActiveDocument.BaseFeature,["Face"+str(nbreOfFaces)])
-    c.Support = (a,["Face"+str(nbreOfFaces)])
-    c.MapMode = 'FlatFace'
-    
-    geoList = []
-    print "delta saumon:"
-    print delta_saumon
-    print "delta emplature:"
-    print delta_emplature
-    geoList.append(Part.LineSegment(FreeCAD.Vector(-delta_saumon,-hauteur_bordattaque/2,0),FreeCAD.Vector(-delta_saumon-profondeur_bordattaque,-hauteur_bordattaque/2,0)))
-    geoList.append(Part.LineSegment(FreeCAD.Vector(-delta_saumon-profondeur_bordattaque,-hauteur_bordattaque/2,0),FreeCAD.Vector(-delta_saumon-profondeur_bordattaque,hauteur_bordattaque/2,0)))
-    geoList.append(Part.LineSegment(FreeCAD.Vector(delta_saumon+profondeur_bordattaque,hauteur_bordattaque/2,0),FreeCAD.Vector(-delta_saumon,hauteur_bordattaque/2,0)))
-    geoList.append(Part.LineSegment(FreeCAD.Vector(-delta_saumon,hauteur_bordattaque/2,0),FreeCAD.Vector(-delta_saumon,-hauteur_bordattaque/2,0)))
-
-    c.addGeometry(geoList,False)
-    conList = []
-    conList.append(Sketcher.Constraint('Coincident',0,2,1,1))
-    conList.append(Sketcher.Constraint('Coincident',1,2,2,1))
-    conList.append(Sketcher.Constraint('Coincident',2,2,3,1))
-    conList.append(Sketcher.Constraint('Coincident',3,2,0,1))
-    conList.append(Sketcher.Constraint('Horizontal',0))
-    #conList.append(Sketcher.Constraint('Horizontal',2))
-    conList.append(Sketcher.Constraint('Vertical',1))
-    conList.append(Sketcher.Constraint('Vertical',3))
-    c.addConstraint(conList)
-
-
-    #---------
-    # Suppression du bord d attaque
-    #---------
-    d=a.newObject("PartDesign::SubtractiveLoft","SubtractiveLoft")
-    d.Profile=b#FreeCAD.activeDocument().BordAttaque0
-
-    d.Sections = [c]
-    
-    FreeCAD.ActiveDocument.recompute()
-    #FreeCAD.Gui.activeDocument().hide('BaseFeature'+str(i/2))
-    #Gui.getDocument("Aile_v0_3").getObject("BaseFeature").Visibility=False
-    
-    FreeCAD.Gui.activeDocument().hide('BordAttaque'+str(i/2)+'_0')
-    FreeCAD.Gui.activeDocument().hide('BordAttaque'+str(i/2)+'_1')
+    FreeCAD.Gui.Selection.addSelection(body)
     FreeCAD.ActiveDocument.recompute()
     
+    generateprofilBA(body,hauteur_bordattaque, profondeur_bordattaque, delta_saumon, delta_emplature,i)
     if i<>number_of_panels*2-2 :
         delta_emplature=delta_saumon
         delta_saumon=-float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B') + i/2+1)+str(16)))
-    #delta_emplature=-float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B') + i/2+1)+str(16)))
     else :
         delta_emplature=delta_saumon
         delta_saumon=-float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B') + i/2)+str(16)))
 
-    a.ViewObject.DiffuseColor=col
-    a.ViewObject.Transparency=70
+    body.ViewObject.DiffuseColor=col
+    body.ViewObject.Transparency=70
+    #------------------------------------
     #--------Fin creation du Body
+    #------------------------------------
+    
     FreeCAD.ActiveDocument.recompute()
     FreeCAD.Gui.SendMsgToActiveView("ViewFit")
  FreeCAD.Gui.activeDocument().activeView().viewAxonometric()
@@ -262,16 +280,16 @@ def generateWing(name):
 #------------------------------------------------------------------
 # Construction de la cle d'aile
 #------------------------------------------------------------------
- cleaileobject=FreeCAD.ActiveDocument.addObject("Part::Cylinder","Cylinder")
- FreeCAD.ActiveDocument.ActiveObject.Label = "CleAile"
- FreeCAD.ActiveDocument.ActiveObject.Radius = cleaile_radius
- FreeCAD.ActiveDocument.ActiveObject.Height = cleaile_long
- #cleaileobject.Placement=FreeCAD.Placement(FreeCAD.Vector(cleaile_X,0,0),FreeCAD.Rotation(FreeCAD.Vector(1,0,0),-90))
- angleX=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B'))+str(19)))
- angleY=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B'))+str(20)))
- angleZ=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B'))+str(21)))
- #91 et 4.5
- cleaileobject.Placement=FreeCAD.Placement(FreeCAD.Vector(cleaile_X,0,0),FreeCAD.Rotation(4.5,angleZ,90+angleX), FreeCAD.Vector(0,0,0))
+# cleaileobject=FreeCAD.ActiveDocument.addObject("Part::Cylinder","Cylinder")
+# FreeCAD.ActiveDocument.ActiveObject.Label = "CleAile"
+# FreeCAD.ActiveDocument.ActiveObject.Radius = cleaile_radius
+# FreeCAD.ActiveDocument.ActiveObject.Height = cleaile_long
+# #cleaileobject.Placement=FreeCAD.Placement(FreeCAD.Vector(cleaile_X,0,0),FreeCAD.Rotation(FreeCAD.Vector(1,0,0),-90))
+# angleX=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B'))+str(19)))
+# angleY=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B'))+str(20)))
+# angleZ=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B'))+str(21)))
+#91 et 4.5
+# cleaileobject.Placement=FreeCAD.Placement(FreeCAD.Vector(cleaile_X,0,0),FreeCAD.Rotation(4.5,angleZ,90+angleX), FreeCAD.Vector(0,0,0))
 
 #------------------------------------------------------------------
 # Construction des longerons
