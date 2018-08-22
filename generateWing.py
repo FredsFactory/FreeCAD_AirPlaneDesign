@@ -54,6 +54,7 @@ def generateprofilgenerique(body,x_saumon,y_saumon,x_emplature, y_emplature, hau
     conList.append(Sketcher.Constraint('Coincident',3,2,0,1))
     conList.append(Sketcher.Constraint('Horizontal',0))
     conList.append(Sketcher.Constraint('Vertical',1))
+    #conList.setExpression('Constraints[6]', u'AirPlaneData.p001_p + 10')
     b.addConstraint(conList)
     
     FreeCAD.Gui.ActiveDocument.resetEdit()
@@ -173,7 +174,68 @@ def generateprofilWingsKey(body,x, y, long, radius, number_of_panels,sketchcleai
     FreeCAD.ActiveDocument.recompute()
     return sketchcleaile
 
+#---------------------------------------------------------
+# Creation d un peigne
+#---------------------------------------------------------
 
+def generateprofil(body,x, y, long, largeur, hauteur, number_of_panels,sketchcleaile):
+    if sketchcleaile==None :
+        nbreOfFaces=len(body.Shape.Faces)
+        FreeCAD.Gui.activeDocument().ActiveView.setActiveObject('pdbody', body) #Active le body
+        b=body.newObject('Sketcher::SketchObject','Peigne00')
+        sketchcleaile=b
+    
+        b.Support = (body.BaseFeature,["Face1"])#+str(nbreOfFaces-1)
+        b.MapMode = 'FlatFace'
+        FreeCAD.ActiveDocument.recompute()
+        geoList = []
+        geoList.append(Part.LineSegment(FreeCAD.Vector(-x,y-hauteur,0),FreeCAD.Vector(-x+largeur,y-hauteur,0)))
+        geoList.append(Part.LineSegment(FreeCAD.Vector(-x+largeur,y-hauteur,0),FreeCAD.Vector(-x+largeur,y+hauteur,0)))
+        geoList.append(Part.LineSegment(FreeCAD.Vector(-x+largeur,y+hauteur,0),FreeCAD.Vector(-x,y+hauteur,0)))
+        geoList.append(Part.LineSegment(FreeCAD.Vector(-x,y+hauteur,0),FreeCAD.Vector(-x,y-hauteur,0)))
+    
+        b.addGeometry(geoList,False)
+        conList = []
+        conList.append(Sketcher.Constraint('Coincident',0,2,1,1))
+        conList.append(Sketcher.Constraint('Coincident',1,2,2,1))
+        conList.append(Sketcher.Constraint('Coincident',2,2,3,1))
+        conList.append(Sketcher.Constraint('Coincident',3,2,0,1))
+        conList.append(Sketcher.Constraint('Horizontal',0))
+        conList.append(Sketcher.Constraint('Vertical',1))
+        #conList.setExpression('Constraints[6]', u'AirPlaneData.p001_p + 10')
+        b.addConstraint(conList)
+        
+        FreeCAD.ActiveDocument.recompute()
+
+        d=body.newObject("PartDesign::Pocket","Peigne00")
+        d.Profile = b
+        d.Length = 5.0
+        d.Length = long
+        d.Length2 = long
+        d.Type = 0
+        d.UpToFace = None
+        d.Reversed = 0
+        d.Midplane = 0
+        d.Offset = 0.000000
+        d.Reversed = True
+        d.Length=long
+        #d.setExpression('Length', u'AirPlaneData.wing_key_length')
+    else :
+        d=body.newObject("PartDesign::Pocket","Peigne00")
+        d.Profile = sketchcleaile
+        d.Length = 5.0
+        d.Length = long
+        d.Length2 = long#100.000000
+        d.Type = 0
+        d.UpToFace = None
+        d.Reversed = 0
+        d.Midplane = 0
+        d.Offset = 0.000000
+        d.Reversed = True
+        d.Length=long
+    #d.setExpression('Length', u'AirPlaneData.wing_key_length')
+    FreeCAD.ActiveDocument.recompute()
+    return sketchcleaile
 
 def generateWing(name):
  list_profil_1mm_ref=[]
@@ -190,14 +252,14 @@ def generateWing(name):
           FreeCAD.ActiveDocument.AirPlaneData.getContents('E6'),
           FreeCAD.ActiveDocument.AirPlaneData.getContents('F6')]
 
- cleaile_X=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('B27'))
- cleaile_Y=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('C27'))
- cleaile_Z=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('D27'))
- cleaile_radius=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('E27'))
- cleaile_long=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('F27'))
- cleaile_angleX=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('G27'))
- cleaile_angleY=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('H27'))
- cleaile_angleZ=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('I27'))
+ cleaile_X=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('C27'))
+ cleaile_Y=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('D27'))
+ cleaile_Z=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('E27'))
+ cleaile_radius=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('F27'))
+ cleaile_long=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('G27'))
+ cleaile_angleX=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('H27'))
+ cleaile_angleY=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('I27'))
+ cleaile_angleZ=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('J27'))
  #------------------------------------------------------------------
  # creation du group permettant de rassembler l ensemble des elements de construction de l aile
  #------------------------------------------------------------------
@@ -360,44 +422,93 @@ def generateWing(name):
  wing_part.Placement = FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(1,0,0),90))
  FreeCAD.Gui.SendMsgToActiveView("ViewFit")
  FreeCAD.Gui.activeDocument().activeView().viewAxonometric()
+
  #-------------------------
  # generation du bord d attaque
  #-------------------------
- print "Generation Bord d attaque"
- delta_emplature=0
- delta_saumon=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B'))+str(16)))
- hauteur_bordattaque=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('E'))+str(31)))
- profondeur_bordattaque=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('F'))+str(31)))
+ if FreeCAD.ActiveDocument.AirPlaneData.getContents('B36')=="Yes":
+  print "Generation Bord d attaque"
+  delta_emplature=0
+  delta_saumon=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B'))+str(16)))
+  hauteur_bordattaque=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('F'))+str(36)))
+  profondeur_bordattaque=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('G'))+str(36)))
  
- for i in range(0,number_of_panels*2,2):
-  generateprofilBA(panel[(i/2)],hauteur_bordattaque, profondeur_bordattaque, delta_saumon-delta_emplature, 0,i)
-  print "delta saumon :"
-  print delta_saumon
-  print "delta emplature:"
-  print delta_emplature
-  col=[(0.2,0.4,0.6)]
-  panel[(i/2)].ViewObject.DiffuseColor=col
-  panel[(i/2)].ViewObject.Transparency=70
-  if i<>number_of_panels*2-2 :
-   delta_emplature=delta_saumon
-   delta_saumon=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B') + i/2+1)+str(16)))
-  else :
-   delta_emplature=delta_saumon
-   delta_saumon=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B') + i/2)+str(16)))
+  for i in range(0,number_of_panels*2,2):
+   generateprofilBA(panel[(i/2)],hauteur_bordattaque, profondeur_bordattaque, delta_saumon-delta_emplature, 0,i)
+   col=[(0.2,0.4,0.6)]
+   panel[(i/2)].ViewObject.DiffuseColor=col
+   panel[(i/2)].ViewObject.Transparency=70
+   if i<>number_of_panels*2-2 :
+    delta_emplature=delta_saumon
+    delta_saumon=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B') + i/2+1)+str(16)))
+   else :
+    delta_emplature=delta_saumon
+    delta_saumon=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B') + i/2)+str(16)))
+ else :
+  print "B36 => No, no BA"
+
+#-------------------------
+ # generation des peignes sauf BA et BF
+ #-------------------------
+ for j in range (0,4):
+     
+  if FreeCAD.ActiveDocument.AirPlaneData.getContents('B'+str(38+j))=="Yes":
+    print "B38 => Yes,"
+    print FreeCAD.ActiveDocument.AirPlaneData.getContents('A'+str(38+j))   #'A38')
+    x=-float(FreeCAD.ActiveDocument.AirPlaneData.getContents('C'+str(38+j)))      #'C38')
+    y=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('D'+str(38+j)))       #'D38')
+    long=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('H'+str(38+j)))    #'H38')
+    largeur=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('G'+str(38+j))) #'G38')
+    hauteur=float(FreeCAD.ActiveDocument.AirPlaneData.getContents('F'+str(38+j))) #'F38')
+    col=[(0.2,0.4,0.6)]
+    panel[(i/2)].ViewObject.DiffuseColor=col
+    panel[(i/2)].ViewObject.Transparency=70
+        #if i<>number_of_panels*2-2 :
+        #delta_emplature=delta_saumon
+        #delta_saumon=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B') + i/2+1)+str(16)))
+        #else :
+        #delta_emplature=delta_saumon
+        #delta_saumon=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B') + i/2)+str(16)))
+
+    for i in range(0,number_of_panels*2,2):
+     if i==0 :
+      print i
+      sketchcleaile=None
+       #             generateprofil(body,x, y, long, largeur, hauteur, number_of_panels,sketchcleaile)
+       #   "p001_rotx"
+       #sketchcleaile=generateprofil(panel[(i/2)],'p001_rotx', 'p001_roty', long, largeur, hauteur, number_of_panels,sketchcleaile)
+      sketchcleaile=generateprofil(panel[(i/2)],x, y, long, largeur, hauteur, number_of_panels,sketchcleaile)
+   
+      print "creation clef d aile"
+     else :
+      print "les autres panels"
+      #             generateprofil(body,x, y, long, largeur, hauteur, number_of_panels,sketchcleaile)
+      print i
+      sketchcleaile=generateprofil(panel[(i/2)],x, y, long, largeur, hauteur, number_of_panels,sketchcleaile)
+      col=[(0.2,0.4,0.6)]
+      panel[(i/2)].ViewObject.DiffuseColor=col
+      panel[(i/2)].ViewObject.Transparency=70
+  else:
+   print "B38 => No, no Peigne#1"
+
 #-------------------------
 # generation de la clef d aile
 #-------------------------
- for i in range(0,number_of_panels*2,2):
-  if i==0 :
-   sketchcleaile=None
-   sketchcleaile=generateprofilWingsKey(panel[(i/2)],cleaile_X, cleaile_Y, cleaile_long, cleaile_radius, number_of_panels,sketchcleaile)
-   print "creation clef d aile"
-  else :
-   print "les autres panels"
-   sketchcleaile=generateprofilWingsKey(panel[(i/2)],cleaile_X, cleaile_Y, cleaile_long, cleaile_radius, number_of_panels,sketchcleaile)
-  col=[(0.2,0.4,0.6)]
-  panel[(i/2)].ViewObject.DiffuseColor=col
-  panel[(i/2)].ViewObject.Transparency=70
+ if FreeCAD.ActiveDocument.AirPlaneData.getContents('B27')=="Yes":
+  print "Integration de la clef d aile"
+  for i in range(0,number_of_panels*2,2):
+   if i==0 :
+    sketchcleaile=None
+    sketchcleaile=generateprofilWingsKey(panel[(i/2)],cleaile_X, cleaile_Y, cleaile_long, cleaile_radius, number_of_panels,sketchcleaile)
+    print "creation clef d aile"
+   else :
+    print "les autres panels"
+    sketchcleaile=generateprofilWingsKey(panel[(i/2)],cleaile_X, cleaile_Y, cleaile_long, cleaile_radius, number_of_panels,sketchcleaile)
+   col=[(0.2,0.4,0.6)]
+   panel[(i/2)].ViewObject.DiffuseColor=col
+   panel[(i/2)].ViewObject.Transparency=70
+ else:
+  print "B27 => No, Pas de clef d aile"
 
 
 #return
