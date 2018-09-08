@@ -213,7 +213,7 @@ def generateprofil(body,x, y, long, largeur, hauteur, number_of_panels,sketchcle
         d.Length = long
         d.Length2 = long
         d.Type = 0
-        d.UpToFace = None
+        #d.UpToFace = None
         d.Reversed = 0
         d.Midplane = 0
         d.Offset = 0.000000
@@ -227,7 +227,7 @@ def generateprofil(body,x, y, long, largeur, hauteur, number_of_panels,sketchcle
         d.Length = long
         d.Length2 = long#100.000000
         d.Type = 0
-        d.UpToFace = None
+        #d.UpToFace = None
         d.Reversed = 0
         d.Midplane = 0
         d.Offset = 0.000000
@@ -273,7 +273,7 @@ def generateWing(name):
     scalefactor=1
 
  for number_profil in range(0,int(FreeCAD.ActiveDocument.AirPlaneData.number_of_profils)):
-      print "profil de ref : "+str(number_profil)+"    Name file :"+dat_file[number_profil]
+      print ("profil de ref : "+str(number_profil)+"    Name file :"+dat_file[number_profil])
       importAirfoilDAT.insert(dat_file[number_profil],FreeCAD.ActiveDocument.Name)
       points = FreeCAD.ActiveDocument.ActiveObject.Points
       Draft.makeBSpline(points, closed=True)
@@ -287,7 +287,7 @@ def generateWing(name):
       obj_nervure_ref.Label="Prof_ref_1mm_"+profilname
       group.addObject(obj_nervure_ref)
       list_profil_1mm_ref.append(obj_nervure_ref)
-      print "nom : "+obj_nervure_ref.Label
+      print ("nom : "+obj_nervure_ref.Label)
 
  FreeCAD.ActiveDocument.recompute()
 
@@ -307,8 +307,8 @@ def generateWing(name):
  wing_part=FreeCAD.activeDocument().addObject('App::Part','Part')
  wing_part.Label = 'Wing'
  FreeCAD.ActiveDocument.recompute()
- print "nombre de paneau"
- print int(FreeCAD.ActiveDocument.AirPlaneData.number_of_panels)
+ print ("nombre de paneau")
+ print( int(FreeCAD.ActiveDocument.AirPlaneData.number_of_panels))
 
  for i in range(0,int(FreeCAD.ActiveDocument.AirPlaneData.number_of_panels)):
    corde_emplature=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B') + i)+str(13+4)))
@@ -494,7 +494,7 @@ def generateWing(name):
      else :
       print ("les autres panels")
       #             generateprofil(body,x, y, long, largeur, hauteur, number_of_panels,sketchcleaile)
-      print i
+      print( i)
       sketchcleaile=generateprofil(panel[(i/2)],x, y, long, largeur, hauteur, number_of_panels,sketchcleaile)
       col=[(0.2,0.4,0.6)]
       panel[(i/2)].ViewObject.DiffuseColor=col
