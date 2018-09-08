@@ -117,6 +117,7 @@ class EditorPanel():
     def updateGraphicsViewWings2(self):
         scene=QtGui.QGraphicsScene()
         self.form.WingView.setScene(scene)
+        
         scene.setSceneRect(QtCore.QRectF(-100, -1500, 3000, 3000))
         self.setpen = QtGui.QPen(QtCore.Qt.red)
         item=QtGui.QGraphicsLineItem(-50,  0, 50,  0)
@@ -143,8 +144,8 @@ class EditorPanel():
              QtCore.QPointF( float(initPanelTable[0][4]), -float(initPanelTable[0][5])),
               QtCore.QPointF( 0, 0)
             ] ),)
-        item.setPen(QtGui.QPen(QtCore.Qt.blue))
-        print float(initPanelTable[0][5])
+        #item.setPen(QtGui.QPen(QtCore.Qt.blue)) # Pyth3 compatibilite
+        print (float(initPanelTable[0][5]))
         scene.addItem(item)
         xref=float(initPanelTable[0][4])
         yref=-float(initPanelTable[0][5])
@@ -160,7 +161,10 @@ class EditorPanel():
             yref=yref-float(initPanelTable[j][5])
             item.setPen(QtGui.QPen(QtCore.Qt.blue))
             scene.addItem(item)
-
+        self.form.WingView.setFocus()
+        self.form.WingView.show()
+            
+    
 
     def setupUi(self):
                 # Connect Signals and Slots

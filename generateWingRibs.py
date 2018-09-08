@@ -31,7 +31,8 @@ panel=[]
 wing_right=[]
 couple=[]
 distanceinternervure=[-3,13.07+44.18,42.86,43.66,59.67,58.07,57.90,58.14,57.39,57.84,58.37,57.47,57.92,57.95,57.84,57.38,58.04,58.28,57.99,57.84,54.80,65.02,58.41,57.80,58.33,57.88,58.59,58.78,56.98,63.74,52.07,52.01,46.30 ] #premiere nervure -13.07
-anglenervureX=[85.5,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90]
+epaisseurnervure=[5,5,5,5,5,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2,2,2,2,2 ]
+anglenervureX=[95.5,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90]
 
 
 #------------------------------------------------------------------
@@ -41,13 +42,15 @@ def generateWingRibs(name):
  b=Draft.clone(FreeCAD.ActiveDocument.getObjectsByLabel(name))#(FreeCAD.ActiveDocument.wing_r)
  xmax=b.Shape.BoundBox.XMax
  xmin=b.Shape.BoundBox.XMin
+ ymax=b.Shape.BoundBox.YMax
+ ymin=b.Shape.BoundBox.YMin
  zmax=b.Shape.BoundBox.ZMax
  zmin=b.Shape.BoundBox.ZMin
  xlength=b.Shape.BoundBox.XLength
  zlength=b.Shape.BoundBox.ZLength
  
- pos=distanceinternervure[0]
- for i in range(0,25,1):
+ pos=-distanceinternervure[0]
+ for i in range(0,32,1):#25,1):
     p1=FreeCAD.Placement()
     p1.Rotation.Q=(0.0,1.0,0.0,0.0)
     p1.Base=FreeCAD.Vector(xmin,zmin,0.0)
@@ -57,14 +60,14 @@ def generateWingRibs(name):
     col=[(1.5,0.5,0.5)]
     FreeCAD.ActiveDocument.Rectangle.ViewObject.DiffuseColor=col
     FreeCAD.ActiveDocument.Rectangle.ViewObject.Transparency=90
-    Plan_coupe.Label="PlanDeCoupe_"+str(long(pos))+"mm"
+    Plan_coupe.Label="PlanDeCoupe_"+str(-long(pos))+"mm"
     
     f = FreeCAD.activeDocument().addObject('Part::Extrusion', 'Extrude')
     #f = App.getDocument('AirPlane').getObject('Extrude')
     f.Base = Plan_coupe#App.getDocument('AirPlane').getObject('Nerv_021')
     f.DirMode = "Normal"
     f.DirLink = None
-    f.LengthFwd = 2.000000000000000
+    f.LengthFwd = epaisseurnervure[i]#2.000000000000000
     f.LengthRev = 0.000000000000000
     f.Solid = True
     f.Reversed = False
@@ -82,9 +85,9 @@ def generateWingRibs(name):
     a.Shapes = [b,f,]#Plan_coupe,]
     a.Label="Nerv_"+str(pos)+"mm"
     
-    pos=pos+distanceinternervure[i+1]
-    print pos
-    print i
+    pos=pos-distanceinternervure[i+1]
+    print (pos)
+    print (i)
     
     #a.Label="Nerv"+str(i)
     #FreeCAD.ActiveDocument().Rectangle.ViewObject.Visibility=False
@@ -101,7 +104,6 @@ class SelectObjectUI():
         self.form = FreeCADGui.PySideUic.loadUi(path_to_ui)
         for obj in FreeCAD.ActiveDocument.Objects:
             self.form.listWidget.addItem(obj.Label)
-            #print obj.Label#item)
         self.form.listWidget.itemSelectionChanged.connect(self.selectionChanged)
         sel = FreeCADGui.Selection.getSelection()
         if sel:
@@ -155,7 +157,7 @@ class GenerateWingRibsCommand():
         if r:
            #r=1 => OK
            a=editor.form.listWidget.currentItem()
-           print a.text()
+           print(a.text())
            generateWingRibs(a.text())
            pass
         return
