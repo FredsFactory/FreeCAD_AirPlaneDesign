@@ -449,7 +449,7 @@ def generateWing(name):
    col=[(0.2,0.4,0.6)]
    panel[(i/2)].ViewObject.DiffuseColor=col
    panel[(i/2)].ViewObject.Transparency=70
-   if i<>number_of_panels*2-2 :
+   if (i!=int(number_of_panels*2-2)) :
     delta_emplature=delta_saumon
     delta_saumon=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B') + i/2+1)+str(16)))
    else :
@@ -474,7 +474,7 @@ def generateWing(name):
     col=[(0.2,0.4,0.6)]
     panel[(i/2)].ViewObject.DiffuseColor=col
     panel[(i/2)].ViewObject.Transparency=70
-        #if i<>number_of_panels*2-2 :
+        #if i!=number_of_panels*2-2 :
         #delta_emplature=delta_saumon
         #delta_saumon=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B') + i/2+1)+str(16)))
         #else :
@@ -530,7 +530,7 @@ def generateWing(name):
 
 def generateWingtmp(name):
     # Passage de cable
-    if FreeCAD.ActiveDocument.AirPlaneData.getContents('B28')<>"":
+    if FreeCAD.ActiveDocument.AirPlaneData.getContents('B28')!="":
      if i==0:
         sketchcable=None
         sketchcable=generateprofilWingsKey(body,
@@ -547,7 +547,7 @@ def generateWingtmp(name):
                                             float(FreeCAD.ActiveDocument.AirPlaneData.getContents('E28')),
                                             number_of_panels,sketchcable)
     # Teton
-    if FreeCAD.ActiveDocument.AirPlaneData.getContents('B29')<>"":
+    if FreeCAD.ActiveDocument.AirPlaneData.getContents('B29')!="":
      if i==0:
         sketchcteton=None
         sketchcteton=generateprofilWingsKey(body,
@@ -567,7 +567,7 @@ def generateWingtmp(name):
 
     
     
-    if i<>number_of_panels*2-2 :
+    if i!=number_of_panels*2-2 :
         delta_emplature=delta_saumon
         delta_saumon=-float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B') + i/2+1)+str(16)))
     else :
