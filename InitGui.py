@@ -21,10 +21,19 @@
 #------------------------------------------------------
 #AirPlaneDesign 
 #------------------------------------------------------
+import path_locator
+
+smWBpath = os.path.dirname(path_locator.__file__)
+smWB_icons_path =  os.path.join( smWBpath, 'resources', 'icons')
+global main_smWB_Icon
+main_smWB_Icon = os.path.join( smWB_icons_path , 'appicon.svg')
+
 class AirPlaneDesignWorkbench(Workbench):
-    MenuText = "AirPlaneDesign"
-    ToolTip = "A description of my workbench"
-    #Icon = """paste here the contents of a 16x16 xpm icon"""
+    def __init__(self):
+     self.__class__.Icon = main_smWB_Icon# ':/AirPlaneDesign/resources/icons/favicon.svg'
+     self.__class__.MenuText = "AirPlaneDesign"
+     self.__class__.ToolTip = "A description of my workbench"
+     #Icon = """paste here the contents of a 16x16 xpm icon"""
 
     def Initialize(self):
         #"This function is executed when FreeCAD starts"
