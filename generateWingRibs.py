@@ -100,7 +100,7 @@ def generateWingRibs(name):
 
 class SelectObjectUI():
     def __init__(self):
-        path_to_ui = FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/ressources/selectobject.ui'
+        path_to_ui = FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/resources/selectobject.ui'
         self.form = FreeCADGui.PySideUic.loadUi(path_to_ui)
         for obj in FreeCAD.ActiveDocument.Objects:
             self.form.listWidget.addItem(obj.Label)
