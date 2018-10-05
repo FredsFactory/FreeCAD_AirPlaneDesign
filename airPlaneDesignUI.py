@@ -18,7 +18,7 @@ from PySide import QtCore, QtGui
 
 class EditorPanel():
     def __init__(self):
-        path_to_ui = FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/ressources/dialog.ui'
+        path_to_ui = FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/resources/dialog.ui'
         self.form = FreeCADGui.PySideUic.loadUi(path_to_ui)
         self.form.airPlaneName.setText("nom")
     
