@@ -15,7 +15,7 @@ After installation a new menu appears:
 1. Wizard: do not use this yet! (UI under heavy development!)  
 2. Init New Plane: initialize a new document, with a sheet with many parameters  
 3. Generate Wing: generate the wing based on the parameters in the sheet AirPlaneData  
-4. Generate Wing Rib: under development
+4. Generate Wing Rib: before using the function make a clone of the wing and apply the function on this clone. The parameters are currently in the "generateWingRibs.py" program they are being outsourced to the sheet. Under development
 
 Ability to choose the:  
 * decomposition of the wing panel: cell B3  
