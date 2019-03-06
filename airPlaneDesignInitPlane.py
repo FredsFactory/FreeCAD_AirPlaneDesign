@@ -103,7 +103,7 @@ def airPlaneDesignInitPlane(filename):
  FreeCAD.ActiveDocument.AirPlaneData.set('E8', '-')
  FreeCAD.ActiveDocument.AirPlaneData.set('F8', '-')
 
- FreeCAD.ActiveDocument.AirPlaneData.set('A10', 'Affectation profil/paneau')
+ FreeCAD.ActiveDocument.AirPlaneData.set('A10', 'link profil/panel')
  FreeCAD.ActiveDocument.AirPlaneData.set('B10', 'Panel 1')
  FreeCAD.ActiveDocument.AirPlaneData.set('C10', 'Panel 2')
  FreeCAD.ActiveDocument.AirPlaneData.set('D10', 'Panel 3')
@@ -127,7 +127,7 @@ def airPlaneDesignInitPlane(filename):
  FreeCAD.ActiveDocument.AirPlaneData.set('D13', '0')
  FreeCAD.ActiveDocument.AirPlaneData.set('E13', '0')
 
- FreeCAD.ActiveDocument.AirPlaneData.set('A15', 'longueur_panneau(mm)')
+ FreeCAD.ActiveDocument.AirPlaneData.set('A15', 'longueur_panneau(mm)/panel length')
  FreeCAD.ActiveDocument.AirPlaneData.set('B15', '100')
  FreeCAD.ActiveDocument.AirPlaneData.set('C15', '700')
  FreeCAD.ActiveDocument.AirPlaneData.set('D15', '500')
@@ -151,7 +151,7 @@ def airPlaneDesignInitPlane(filename):
  FreeCAD.ActiveDocument.AirPlaneData.setAlias('F16', 'd5')
 
 
- FreeCAD.ActiveDocument.AirPlaneData.set('A17', 'Corde emplature')
+ FreeCAD.ActiveDocument.AirPlaneData.set('A17', 'Corde emplature/wing root length')
  FreeCAD.ActiveDocument.AirPlaneData.set('B17', '463')
  FreeCAD.ActiveDocument.AirPlaneData.set('C17', '300')
  FreeCAD.ActiveDocument.AirPlaneData.set('D17', '250')
@@ -163,7 +163,7 @@ def airPlaneDesignInitPlane(filename):
  FreeCAD.ActiveDocument.AirPlaneData.setAlias('F17', 'ce5')
  
 
- FreeCAD.ActiveDocument.AirPlaneData.set('A18', 'Corde saumon')
+ FreeCAD.ActiveDocument.AirPlaneData.set('A18', 'Corde saumon/wingtip length')
  FreeCAD.ActiveDocument.AirPlaneData.set('B18', '300')#
  FreeCAD.ActiveDocument.AirPlaneData.set('C18', '250')
  FreeCAD.ActiveDocument.AirPlaneData.set('D18', '180')
@@ -208,7 +208,7 @@ def airPlaneDesignInitPlane(filename):
  FreeCAD.ActiveDocument.AirPlaneData.setAlias('E21', 'rot_e004_z')
  FreeCAD.ActiveDocument.AirPlaneData.setAlias('F21', 'rot_e005_z')
 
- FreeCAD.ActiveDocument.AirPlaneData.set('A22', 'Decalage Hauteur')
+ FreeCAD.ActiveDocument.AirPlaneData.set('A22', 'Decalage Hauteur/Height offset')
  FreeCAD.ActiveDocument.AirPlaneData.set('B22', '')
  FreeCAD.ActiveDocument.AirPlaneData.set('C22', ' ')
  FreeCAD.ActiveDocument.AirPlaneData.set('D22', ' ')
@@ -232,7 +232,7 @@ def airPlaneDesignInitPlane(filename):
  FreeCAD.ActiveDocument.AirPlaneData.set('D26', 'Y')
  FreeCAD.ActiveDocument.AirPlaneData.set('E26', 'Z')
  FreeCAD.ActiveDocument.AirPlaneData.set('F26', 'Radius')
- FreeCAD.ActiveDocument.AirPlaneData.set('G26', 'Longueur')
+ FreeCAD.ActiveDocument.AirPlaneData.set('G26', 'Longueur/length')
  FreeCAD.ActiveDocument.AirPlaneData.set('H26', 'AngleX')
  FreeCAD.ActiveDocument.AirPlaneData.set('I26', 'AngleY')
  FreeCAD.ActiveDocument.AirPlaneData.set('J26', 'AngleZ')
@@ -289,8 +289,8 @@ def airPlaneDesignInitPlane(filename):
  FreeCAD.ActiveDocument.AirPlaneData.set('E31', '3')
  FreeCAD.ActiveDocument.AirPlaneData.set('F31', '30')
 
- FreeCAD.ActiveDocument.AirPlaneData.set('A43', 'Materiaux')
- FreeCAD.ActiveDocument.AirPlaneData.set('A44', 'Epaisseur CTP 1mm')
+ FreeCAD.ActiveDocument.AirPlaneData.set('A43', 'Materiaux/materials')
+ FreeCAD.ActiveDocument.AirPlaneData.set('A44', 'Epaisseur CTP 1mm/thickness plywood 1 mm')
  FreeCAD.ActiveDocument.AirPlaneData.set('A45', 'Epaisseur CTP 2mm')
  FreeCAD.ActiveDocument.AirPlaneData.set('A46', 'Epaisseur CTP 3mm')
  FreeCAD.ActiveDocument.AirPlaneData.set('A47', 'Epaisseur CTP 4mm')
