@@ -280,7 +280,8 @@ def generateWing(name):
       obj_nervure_ref=Draft.scale(FreeCAD.ActiveDocument.ActiveObject,delta=FreeCAD.Vector(scalefactor,scalefactor,scalefactor),center=FreeCAD.Vector(0,0,0),legacy=True)
 
       obj_nervure_ref.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Vector(0,0,0),0)
-      FreeCAD.ActiveDocument.removeObject("DWire")
+      #FreeCAD.ActiveDocument.removeObject("DWire")
+      FreeCAD.ActiveDocument.removeObject("Wire")
       FreeCAD.Gui.ActiveDocument.ActiveObject.Visibility=False
       profilname= FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B') + number_profil)+str(7))
 
