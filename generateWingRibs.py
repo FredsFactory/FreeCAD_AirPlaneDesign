@@ -40,6 +40,7 @@ anglenervureX=[95.5,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,
 #------------------------------------------------------------------
 def generateWingRibs(name):
  b=Draft.clone(FreeCAD.ActiveDocument.getObjectsByLabel(name))#(FreeCAD.ActiveDocument.wing_r)
+ print( "BoundBox")
  xmax=b.Shape.BoundBox.XMax
  xmin=b.Shape.BoundBox.XMin
  ymax=b.Shape.BoundBox.YMax
@@ -48,6 +49,15 @@ def generateWingRibs(name):
  zmin=b.Shape.BoundBox.ZMin
  xlength=b.Shape.BoundBox.XLength
  zlength=b.Shape.BoundBox.ZLength
+ xmax=200
+ xmin=-200
+ ymax=200
+ ymin=-200
+ zmax=200
+ zmin=-200
+ xlength=1000
+ zlength=1000
+ 
  
  pos=-distanceinternervure[0]
  for i in range(0,32,1):#25,1):
@@ -55,12 +65,12 @@ def generateWingRibs(name):
     p1.Rotation.Q=(0.0,1.0,0.0,0.0)
     p1.Base=FreeCAD.Vector(xmin,zmin,0.0)
     Plan_coupe = Draft.makeRectangle(xlength,zlength,placement=p1,face=True,support=None)
-    Plan_coupe.Placement=FreeCAD.Placement(FreeCAD.Vector(xmin,long(pos),zmin),FreeCAD.Rotation(FreeCAD.Vector(1,0,0),anglenervureX[i]))
+    Plan_coupe.Placement=FreeCAD.Placement(FreeCAD.Vector(xmin,pos,zmin),FreeCAD.Rotation(FreeCAD.Vector(1,0,0),anglenervureX[i]))
     FreeCAD.ActiveDocument.recompute()
     col=[(1.5,0.5,0.5)]
     FreeCAD.ActiveDocument.Rectangle.ViewObject.DiffuseColor=col
     FreeCAD.ActiveDocument.Rectangle.ViewObject.Transparency=90
-    Plan_coupe.Label="PlanDeCoupe_"+str(-long(pos))+"mm"
+    Plan_coupe.Label="PlanDeCoupe_"+str(-(pos))+"mm"
     
     f = FreeCAD.activeDocument().addObject('Part::Extrusion', 'Extrude')
     #f = App.getDocument('AirPlane').getObject('Extrude')
