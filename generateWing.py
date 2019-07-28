@@ -277,8 +277,11 @@ def generateWing(name):
       importAirfoilDAT.insert(dat_file[number_profil],FreeCAD.ActiveDocument.Name)
       points = FreeCAD.ActiveDocument.ActiveObject.Points
       Draft.makeBSpline(points, closed=True)
+      #Version 0.17 et 0.18
       obj_nervure_ref=Draft.scale(FreeCAD.ActiveDocument.ActiveObject,delta=FreeCAD.Vector(scalefactor,scalefactor,scalefactor),center=FreeCAD.Vector(0,0,0),legacy=True)
+      #Version 0.19  obj_nervure_ref=Draft.scale(FreeCAD.ActiveDocument.ActiveObject,scale=FreeCAD.Vector(scalefactor,scalefactor,scalefactor),center=FreeCAD.Vector(0,0,0),copy=True)
 
+#Draft.scale([FreeCAD.ActiveDocument.BSpline],scale=FreeCAD.Vector(1.0,1.0,1.0),center=FreeCAD.Vector(10.0,10.0,10.0),copy=False)
       obj_nervure_ref.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Vector(0,0,0),0)
       #FreeCAD.ActiveDocument.removeObject("DWire")
       FreeCAD.ActiveDocument.removeObject("Wire")
@@ -443,19 +446,20 @@ def generateWing(name):
   delta_emplature=0
   delta_saumon=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B'))+str(16)))
   hauteur_bordattaque=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('F'))+str(36)))
+  
   profondeur_bordattaque=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('G'))+str(36)))
  
   for i in range(0,number_of_panels*2,2):
-   generateprofilBA(panel[(i/2)],hauteur_bordattaque, profondeur_bordattaque, delta_saumon-delta_emplature, 0,i)
+   generateprofilBA(panel[round((i/2))],hauteur_bordattaque, profondeur_bordattaque, delta_saumon-delta_emplature, 0,i)
    col=[(0.2,0.4,0.6)]
-   panel[(i/2)].ViewObject.DiffuseColor=col
-   panel[(i/2)].ViewObject.Transparency=70
+   panel[round((i/2))].ViewObject.DiffuseColor=col
+   panel[round(i/2)].ViewObject.Transparency=70
    if (i!=int(number_of_panels*2-2)) :
     delta_emplature=delta_saumon
-    delta_saumon=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B') + i/2+1)+str(16)))
+    delta_saumon=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B') + round(i/2+1))+str(16)))
    else :
     delta_emplature=delta_saumon
-    delta_saumon=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B') + i/2)+str(16)))
+    delta_saumon=float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B') + round(i/2))+str(16)))
  else :
   print ("B36 => No, no BA")
 
@@ -511,14 +515,14 @@ def generateWing(name):
   for i in range(0,number_of_panels*2,2):
    if i==0 :
     sketchcleaile=None
-    sketchcleaile=generateprofilWingsKey(panel[(i/2)],cleaile_X, cleaile_Y, cleaile_long, cleaile_radius, number_of_panels,sketchcleaile)
+    sketchcleaile=generateprofilWingsKey(panel[round(i/2)],cleaile_X, cleaile_Y, cleaile_long, cleaile_radius, number_of_panels,sketchcleaile)
     print ("creation clef d aile")
    else :
     print ("les autres panels")
-    sketchcleaile=generateprofilWingsKey(panel[(i/2)],cleaile_X, cleaile_Y, cleaile_long, cleaile_radius, number_of_panels,sketchcleaile)
+    sketchcleaile=generateprofilWingsKey(panel[round(i/2)],cleaile_X, cleaile_Y, cleaile_long, cleaile_radius, number_of_panels,sketchcleaile)
    col=[(0.2,0.4,0.6)]
-   panel[(i/2)].ViewObject.DiffuseColor=col
-   panel[(i/2)].ViewObject.Transparency=70
+   panel[round(i/2)].ViewObject.DiffuseColor=col
+   panel[round(i/2)].ViewObject.Transparency=70
  else:
   print ("B27 => No, Pas de clef d aile")
 
