@@ -57,7 +57,7 @@ def airPlaneDesignInitPlane(filename):
  FreeCAD.ActiveDocument.AirPlaneData.setStyle('A1:A63', 'bold', 'add')
  FreeCAD.ActiveDocument.AirPlaneData.setStyle('A6:E6', 'italic', 'add')
  FreeCAD.ActiveDocument.AirPlaneData.setStyle('A6:E6', 'bold', 'add')
- FreeCAD.ActiveDocument.AirPlaneData.setColumnWidth('A', 200)
+ FreeCAD.ActiveDocument.AirPlaneData.setColumnWidth('A', 300)
 
  FreeCAD.ActiveDocument.AirPlaneData.set('A1', 'Name')
  FreeCAD.ActiveDocument.AirPlaneData.set('B1', 'AirPlane')
@@ -292,7 +292,7 @@ def airPlaneDesignInitPlane(filename):
  FreeCAD.ActiveDocument.AirPlaneData.set('F31', '30')
 
  FreeCAD.activeDocument().addObject('Spreadsheet::Sheet','AirPlaneRibs')
- FreeCAD.ActiveDocument.AirPlaneRibs.setColumnWidth('A', 200)
+ FreeCAD.ActiveDocument.AirPlaneRibs.setColumnWidth('A', 300)
  
  FreeCAD.ActiveDocument.AirPlaneRibs.set('A01', 'Nbre Nerv./Ribs Number')
  FreeCAD.ActiveDocument.AirPlaneRibs.set('B01', '5')
@@ -401,7 +401,7 @@ def airPlaneDesignInitPlane(filename):
  FreeCAD.ActiveDocument.AirPlaneRibs.set('AH62','90')
  FreeCAD.ActiveDocument.recompute()
  FreeCAD.activeDocument().addObject('Spreadsheet::Sheet','AirPlaneMaterials')
- FreeCAD.ActiveDocument.AirPlaneMaterials.setColumnWidth('A', 200)
+ FreeCAD.ActiveDocument.AirPlaneMaterials.setColumnWidth('A', 300)
 
  FreeCAD.ActiveDocument.AirPlaneMaterials.set('A01', 'Materiaux/materials')
  FreeCAD.ActiveDocument.AirPlaneMaterials.set('A02', 'Epaisseur CTP/thickness plywood 1 mm')
