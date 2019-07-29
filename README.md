@@ -25,7 +25,7 @@ Ability to choose the:
 * Profiles you want to import: B6 (.dat format), two profiles are installed with the workbench (eppler 205 and eppler 207); If you want use another profile simply download it in to the `wingribprofil/` folder
 
 # Feedback
-Feedback can be provided via the [discussion thread]() on the FreeCAD forums
+Feedback can be provided via the https://forum.freecadweb.org/viewtopic.php?f=12&t=38215 on the FreeCAD forums
 
 # Release Notes
 V0.002 29 July 2019: 
