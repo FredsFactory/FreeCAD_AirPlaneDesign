@@ -5,7 +5,7 @@ FreeCAD Air Plane Design WorkBench for FreeCAD >=v0.17
 
 ![](https://github.com/FredsFactory/FreeCAD_AirPlaneDesign/blob/master/AirplaneDesign001.png)
 
-![](https://github.com/FredsFactory/FreeCAD_AirPlaneDesign/blob/master/AirplaneDesign002.png)
+![](https://github.com/FredsFactory/FreeCAD_AirPlaneDesign/blob/master/AirPlaneDesign002.png)
 
 ![](https://github.com/FredsFactory/FreeCAD_AirPlaneDesign/blob/master/AirPlaneDesignWorkbench.png)
 
@@ -28,4 +28,10 @@ Ability to choose the:
 Feedback can be provided via the [discussion thread]() on the FreeCAD forums
 
 # Release Notes
+V0.002 29 July 2019: 
+-compatible with V0.18, 
+-split the inital sheet in 3 sheet
+-ribs is now managed as a parameter : the list of ribs is now managed as a parameter in the table :"AirPlaneRibs" : position, length & rotation.
+-new picture in readme fil to explain some parameters.
+
 V0.001 11 July 2018: Initial version
