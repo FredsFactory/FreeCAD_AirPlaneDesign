@@ -30,7 +30,7 @@ profil_construction_aile=[]
 panel=[]
 wing_right=[]
 couple=[]
-distanceinternervure=[-3,13.07+44.18,42.86,43.66,59.67,58.07,57.90,58.14,57.39,57.84,58.37,57.47,57.92,57.95,57.84,57.38,58.04,58.28,57.99,57.84,54.80,65.02,58.41,57.80,58.33,57.88,58.59,58.78,56.98,63.74,52.07,52.01,46.30 ] #premiere nervure -13.07
+distanceinternervure=[]#[-3,13.07+44.18,42.86,43.66,59.67,58.07,57.90,58.14,57.39,57.84,58.37,57.47,57.92,57.95,57.84,57.38,58.04,58.28,57.99,57.84,54.80,65.02,58.41,57.80,58.33,57.88,58.59,58.78,56.98,63.74,52.07,52.01,46.30 ] #premiere nervure -13.07
 epaisseurnervure=[5,5,5,5,5,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2,2,2,2,2 ]
 anglenervureX=[95.5,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90]
 
@@ -39,8 +39,7 @@ anglenervureX=[95.5,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,
 # Construction des plans de decoupe
 #------------------------------------------------------------------
 def generateWingRibs(name):
- b=Draft.clone(FreeCAD.ActiveDocument.getObjectsByLabel(name))#(FreeCAD.ActiveDocument.wing_r)
- print( "BoundBox")
+ b=Draft.clone(FreeCAD.ActiveDocument.getObjectsByLabel(name))
  xmax=b.Shape.BoundBox.XMax
  xmin=b.Shape.BoundBox.XMin
  ymax=b.Shape.BoundBox.YMax
@@ -59,8 +58,24 @@ def generateWingRibs(name):
  zlength=1000
  
  
+ aaa=chr(ord('B')+1)+str(2)
+ aaaa=float(FreeCAD.ActiveDocument.AirPlaneRibs.getContents(aaa))
+ 
+ 
+ print("lecture tableau")
+ print(aaa)
+ print(aaaa)
+ ribsnumber=int(FreeCAD.ActiveDocument.AirPlaneRibs.getContents('B1'))
+ #init ribs position
+ distanceinternervure.append(float(FreeCAD.ActiveDocument.AirPlaneRibs.getContents(chr(ord('B'))+str(2))))
+ for i in range(1,ribsnumber,1):
+    distanceinternervure.append(float(FreeCAD.ActiveDocument.AirPlaneRibs.getContents(chr(ord('B')+i)+str(2))))
+ 
  pos=-distanceinternervure[0]
- for i in range(0,32,1):#25,1):
+ print(ribsnumber)
+ for i in range(0,ribsnumber,1):#
+    print("Creation nervure")
+    print(i)
     p1=FreeCAD.Placement()
     p1.Rotation.Q=(0.0,1.0,0.0,0.0)
     p1.Base=FreeCAD.Vector(xmin,zmin,0.0)
@@ -70,7 +85,7 @@ def generateWingRibs(name):
     col=[(1.5,0.5,0.5)]
     FreeCAD.ActiveDocument.Rectangle.ViewObject.DiffuseColor=col
     FreeCAD.ActiveDocument.Rectangle.ViewObject.Transparency=90
-    Plan_coupe.Label="PlanDeCoupe_"+str(-(pos))+"mm"
+    Plan_coupe.Label="PlanDeCoupe_"+str(-pos)+"mm"
     
     f = FreeCAD.activeDocument().addObject('Part::Extrusion', 'Extrude')
     #f = App.getDocument('AirPlane').getObject('Extrude')
@@ -93,17 +108,10 @@ def generateWingRibs(name):
     a=FreeCAD.activeDocument().addObject("Part::MultiCommon","Nerv_")#"Common")
     #a.Shapes = [FreeCAD.activeDocument().Rectangle,b,]#FreeCAD.activeDocument().Clone,]
     a.Shapes = [b,f,]#Plan_coupe,]
-    a.Label="Nerv_"+str(pos)+"mm"
+    a.Label="Nerv_"+str(-pos)+"mm"
+    if i<ribsnumber-1 :
+       pos=pos-distanceinternervure[i+1]
     
-    pos=pos-distanceinternervure[i+1]
-    print (pos)
-    print (i)
-    
-    #a.Label="Nerv"+str(i)
-    #FreeCAD.ActiveDocument().Rectangle.ViewObject.Visibility=False
-    #   FreeCAD.ActiveDocument().Clone.Visibility=False
-    #   FreeCAD.ActiveDocument.Common.ShapeColor=Gui.ActiveDocument.Rectangle.ShapeColor
-    #   FreeCAD.ActiveDocument.Common.DisplayMode=Gui.ActiveDocument.Rectangle.DisplayMode
     couple.append(a)
     FreeCAD.ActiveDocument.recompute()
  return
