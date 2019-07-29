@@ -302,7 +302,7 @@ def airPlaneDesignInitPlane(filename):
  FreeCAD.ActiveDocument.AirPlaneRibs.set('B02','-3')
  FreeCAD.ActiveDocument.AirPlaneRibs.set('B03','5')
  FreeCAD.ActiveDocument.AirPlaneRibs.set('B04','95.5')
- FreeCAD.ActiveDocument.AirPlaneRibs.set('C02','13.07+44.18')
+ FreeCAD.ActiveDocument.AirPlaneRibs.set('C02','57')#13.07+44.18')
  FreeCAD.ActiveDocument.AirPlaneRibs.set('C03','5')
  FreeCAD.ActiveDocument.AirPlaneRibs.set('C04','90')
  FreeCAD.ActiveDocument.AirPlaneRibs.set('D02','42.86')
