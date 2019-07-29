@@ -30,24 +30,36 @@ profil_construction_aile=[]
 panel=[]
 wing_right=[]
 couple=[]
-distanceinternervure=[]#[-3,13.07+44.18,42.86,43.66,59.67,58.07,57.90,58.14,57.39,57.84,58.37,57.47,57.92,57.95,57.84,57.38,58.04,58.28,57.99,57.84,54.80,65.02,58.41,57.80,58.33,57.88,58.59,58.78,56.98,63.74,52.07,52.01,46.30 ] #premiere nervure -13.07
-epaisseurnervure=[5,5,5,5,5,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2,2,2,2,2 ]
-anglenervureX=[95.5,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90]
+distanceinternervure=[]
+#[-3,13.07+44.18,42.86,43.66,59.67,58.07,57.90,58.14,57.39,57.84,58.37,57.47,57.92,57.95,57.84,57.38,58.04,58.28,57.99,57.84,54.80,65.02,58.41,57.80,58.33,57.88,58.59,58.78,56.98,63.74,52.07,52.01,46.30 ] #premiere nervure -13.07
+epaisseurnervure=[]
+#[5,5,5,5,5,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2,2,2,2,2 ]
+anglenervureX=[]
+#[95.5,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90]
 
 
 #------------------------------------------------------------------
 # Construction des plans de decoupe
 #------------------------------------------------------------------
 def generateWingRibs(name):
- b=Draft.clone(FreeCAD.ActiveDocument.getObjectsByLabel(name))
- xmax=b.Shape.BoundBox.XMax
- xmin=b.Shape.BoundBox.XMin
- ymax=b.Shape.BoundBox.YMax
- ymin=b.Shape.BoundBox.YMin
- zmax=b.Shape.BoundBox.ZMax
- zmin=b.Shape.BoundBox.ZMin
- xlength=b.Shape.BoundBox.XLength
- zlength=b.Shape.BoundBox.ZLength
+ obj=Draft.clone(FreeCAD.ActiveDocument.getObjectsByLabel(name))
+ 
+ xmax=obj.Shape.BoundBox.XMax
+ xmin=obj.Shape.BoundBox.XMin
+ ymax=obj.Shape.BoundBox.YMax
+ ymin=obj.Shape.BoundBox.YMin
+ zmax=obj.Shape.BoundBox.ZMax
+ zmin=obj.Shape.BoundBox.ZMin
+ xlength=obj.Shape.BoundBox.XLength
+ zlength=obj.Shape.BoundBox.ZLength
+ print(xmax)
+ print(xmin)
+ 
+ print(ymax)
+ print(ymin)
+ 
+ print(xlength)
+ print(zlength)
  xmax=200
  xmin=-200
  ymax=200
@@ -66,11 +78,19 @@ def generateWingRibs(name):
  print(aaa)
  print(aaaa)
  ribsnumber=int(FreeCAD.ActiveDocument.AirPlaneRibs.getContents('B1'))
- #init ribs position
- distanceinternervure.append(float(FreeCAD.ActiveDocument.AirPlaneRibs.getContents(chr(ord('B'))+str(2))))
- for i in range(1,ribsnumber,1):
-    distanceinternervure.append(float(FreeCAD.ActiveDocument.AirPlaneRibs.getContents(chr(ord('B')+i)+str(2))))
- 
+ # init ribs position
+ print("ribsnumber:"+str(ribsnumber))
+ for i in range(0,ribsnumber,1):
+    print("nombre:"+str(i))
+    if i<25 :
+      distanceinternervure.append(float(FreeCAD.ActiveDocument.AirPlaneRibs.getContents(chr(ord('B')+i)+str(2))))
+      epaisseurnervure.append(float(FreeCAD.ActiveDocument.AirPlaneRibs.getContents(chr(ord('B')+i)+str(3))))
+      anglenervureX.append(float(FreeCAD.ActiveDocument.AirPlaneRibs.getContents(chr(ord('B')+i)+str(4))))
+    else :
+      distanceinternervure.append(float(FreeCAD.ActiveDocument.AirPlaneRibs.getContents('A'+chr(ord('A')+i-25)+str(2))))
+      epaisseurnervure.append(float(FreeCAD.ActiveDocument.AirPlaneRibs.getContents('A'+chr(ord('A')+i-25)+str(3))))
+      anglenervureX.append(float(FreeCAD.ActiveDocument.AirPlaneRibs.getContents('A'+chr(ord('A')+i-25)+str(4))))
+ #produce ribs
  pos=-distanceinternervure[0]
  print(ribsnumber)
  for i in range(0,ribsnumber,1):#
@@ -85,7 +105,7 @@ def generateWingRibs(name):
     col=[(1.5,0.5,0.5)]
     FreeCAD.ActiveDocument.Rectangle.ViewObject.DiffuseColor=col
     FreeCAD.ActiveDocument.Rectangle.ViewObject.Transparency=90
-    Plan_coupe.Label="PlanDeCoupe_"+str(-pos)+"mm"
+    Plan_coupe.Label="PlanDeCoupe_"+str(-round(pos,2))+"mm"
     
     f = FreeCAD.activeDocument().addObject('Part::Extrusion', 'Extrude')
     #f = App.getDocument('AirPlane').getObject('Extrude')
@@ -105,10 +125,10 @@ def generateWingRibs(name):
     f.Base.ViewObject.hide()
     FreeCAD.ActiveDocument.recompute()
 
-    a=FreeCAD.activeDocument().addObject("Part::MultiCommon","Nerv_")#"Common")
+    a=FreeCAD.activeDocument().addObject("Part::MultiCommon","Nerv_")
     #a.Shapes = [FreeCAD.activeDocument().Rectangle,b,]#FreeCAD.activeDocument().Clone,]
-    a.Shapes = [b,f,]#Plan_coupe,]
-    a.Label="Nerv_"+str(-pos)+"mm"
+    a.Shapes = [obj,f,]
+    a.Label="Nerv_"+str(-round(pos,2))+"mm"
     if i<ribsnumber-1 :
        pos=pos-distanceinternervure[i+1]
     
