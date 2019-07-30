@@ -7,6 +7,8 @@ FreeCAD Air Plane Design WorkBench for FreeCAD >=v0.17
 
 ![](https://github.com/FredsFactory/FreeCAD_AirPlaneDesign/blob/master/AirPlaneDesign002.png)
 
+![](https://github.com/FredsFactory/FreeCAD_AirPlaneDesign/blob/master/AirPlaneDesign003.png)
+
 ![](https://github.com/FredsFactory/FreeCAD_AirPlaneDesign/blob/master/AirPlaneDesignWorkbench.png)
 
 # Installation
