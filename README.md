@@ -29,9 +29,9 @@ Feedback can be provided via the https://forum.freecadweb.org/viewtopic.php?f=12
 
 # Release Notes
 V0.002 29 July 2019: 
-*compatible with V0.18 tested on PC windows 10 & MacOS, 
-*split the inital sheet in 3 sheet
-*ribs is now managed as a parameter : the list of ribs is now managed as a parameter in the table :"AirPlaneRibs" : position, length & rotation.
-*new picture in readme fil to explain some parameters.
+* compatible with V0.18 tested on PC windows 10 & MacOS, 
+* split the inital sheet in 3 sheet
+* ribs is now managed as a parameter : the list of ribs is now managed as a parameter in the table :"AirPlaneRibs" : position, length & rotation.
+* new picture in readme fil to explain some parameters.
 
 V0.001 11 July 2018: Initial version
