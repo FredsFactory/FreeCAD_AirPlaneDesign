@@ -279,7 +279,8 @@ def generateWing(name):
       Draft.makeBSpline(points, closed=True)
       #Version 0.17 et 0.18
       obj_nervure_ref=Draft.scale(FreeCAD.ActiveDocument.ActiveObject,delta=FreeCAD.Vector(scalefactor,scalefactor,scalefactor),center=FreeCAD.Vector(0,0,0),legacy=True)
-      #Version 0.19  obj_nervure_ref=Draft.scale(FreeCAD.ActiveDocument.ActiveObject,scale=FreeCAD.Vector(scalefactor,scalefactor,scalefactor),center=FreeCAD.Vector(0,0,0),copy=True)
+      #Version 0.19
+      #obj_nervure_ref=Draft.scale(FreeCAD.ActiveDocument.ActiveObject,scale=FreeCAD.Vector(scalefactor,scalefactor,scalefactor),center=FreeCAD.Vector(0,0,0),copy=True)
 
 #Draft.scale([FreeCAD.ActiveDocument.BSpline],scale=FreeCAD.Vector(1.0,1.0,1.0),center=FreeCAD.Vector(10.0,10.0,10.0),copy=False)
       obj_nervure_ref.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Vector(0,0,0),0)
@@ -343,38 +344,39 @@ def generateWing(name):
    group.addObject(obj_clone_nervure)
    FreeCAD.ActiveDocument.recompute()
    if i==0:
-    obj_clone_nervure_sketch.Placement = FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(1,0,0),4.5))
+    #obj_clone_nervure_sketch.Placement = FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(1,0,0),4.5))
+    #obj_clone_nervure_sketch.Placement = FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(1,0,0),0))
     obj_clone_nervure_sketch.setExpression('Placement.Rotation.Angle', u'AirPlaneData.rot_e001_z')
     #obj_clone_nervure_sketch.Placement = FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(1,0,0),u'AirPlaneData.rot_e001_z'))
     #obj_clone_nervure_sketch.Placement=App.Placement(App.Vector(0,0,0), App.Rotation(10,20,30), App.Vector(0,0,0))
 
     obj_clone_nervure_sketch.setExpression('Placement.Rotation.Angle', u'AirPlaneData.rot_e001_x')
-    obj_clone_nervure_sketch.setExpression('Placement.Base.y', u'-AirPlaneData.rot_e001_h')
+    obj_clone_nervure_sketch.setExpression('Placement.Base.y', u'-AirPlaneData.e001_h')
    else:
     if i==1:
      obj_clone_nervure_sketch.setExpression('Placement.Base.z', u'AirPlaneData.l1')
      obj_clone_nervure_sketch.setExpression('Placement.Base.x', u'-AirPlaneData.d1')
-     obj_clone_nervure_sketch.setExpression('Placement.Base.y', u'-AirPlaneData.rot_e002_h')
+     obj_clone_nervure_sketch.setExpression('Placement.Base.y', u'-AirPlaneData.e002_h')
     else :
      if i==2:
       obj_clone_nervure_sketch.setExpression('Placement.Base.z', u'AirPlaneData.l1+ AirPlaneData.l2')
       obj_clone_nervure_sketch.setExpression('Placement.Base.x', u'- AirPlaneData.d2')
-      obj_clone_nervure_sketch.setExpression('Placement.Base.y', u'-AirPlaneData.rot_e002_h')
+      obj_clone_nervure_sketch.setExpression('Placement.Base.y', u'-AirPlaneData.e002_h')
      else :
       if i==3:
        obj_clone_nervure_sketch.setExpression('Placement.Base.z', u'AirPlaneData.l1+ AirPlaneData.l2 + AirPlaneData.l3')
        obj_clone_nervure_sketch.setExpression('Placement.Base.x', u' - AirPlaneData.d3')
-       obj_clone_nervure_sketch.setExpression('Placement.Base.y', u'-AirPlaneData.rot_e003_h')
+       obj_clone_nervure_sketch.setExpression('Placement.Base.y', u'-AirPlaneData.e003_h')
       else:
        if i==4:
         obj_clone_nervure_sketch.setExpression('Placement.Base.z', u'AirPlaneData.l1+ AirPlaneData.l2 + AirPlaneData.l3 +  AirPlaneData.l4')
         obj_clone_nervure_sketch.setExpression('Placement.Base.x', u'- AirPlaneData.d4')
-        obj_clone_nervure_sketch.setExpression('Placement.Base.y', u'-AirPlaneData.rot_e004_h')
+        obj_clone_nervure_sketch.setExpression('Placement.Base.y', u'-AirPlaneData.e004_h')
        else:
         if i==5:
          obj_clone_nervure_sketch.setExpression('Placement.Base.z', u'AirPlaneData.l1+ AirPlaneData.l2 + AirPlaneData.l3 + AirPlaneData.l4 + AirPlaneData.l5')
          obj_clone_nervure_sketch.setExpression('Placement.Base.x', u'- AirPlaneData.d5')
-         obj_clone_nervure_sketch.setExpression('Placement.Base.y', u'-AirPlaneData.rot_e005_h')
+         obj_clone_nervure_sketch.setExpression('Placement.Base.y', u'-AirPlaneData.e005_h')
 
    #association de la nervure au body
    FreeCAD.ActiveDocument.recompute()
@@ -401,22 +403,27 @@ def generateWing(name):
    if i==0:
     obj_clone_nervure_sketch.setExpression('Placement.Base.z', u'AirPlaneData.l1')
     obj_clone_nervure_sketch.setExpression('Placement.Base.x', u'-AirPlaneData.d1')
+    obj_clone_nervure_sketch.setExpression('Placement.Base.y', u'-AirPlaneData.e002_h')
    else :
     if i==1:
      obj_clone_nervure_sketch.setExpression('Placement.Base.z', u'AirPlaneData.l1+ AirPlaneData.l2')
      obj_clone_nervure_sketch.setExpression('Placement.Base.x', u' -AirPlaneData.d2')
+     obj_clone_nervure_sketch.setExpression('Placement.Base.y', u'-AirPlaneData.e003_h')
     else :
      if i==2:
       obj_clone_nervure_sketch.setExpression('Placement.Base.z', u'AirPlaneData.l1+ AirPlaneData.l2 + AirPlaneData.l3')
       obj_clone_nervure_sketch.setExpression('Placement.Base.x', u'-AirPlaneData.d3')
+      obj_clone_nervure_sketch.setExpression('Placement.Base.y', u'-AirPlaneData.e004_h')
      else:
       if i==3:
        obj_clone_nervure_sketch.setExpression('Placement.Base.z', u'AirPlaneData.l1+ AirPlaneData.l2 + AirPlaneData.l3 + AirPlaneData.l4')
        obj_clone_nervure_sketch.setExpression('Placement.Base.x', u' -AirPlaneData.d4')
+       obj_clone_nervure_sketch.setExpression('Placement.Base.y', u'-AirPlaneData.e005_h')
       else:
        if i==4:
         obj_clone_nervure_sketch.setExpression('Placement.Base.z', u'AirPlaneData.l1+ AirPlaneData.l2 + AirPlaneData.l3 + AirPlaneData.l4 + AirPlaneData.l5')
         obj_clone_nervure_sketch.setExpression('Placement.Base.x', u' -AirPlaneData.d5')
+        obj_clone_nervure_sketch.setExpression('Placement.Base.y', u'-AirPlaneData.e006_h')
    FreeCAD.ActiveDocument.recompute()
    #association de la nervure au body
    panel_wing.addObject(obj_clone_nervure_sketch)

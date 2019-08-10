@@ -37,19 +37,14 @@ class AirPlaneDesignWorkbench(Workbench):
 
     def Initialize(self):
         #"This function is executed when FreeCAD starts"
-        import airPlaneDesignInitPlane, generateWing,airPlaneDesignUI,generateWingRibs
+        import airPlaneDesignInitPlane,airPlaneRib,airPlanePanel,generateWing,airPlaneDesignUI,generateWingRibs,airPlaneWingUI
        #self.list 
-        commandslist= [
-            'airPlaneDesignEdit',
-            'airPlaneDesignInitPlane',
-            'generateWing',
-            'generateWingRibs'
-            ] 
-                    
+        commandslistV0= ['airPlaneDesignEdit','airPlaneDesignInitPlane','generateWing','generateWingRibs']
+        commandslistV1= ['airPlaneWingCreate','airPlaneDesingWRib','airPlaneDesingWPanel']
         #self.appendToolbar("My Commands",commandslist)#self.list) # creates a new toolbar with your commands
         
-        self.appendMenu('Air Plane Design',commandslist)#self.list) # creates a new menu
-        
+        self.appendMenu('Air Plane Design V0',commandslistV0+["Separator"] )#self.list) # creates a new menu
+        self.appendMenu('Air Plane Design V1',["Separator"] +commandslistV1+["Separator"])
         #self.appendMenu("Air PlaneDesign",commandslist)#self.list) # appends a submenu to an existing menu
 
     def Activated(self):

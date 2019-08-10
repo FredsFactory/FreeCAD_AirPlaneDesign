@@ -211,11 +211,18 @@ def airPlaneDesignInitPlane(filename):
  FreeCAD.ActiveDocument.AirPlaneData.setAlias('F21', 'rot_e005_z')
 
  FreeCAD.ActiveDocument.AirPlaneData.set('A22', 'Decalage Hauteur/Height offset')
- FreeCAD.ActiveDocument.AirPlaneData.set('B22', '')
- FreeCAD.ActiveDocument.AirPlaneData.set('C22', ' ')
- FreeCAD.ActiveDocument.AirPlaneData.set('D22', ' ')
- FreeCAD.ActiveDocument.AirPlaneData.set('E22', ' ')
-
+ FreeCAD.ActiveDocument.AirPlaneData.set('B22', '0')
+ FreeCAD.ActiveDocument.AirPlaneData.set('C22', '0')
+ FreeCAD.ActiveDocument.AirPlaneData.set('D22', '0')
+ FreeCAD.ActiveDocument.AirPlaneData.set('E22', '0')
+ 
+ FreeCAD.ActiveDocument.AirPlaneData.setAlias('B22', 'e001_h')
+ FreeCAD.ActiveDocument.AirPlaneData.setAlias('C22', 'e002_h')
+ FreeCAD.ActiveDocument.AirPlaneData.setAlias('D22', 'e003_h')
+ FreeCAD.ActiveDocument.AirPlaneData.setAlias('E22', 'e004_h')
+ FreeCAD.ActiveDocument.AirPlaneData.setAlias('F22', 'e005_h')
+ 
+ 
  FreeCAD.ActiveDocument.AirPlaneData.set('A23', 'Flap#')
  FreeCAD.ActiveDocument.AirPlaneData.set('B23', '-')
  FreeCAD.ActiveDocument.AirPlaneData.set('C23', '-')

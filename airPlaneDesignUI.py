@@ -21,7 +21,6 @@ class EditorPanel():
         path_to_ui = FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/resources/dialog.ui'
         self.form = FreeCADGui.PySideUic.loadUi(path_to_ui)
         self.form.airPlaneName.setText("nom")
-    
 
     def accept(self):
         pass
@@ -107,11 +106,10 @@ class EditorPanel():
         item=QtGui.QGraphicsPolygonItem(QtGui.QPolygonF( [
                                                           QtCore.QPointF( 100,  300),
                                                           QtCore.QPointF( 100,  300),
-                                                          QtCore.QPointF(    100+700,  300),
-                                                          QtCore.QPointF(    100+700,  0)
+                                                          QtCore.QPointF( 100+700,  300),
+                                                          QtCore.QPointF( 100+700,  0)
                                                           ]  ),)
         item = QtGui.QGraphicsEllipseItem(-60, -40, 60, 40)
-       
         scene.addItem(item)
         
     def updateGraphicsViewWings2(self):

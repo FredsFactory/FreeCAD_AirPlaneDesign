@@ -5,10 +5,6 @@ FreeCAD Air Plane Design WorkBench for FreeCAD >=v0.17
 
 ![](https://github.com/FredsFactory/FreeCAD_AirPlaneDesign/blob/master/AirplaneDesign001.png)
 
-![](https://github.com/FredsFactory/FreeCAD_AirPlaneDesign/blob/master/AirPlaneDesign002.png)
-
-![](https://github.com/FredsFactory/FreeCAD_AirPlaneDesign/blob/master/AirPlaneDesign003.png)
-
 ![](https://github.com/FredsFactory/FreeCAD_AirPlaneDesign/blob/master/AirPlaneDesignWorkbench.png)
 
 # Installation
@@ -27,13 +23,7 @@ Ability to choose the:
 * Profiles you want to import: B6 (.dat format), two profiles are installed with the workbench (eppler 205 and eppler 207); If you want use another profile simply download it in to the `wingribprofil/` folder
 
 # Feedback
-Feedback can be provided via the https://forum.freecadweb.org/viewtopic.php?f=12&t=38215 on the FreeCAD forums
+Feedback can be provided via the [discussion thread]() on the FreeCAD forums
 
 # Release Notes
-V0.1 29 July 2019: 
-* compatible with V0.18 tested on PC windows 10 & MacOS, 
-* split the inital sheet in 3 sheet
-* ribs is now managed as a parameter : the list of ribs is now managed as a parameter in the table :"AirPlaneRibs" : position, length & rotation.
-* new picture in readme fil to explain some parameters.
-
-V0.0 11 July 2018: Initial version
+V0.001 11 July 2018: Initial version
