@@ -32,6 +32,8 @@ from Draft import makeWire
 
 import re, FreeCAD, FreeCADGui, Draft, Part, PartDesign,PartDesignGui,Sketcher,cProfile, os, string
 from airPlaneAirFoil import process,decodeName
+from airPlaneDesingProfilUI import SelectObjectUI
+
 
 
 class WingRib:
@@ -129,11 +131,18 @@ class CommandWingRib:
         return not FreeCAD.ActiveDocument is None
     
     def Activated(self):
+        editor = SelectObjectUI()
+        editor.setupUi()
+        r = editor.form.exec_()
+        if r:
+            #r=1 => OK
+            b=editor.form.listWidget.currentItem()
+            print(b.text())
+            
         a=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","wrib")
-        WingRib(a,u"/Users/fredericnivoix/Library/Preferences/FreeCAD/Mod/AirPlaneDesign/wingribprofil/e207.dat",100,0,0,0)
+        #WingRib(a,u"/Users/fredericnivoix/Library/Preferences/FreeCAD/Mod/AirPlaneDesign/wingribprofil/e207.dat",100,0,0,0)
+        WingRib(a,b.text(),100,0,0,0)
         ViewProviderWingRib(a.ViewObject)
-        #FreeCADGui.addModule("AirPlaneDesign")
-        #FreeCAD.ActiveDocument.commitTransaction()
         FreeCAD.ActiveDocument.recompute()
 
 if FreeCAD.GuiUp:
