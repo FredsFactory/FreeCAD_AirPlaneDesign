@@ -35,36 +35,24 @@ class EditorPanel():
     def getStandardButtons(self):
         return int(QtGui.QDialogButtonBox.Ok)
 
-    def loadTable(self):
-        tooldata =[["1","Ep001","Eppler","c:lkjdsq"],["1","Ep001","Eppler","c:lkjdsq"]]
-        headers = ["","Profil Num.","Name","File"]
-        model = QtGui.QStandardItemModel()
-        model.setHorizontalHeaderLabels(headers)
-        
-        model.setRowCount(10);
-        model.setColumnCount(3);
-        #self.form.tableWidget.setHorizontalHeaderLabels(QtGui.QTableWidgetItem("colonne1"))
-        #model.appendRow(tooldata)
-        self.form.tableWidget.setRowCount(0)
-        for row_number,row_data in enumerate(tooldata):
-            self.form.tableWidget.insertRow(row_number)
-            for col_number, data in enumerate(row_data):
-                self.form.tableWidget.setItem(row_number,col_number,QtGui.QTableWidgetItem(str(data)))
 
     def loadPanelTable(self):
+        _wingRibProfilDir=FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/wingribprofil'
         #longueur paneau, delta, corde emplature, corde saumon, angle
-        initPanelTable =[["Eppler207","100","-10","463","300","4.5","0","-","-","-"],["Eppler207","700","70","300","250","0","0","-","-","-"],["Eppler205","100","-10","463","300","0","0","-","-","-"],["Eppler205","100","-10","463","300","0","0","-","-","-"],["Eppler205","100","-10","463","300","0","0","-","-","-"],]
+        initPanelTable =[
+                         ["1","Eppler207",_wingRibProfilDir+u"/e207.dat","100","-10","463","300","4.5","0","-","-"],["2","Eppler207",_wingRibProfilDir+u"/e207.dat","700","70","300","250","0","0","-","-"],["3","Eppler205",_wingRibProfilDir+u"/e205.dat","100","-10","463","300","0","0","-","-"],["4","Eppler205",_wingRibProfilDir+u"/e205.dat","100","-10","463","300","0","0","-","-"],["5","Eppler205",_wingRibProfilDir+u"/e205.dat","100","-10","463","300","0","0","-","-"]
+                         ]
         #self.form.PanelTable.setRowCount(0)
         for row_number,row_data in enumerate(initPanelTable):
             self.form.PanelTable.insertRow(row_number)
             for col_number, data in enumerate(row_data):
-                self.form.PanelTable.setItem(row_number,col_number)#,QtGui.QTableWidgetItem(str(data)))
+               self.form.PanelTable.setItem(row_number,col_number,QtGui.QTableWidgetItem(str(data)))#,QtGui.QTableWidgetItem(str(data)))
 
     def setupUi(self):
         # Connect Signals and Slots
         print("setupUI")
         #self.form.testButton.clicked.connect(self.importFile)
-        self.loadTable()
+        self.loadPanelTable()
         #self.loadPanelTable()
         #self.updateGraphicsViewWings2()
 
