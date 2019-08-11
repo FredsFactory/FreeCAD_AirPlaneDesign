@@ -33,8 +33,7 @@ def generateprofilgenerique(body,x_saumon,y_saumon,x_emplature, y_emplature, hau
     FreeCAD.ActiveDocument.recompute()
 
     print( "Face1")
-    b.Support = (FreeCAD.ActiveDocument.getObject("SubWing00"+str(i/2+1)),["Face1"])   #+str(nbreOfFaces)-1)])
-    #b.Support = (body.BaseFeature,["Face1"])#+str(nbreOfFaces)-1)])
+    b.Support = (FreeCAD.ActiveDocument.getObject("SubWing00"+str(i/2+1)),["Face1"])
    
     print (b.Label)
     b.MapMode = 'FlatFace'
@@ -54,7 +53,7 @@ def generateprofilgenerique(body,x_saumon,y_saumon,x_emplature, y_emplature, hau
     conList.append(Sketcher.Constraint('Coincident',3,2,0,1))
     conList.append(Sketcher.Constraint('Horizontal',0))
     conList.append(Sketcher.Constraint('Vertical',1))
-    #conList.setExpression('Constraints[6]', u'AirPlaneData.p001_p + 10')
+
     b.addConstraint(conList)
     
     FreeCAD.Gui.ActiveDocument.resetEdit()
@@ -614,10 +613,6 @@ class GenerateWingCommand():
                   }
 
     def Activated(self):
-        #FreeCAD.ActiveDocument=FreeCAD.getDocument("AirPlane")
-        #FreeCAD.Gui.ActiveDocument=FreeCAD.Gui.getDocument("AirPlane")
-        #FreeCAD.ActiveDocument=FreeCAD.getDocument("AirPlane")
-
         generateWing('blabla')
         return
 
