@@ -23,6 +23,7 @@ __title__="FreeCAD Arch Stairs"
 __author__ = "F. Nivoix"
 __url__ = "https://fredsfactory.fr"
 
+
 import os,FreeCAD,FreeCADGui,airPlaneRib
 from PySide import QtCore, QtGui
 from PySide.QtGui import QLineEdit, QRadioButton
@@ -42,12 +43,15 @@ from airPlaneRib import WingRib, ViewProviderWingRib
 if open.__module__ in ['__builtin__','io']:
     pythonopen = open
 
+_wingRibProfilDir=FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/wingribprofil'
 
 class WPanel:
     def __init__(self, obj):
         '''Add some custom properties to our box feature'''
+        
         obj.Proxy = self
-        obj.addProperty("App::PropertyFile","PanelProfil","WingPanel","Profil type").PanelProfil=u"/Users/fredericnivoix/Library/Preferences/FreeCAD/Mod/AirPlaneDesign/wingribprofil/e207.dat"
+        #obj.addProperty("App::PropertyFile","PanelProfil","WingPanel","Profil type").PanelProfil=u"/Users/fredericnivoix/Library/Preferences/FreeCAD/Mod/AirPlaneDesign/wingribprofil/e207.dat"
+        obj.addProperty("App::PropertyFile","PanelProfil","WingPanel","Profil type").PanelProfil=_wingRibProfilDir+u"/e207.dat"
         obj.addProperty("App::PropertyInteger","NberOfPanel","WingPanel","Number of Panel").NberOfPanel=5
         obj.addProperty("App::PropertyFloatList","PanelLength","WingPanel","Length of the Wing").PanelLength=[100.0,100.0,100,70,50]
         obj.addProperty("App::PropertyFloatList","PanelDelta","WingPanel","Delta").PanelDelta=[0.0,70.0]
