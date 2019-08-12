@@ -53,6 +53,10 @@ class WPanel:
         #obj.addProperty("App::PropertyFile","PanelProfil","WingPanel","Profil type").PanelProfil=u"/Users/fredericnivoix/Library/Preferences/FreeCAD/Mod/AirPlaneDesign/wingribprofil/e207.dat"
         obj.addProperty("App::PropertyFile","PanelProfil","WingPanel","Profil type").PanelProfil=_wingRibProfilDir+u"/e207.dat"
         obj.addProperty("App::PropertyInteger","NberOfPanel","WingPanel","Number of Panel").NberOfPanel=5
+        
+        obj.addProperty("App::PropertyFile","PanelProfil","WingPanel","Profil type").PanelProfil=_wingRibProfilDir+u"/e207.dat"
+    #, _wingRibProfilDir+u"/e207.dat",_wingRibProfilDir+u"/e207.dat",_wingRibProfilDir+u"/e207.dat",_wingRibProfilDir+u"/e207.dat"]
+        
         obj.addProperty("App::PropertyFloatList","PanelLength","WingPanel","Length of the Wing").PanelLength=[100.0,100.0,100,70,50]
         obj.addProperty("App::PropertyFloatList","PanelDelta","WingPanel","Delta").PanelDelta=[0.0,70.0]
         obj.addProperty("App::PropertyLinkList", "RibRoot", "Ribs", "Root Ribs")
@@ -100,45 +104,17 @@ class WPanel:
 
            FreeCAD.Console.PrintMessage("create the panel")
            _panel.append(FreeCAD.ActiveDocument.addObject('Part::Loft','panel'))
-           #_panel[i].Sections=[obj.RibRoot[i],obj.RibTip[i]]
-           #_panel[i].Sections=[_ribs[i*2],_ribs[i*2+1]]
            _panel[i].Sections=[_ribs[i*2],_ribs[i*2+1]]
            _panel[i].Solid=True
            _panel[i].Ruled=False
            FreeCAD.ActiveDocument.recompute()
         
-        
-        
-        #_panel.append(FreeCAD.ActiveDocument.addObject('Part::Loft','panel001'))
-        #_panel[0].Sections=[_ribs[0],_ribs[1]]
-        #_panel[0].Solid=True
-        #_panel[0].Ruled=False
-        
-        # Panel 001
-        
-        
-        
-        
         obj.Group=_panel
-    
-    
-    
-    
-        #self.RibRoot=obj.RibRoot.Proxy
-    
-            #FreeCAD.ActiveDocument.addObject("_WRib::FeatureCompoundPython", "_WRib")
-        #---------
+
         #obj.addProperty("App::PropertyLink", "Operations", "Base", "Operations ")
         # Ordonner les champs
         #obj.OrderOutputBy = ['NumberOfPanel','Length', 'Width', 'Height','Delta']
-        #ops = FreeCAD.ActiveDocument.addObject("Ribs::FeatureCompoundPython", "Ribs")
-        #if ops.ViewObject:
-        #    ops.ViewObject.Proxy = 0
-        #    ops.ViewObject.Visibility = False 
-        #obj.Operations = ops 
-        
-        
-    
+
     def onChanged(self, fp, prop):
         '''Do something when a property has changed'''
         FreeCAD.Console.PrintMessage("Change property: " + str(prop) + "\n")
@@ -225,7 +201,7 @@ class CommandWPanel:
         return not FreeCAD.ActiveDocument is None
     
     def Activated(self):
-        a=FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroupPython","panel")#Path::FeaturePython","wpanel") #"Part::FeaturePython","wpanel")
+        a=FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroupPython","Wing")#Path::FeaturePython","wpanel") #"Part::FeaturePython","wpanel")
         WPanel(a)
         ViewProviderPanel(a.ViewObject)
         #FreeCADGui.addModule("AirPlaneDesign")

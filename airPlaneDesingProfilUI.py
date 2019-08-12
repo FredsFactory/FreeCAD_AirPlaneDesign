@@ -42,8 +42,8 @@ class SelectObjectUI():
         a=listdirectory(profil_dir)
         print(a)
         for obj in a:
-            self.form.listWidget.addItem(obj)
-        self.form.listWidget.itemSelectionChanged.connect(self.selectionChanged)
+            self.form.listProfil.addItem(obj)
+        self.form.listProfil.itemSelectionChanged.connect(self.selectionChanged)
         sel = FreeCADGui.Selection.getSelection()
         if sel:
             selected = sel[0].Label
@@ -52,7 +52,10 @@ class SelectObjectUI():
             selected = None
 
     def accept(self):
-        
+        #_profil=sel[0].Label
+        print(_profil)
+        #_chord=self.form.chord.value()
+        print(_chord)
         return
     
     def reject(self):
@@ -63,11 +66,8 @@ class SelectObjectUI():
     def getStandardButtons(self):
         return int(QtGui.QDialogButtonBox.Ok)
     
-    def loadTable(self):
-        return
-    
     def selectionChanged(self):
-        a=self.form.listWidget.currentItem()
+        a=self.form.listProfil.currentItem()
         item=a.text()
         print("Selected items: ",item)
         #print filter(lambda obj: obj.Label == label, FreeCAD.ActiveDocument.Objects)[0]

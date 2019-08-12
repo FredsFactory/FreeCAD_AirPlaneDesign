@@ -136,14 +136,17 @@ class CommandWingRib:
         r = editor.form.exec_()
         if r:
             #r=1 => OK
-            b=editor.form.listWidget.currentItem()
+            b=editor.form.listProfil.currentItem()
             print(b.text())
-            
-        a=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","wrib")
-        #WingRib(a,u"/Users/fredericnivoix/Library/Preferences/FreeCAD/Mod/AirPlaneDesign/wingribprofil/e207.dat",100,0,0,0)
-        WingRib(a,b.text(),100,0,0,0)
-        ViewProviderWingRib(a.ViewObject)
-        FreeCAD.ActiveDocument.recompute()
+            print("corde : /n")
+            print(editor.form.chord.value())
+            a=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","wrib")
+            #WingRib(a,u"/Users/fredericnivoix/Library/Preferences/FreeCAD/Mod/AirPlaneDesign/wingribprofil/e207.dat",100,0,0,0)
+            WingRib(a,b.text(),editor.form.chord.value(),0,0,0)
+            ViewProviderWingRib(a.ViewObject)
+            FreeCAD.ActiveDocument.recompute()
+        else :
+            print("Canceled")
 
 if FreeCAD.GuiUp:
     #register the FreeCAD command
