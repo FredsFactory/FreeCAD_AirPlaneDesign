@@ -35,6 +35,7 @@ import re, FreeCAD, FreeCADGui, Draft, Part, PartDesign,PartDesignGui,Sketcher
 import cProfile, os, string
 
 from airPlaneRib import WingRib, ViewProviderWingRib
+from airPlaneWingUI import WingEditorPanel
 
 #################################################
 #  This module provides tools to build a
@@ -46,13 +47,13 @@ if open.__module__ in ['__builtin__','io']:
 _wingRibProfilDir=FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/wingribprofil'
 
 class WPanel:
-    def __init__(self, obj):
+    def __init__(self, obj,_NberOfPanel):
         '''Add some custom properties to our box feature'''
         
         obj.Proxy = self
         #obj.addProperty("App::PropertyFile","PanelProfil","WingPanel","Profil type").PanelProfil=u"/Users/fredericnivoix/Library/Preferences/FreeCAD/Mod/AirPlaneDesign/wingribprofil/e207.dat"
         obj.addProperty("App::PropertyFile","PanelProfil","WingPanel","Profil type").PanelProfil=_wingRibProfilDir+u"/e207.dat"
-        obj.addProperty("App::PropertyInteger","NberOfPanel","WingPanel","Number of Panel").NberOfPanel=5
+        obj.addProperty("App::PropertyInteger","NberOfPanel","WingPanel","Number of Panel").NberOfPanel=_NberOfPanel
         
         obj.addProperty("App::PropertyFile","PanelProfil","WingPanel","Profil type").PanelProfil=_wingRibProfilDir+u"/e207.dat"
     #, _wingRibProfilDir+u"/e207.dat",_wingRibProfilDir+u"/e207.dat",_wingRibProfilDir+u"/e207.dat",_wingRibProfilDir+u"/e207.dat"]
@@ -201,12 +202,42 @@ class CommandWPanel:
         return not FreeCAD.ActiveDocument is None
     
     def Activated(self):
-        a=FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroupPython","Wing")#Path::FeaturePython","wpanel") #"Part::FeaturePython","wpanel")
-        WPanel(a)
-        ViewProviderPanel(a.ViewObject)
-        #FreeCADGui.addModule("AirPlaneDesign")
-        #FreeCAD.ActiveDocument.commitTransaction()
-        FreeCAD.ActiveDocument.recompute()
+        PanelTable=[]
+        editor = WingEditorPanel()
+        editor.setupUi()
+        r = editor.form.exec_()
+        if r:
+          print("Nombre de ligne :")
+          print(editor.form.PanelTable.rowCount())
+          print("Nombre de colonne :")
+          print(editor.form.PanelTable.columnCount())
+          print("/n")
+          #table=editor.form.PanelTable
+          #print(editor.form.PanelTable.item(1, 2).text())
+          print(editor.form.PanelTable.rowCount())
+          print(editor.form.PanelTable.columnCount())
+          for row_number in range(5):#int(editor.form.PanelTable.rowCount())):
+              #print( row_number)
+             rowData=[]
+             for col_number in range(11):#int(editor.form.PanelTable.columnCount())):
+                 #print(col_number)
+                rowData.append(editor.form.PanelTable.item(row_number,col_number).text())
+             #print(rowData)
+             PanelTable.append(rowData)
+          print(PanelTable)
+
+          a=FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroupPython","Wing")#Path::FeaturePython","wpanel") #"Part::FeaturePython","wpanel")
+          WPanel(a,editor.form.NumberOfPanel.value())
+          ViewProviderPanel(a.ViewObject)
+          #FreeCADGui.addModule("AirPlaneDesign")
+          #FreeCAD.ActiveDocument.commitTransaction()
+          FreeCAD.ActiveDocument.recompute()
+          FreeCAD.Gui.activeDocument().activeView().viewAxonometric()
+          FreeCAD.Gui.SendMsgToActiveView("ViewFit")
+
+          
+          pass
+
 
 if FreeCAD.GuiUp:
     #register the FreeCAD command

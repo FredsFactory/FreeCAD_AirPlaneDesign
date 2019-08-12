@@ -197,6 +197,8 @@ class GenerateWingRibsCommand():
            a=editor.form.listWidget.currentItem()
            print(a.text())
            generateWingRibs(a.text())
+           FreeCAD.Gui.activeDocument().activeView().viewAxonometric()
+           FreeCAD.Gui.SendMsgToActiveView("ViewFit")
            pass
         return
 

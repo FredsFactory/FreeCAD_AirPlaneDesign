@@ -40,22 +40,22 @@ class AirPlaneDesignWorkbench(Workbench):
         import airPlaneDesignInitPlane,airPlaneRib,airPlanePanel,generateWing,airPlaneDesignUI,generateWingRibs,airPlaneWingUI
        #self.list 
         commandslistV0= ['airPlaneDesignEdit','airPlaneDesignInitPlane','generateWing','generateWingRibs']
-        commandslistV1= ['airPlaneWingCreate','airPlaneDesingWRib','airPlaneDesingWPanel']
+        commandslistV1= ['airPlaneDesingWRib','airPlaneDesingWPanel']
         self.appendToolbar("Air Plane Design V1",commandslistV1) # creates a new toolbar with your commands
         
         self.appendMenu('Air Plane Design V0',commandslistV0+["Separator"] )#self.list) # creates a new menu
         self.appendMenu('Air Plane Design V1',["Separator"] +commandslistV1+["Separator"])
 
     def Activated(self):
-        "This function is executed when the workbench is activated"
+        #This function is executed when the workbench is activated
         return
 
     def Deactivated(self):
-        "This function is executed when the workbench is deactivated"
+        #This function is executed when the workbench is deactivated
         return
 
     def ContextMenu(self, recipient):
-        "This is executed whenever the user right-clicks on screen"
+        # This is executed whenever the user right-clicks on screen
         # "recipient" will be either "view" or "tree"
         self.appendContextMenu("AirPlaneDesignInitPlane",self.list) # add commands to the context menu
 

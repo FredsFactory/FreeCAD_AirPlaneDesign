@@ -16,7 +16,7 @@ from PySide import QtCore, QtGui
 
 
 
-class EditorPanel():
+class WingEditorPanel():
     def __init__(self):
         path_to_ui = FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/resources/airPlaneDesignWingdialog.ui'
         self.form = FreeCADGui.PySideUic.loadUi(path_to_ui)
@@ -38,16 +38,23 @@ class EditorPanel():
 
     def loadPanelTable(self):
         _wingRibProfilDir=FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/wingribprofil'
+        #self.form.NumberOfPanel.setItem=5
         #longueur paneau, delta, corde emplature, corde saumon, angle
         initPanelTable =[
-                         ["1","Eppler207",_wingRibProfilDir+u"/e207.dat","100","-10","463","300","4.5","0","-","-"],["2","Eppler207",_wingRibProfilDir+u"/e207.dat","700","70","300","250","0","0","-","-"],["3","Eppler205",_wingRibProfilDir+u"/e205.dat","100","-10","463","300","0","0","-","-"],["4","Eppler205",_wingRibProfilDir+u"/e205.dat","100","-10","463","300","0","0","-","-"],["5","Eppler205",_wingRibProfilDir+u"/e205.dat","100","-10","463","300","0","0","-","-"]
+                         ["1","Eppler207",_wingRibProfilDir+u"/e207.dat","-","100","-10","463","300","4.5","0","-"],["2","Eppler207",_wingRibProfilDir+u"/e207.dat","-","700","70","300","250","0","0","-"],["3","Eppler205",_wingRibProfilDir+u"/e205.dat","-","100","-10","463","300","0","0","-"],["4","Eppler205",_wingRibProfilDir+u"/e205.dat","-","100","-10","463","300","0","0","-"],["5","Eppler205",_wingRibProfilDir+u"/e205.dat","-","100","-10","463","300","0","0","-"]
                          ]
         #self.form.PanelTable.setRowCount(0)
         for row_number,row_data in enumerate(initPanelTable):
             self.form.PanelTable.insertRow(row_number)
             for col_number, data in enumerate(row_data):
                self.form.PanelTable.setItem(row_number,col_number,QtGui.QTableWidgetItem(str(data)))#,QtGui.QTableWidgetItem(str(data)))
+    
 
+    def accept(self):
+        print("OK")
+        return
+
+               
     def setupUi(self):
         # Connect Signals and Slots
         print("setupUI")
@@ -62,7 +69,7 @@ class EditorPanel():
 
 class CommandWizard():
     def edit(self):
-        editor = EditorPanel()
+        editor = WingEditorPanel()
         editor.setupUi()
         r = editor.form.exec_()
         if r:
