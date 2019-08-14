@@ -74,7 +74,7 @@ def insert(filename,docname):
     importgroup.Label = decodeName(groupname)
     process(doc,filename)
 
-def process(doc,filename,scale,posX,posY,posZ):
+def process(doc,filename,scale,posX,posY,posZ,rotX,rotY,rotZ):
     # The common airfoil dat format has many flavors, This code should work with almost every dialect,
     #Regex to identify data rows and throw away unused metadata
     regex = re.compile(r'^\s*(?P<xval>(\-|\d*)\.\d+(E\-?\d+)?)\,?\s*(?P<yval>\-?\s*\d*\.\d+(E\-?\d+)?)\s*$')
@@ -90,9 +90,9 @@ def process(doc,filename,scale,posX,posY,posZ):
         if curdat != None:
            #x = float(curdat.group("xval"))
            #y = float(curdat.group("yval"))
-           x = float(curdat.group("xval"))+posX
-           y = posY
-           z = float(curdat.group("yval"))+posZ
+           x = float(curdat.group("xval"))#+posX
+           y = 0#posY
+           z = float(curdat.group("yval"))#+posZ
            # the normal processing
            coords.append(Vector(x,y,z))
         # End of if curdat != None
@@ -145,4 +145,17 @@ def process(doc,filename,scale,posX,posY,posZ):
         myScale = Base.Matrix()
         myScale.scale(scale,1,scale)
         face=face.transformGeometry(myScale)
+        #
+#move(face, FreeCAD.Vector(posX, posY, posZ))
+        face.Placement=FreeCAD.Placement(FreeCAD.Vector(1,0,0),FreeCAD.Rotation(FreeCAD.Vector(0,0,0),posX))
+        face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,1,0),FreeCAD.Rotation(FreeCAD.Vector(0,0,0),posY))
+        face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,1),FreeCAD.Rotation(FreeCAD.Vector(0,0,0),posZ))
+        face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(1,0,0),rotX))
+        face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(0,1,0),rotY))
+        face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(0,0,1),rotZ))
+
+
+#face.Placement(App.Vector(0,1,0),App.Rotation(App.Vector(0,0,0),posY))
+#face.Placement(App.Vector(0,0,1),App.Rotation(App.Vector(0,0,0),posZ))
+
     return face

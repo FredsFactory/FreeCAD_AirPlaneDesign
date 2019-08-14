@@ -79,7 +79,7 @@ class WPanel:
            FreeCAD.Console.PrintMessage("Add Rib Root")
            _ribs.append(FreeCAD.ActiveDocument.addObject("Part::FeaturePython","RibRoot_"+str(i)))
            #WingRib(_ribs[i*2],obj.PanelProfil,100,0,_position,0)
-           WingRib(_ribs[i*2],_row[2],_row[3],_row[6],_position,_row[8])
+           WingRib(_ribs[i*2],_row[2],_row[3],_row[6],_position,_row[8],0,0,0)
            ViewProviderWingRib(_ribs[i*2].ViewObject)
            obj.RibRoot.append(_ribs[i*2])
         
@@ -90,7 +90,7 @@ class WPanel:
            _position=_position+float(_row[5])
            _ribs.append(FreeCAD.ActiveDocument.addObject("Part::FeaturePython","RibTip_"+str(i)))
            #WingRib(_ribs[i*2+1],obj.PanelProfil,100,0,_position,0)
-           WingRib(_ribs[i*2+1],_row[2],_row[4],_row[7],_position,_row[9])
+           WingRib(_ribs[i*2+1],_row[2],_row[4],_row[7],_position,_row[9],0,0,0)
            ViewProviderWingRib(_ribs[i*2+1].ViewObject)
            obj.RibTip.append(_ribs[i*2+1])
 

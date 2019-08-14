@@ -37,12 +37,15 @@ from airPlaneDesingProfilUI import SelectObjectUI
 
 
 class WingRib:
-    def __init__(self, obj,_profil,_chord,_x,_y,_z):
+    def __init__(self, obj,_profil,_chord,_x,_y,_z,_xrot,_yrot,_zrot):
         '''Rib properties'''
         obj.Proxy = self
         obj.addProperty("App::PropertyFile","RibProfil","Rib","Profil type").RibProfil=_profil#[u"/Users/fredericnivoix/Library/Preferences/FreeCAD/Mod/AirPlaneDesign/wingribprofil/e207.dat"]
         #obj.addProperty("App::PropertyFloatList","PanelDelta","Rib","Delta").PanelDelta=[0,70.0]
         obj.addProperty("App::PropertyLength","Chord","Rib","chord").Chord=_chord
+        obj.addProperty("App::PropertyLength","xrot","Rib","chord").xrot=_xrot
+        obj.addProperty("App::PropertyLength","yrot","Rib","chord").yrot=_yrot
+        obj.addProperty("App::PropertyLength","zrot","Rib","chord").zrot=_zrot
         obj.Placement.Base.x=_x
         obj.Placement.Base.y=_y
         obj.Placement.Base.z=_z
@@ -57,7 +60,7 @@ class WingRib:
         name=decodeName(fp.RibProfil)
         #fp.addProperty("App::PropertyLink", "Rib", "Panel", "Rib")
         FreeCAD.Console.PrintMessage(name)
-        a=process(FreeCAD.ActiveDocument.Name,fp.RibProfil,fp.Chord,fp.Placement.Base.x,fp.Placement.Base.y,fp.Placement.Base.z)
+        a=process(FreeCAD.ActiveDocument.Name,fp.RibProfil,fp.Chord,fp.Placement.Base.x,fp.Placement.Base.y,fp.Placement.Base.z,fp.xrot,fp.yrot,fp.zrot)
         fp.Shape=a
         FreeCAD.Console.PrintMessage("Create Rib End\n")
 
@@ -142,7 +145,7 @@ class CommandWingRib:
             print(editor.form.chord.value())
             a=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","wrib")
             #WingRib(a,u"/Users/fredericnivoix/Library/Preferences/FreeCAD/Mod/AirPlaneDesign/wingribprofil/e207.dat",100,0,0,0)
-            WingRib(a,b.text(),editor.form.chord.value(),0,0,0)
+            WingRib(a,b.text(),editor.form.chord.value(),0,0,0,0,0,0)
             ViewProviderWingRib(a.ViewObject)
             FreeCAD.ActiveDocument.recompute()
         else :

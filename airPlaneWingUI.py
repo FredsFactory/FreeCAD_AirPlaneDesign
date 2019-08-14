@@ -39,9 +39,9 @@ class WingEditorPanel():
     def loadPanelTable(self):
         _wingRibProfilDir=FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/wingribprofil'
         #self.form.NumberOfPanel.setItem=5
-        # Numéro du panneau, profil, fichier profil, longueur paneau, , corde emplature, corde saumon, angle
+        # Numéro du panneau, profil, fichier profil, , corde emplature, corde saumon, longueur paneau, X emplature, X saumon, Y emplature, Y saumon, Z emplature, Z saumon, X Rotation, Y Rotation, Z Rotation
         initPanelTable =[
-                         ["1","Eppler207",_wingRibProfilDir+u"/e207.dat","350","250","100","-1","0","0.0","0","0"],["2","Eppler207",_wingRibProfilDir+u"/e207.dat","250","200","300","0","-1","0","0","0"],["3","Eppler205",_wingRibProfilDir+u"/e205.dat","200","150","200","-1","0.","0","0","0"],["4","Eppler205",_wingRibProfilDir+u"/e205.dat","150","100","150","0","0.","0","0","0"],["5","Eppler205",_wingRibProfilDir+u"/e205.dat","100","100","100","0","0.","0","0","0"]
+                         ["1","Eppler207",_wingRibProfilDir+u"/naca/naca2412.dat","250","222","122","0","0","0.0","-54.","0","0","22"],["2","Eppler207",_wingRibProfilDir+u"/naca/naca2412.dat","222","196","35.","0","0","-54","-54","0","54","0"],["3","Eppler205",_wingRibProfilDir+u"/naca/naca2412.dat","196","146","456","0","0","-54","12","0","0","81"],["4","Eppler205",_wingRibProfilDir+u"/naca/naca2412.dat","146","100","10","0","0.","12","12","12","0","0"],["5","Eppler205",_wingRibProfilDir+u"/naca/naca2412.dat","100","100","10","0","0.","12","12","0","0","0"]
                          ]
         #self.form.PanelTable.setRowCount(0)
         for row_number,row_data in enumerate(initPanelTable):
