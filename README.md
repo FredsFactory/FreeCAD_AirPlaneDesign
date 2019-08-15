@@ -7,6 +7,8 @@ FreeCAD Air Plane Design WorkBench for FreeCAD >=v0.17
 
 ![](https://github.com/FredsFactory/FreeCAD_AirPlaneDesign/blob/master/AirPlaneDesignWorkbench.png)
 
+
+
 # Installation
 Simply use the FreeCAD [Addon Manager](https://github.com/FreeCAD/FreeCAD-addons#installing).
 
@@ -26,4 +28,7 @@ Ability to choose the:
 Feedback can be provided via the [discussion thread]() on the FreeCAD forums
 
 # Release Notes
+V0.2 : new release with parametric objects based on a dedicated UI.
+V0.1 : initial release based on sheet
 V0.001 11 July 2018: Initial version
+
