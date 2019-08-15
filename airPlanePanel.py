@@ -102,7 +102,9 @@ class WPanel:
            FreeCAD.ActiveDocument.recompute()
         obj.addProperty("App::PropertyFloatList","PanelLength","WingPanel","Length of the Wing").PanelLength=_PanelLength
         obj.addProperty("App::PropertyStringList","PanelProfil","WingPanel","Profil type").PanelProfil=profil
-        obj.Group=_panel
+        a=FreeCAD.activeDocument().addObject("Part::MultiFuse","Wing")
+        a.Shapes = _panel
+        obj.Group=a#_panel
 
     #_ribs.append(FreeCAD.ActiveDocument.addObject("Part::FeaturePython","RibRoot"))
     #WingRib(_ribs[0],obj.PanelProfil,100,0,0,0)
