@@ -185,7 +185,7 @@ class GenerateWingRibsCommand():
                 #'Pixmap'  : ':/AirPlaneDesign/icons/importPart_update.svg', 
                 #'Accel' : 'Shift+S', # a default shortcut (optional)
                 'MenuText': 'Generate Wing Ribs',
-                'ToolTip' : 'Generate Wing Ribs What my new command does'
+                'ToolTip' : 'Generate Wing Ribs'
                   }
 
     def Activated(self):

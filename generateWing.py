@@ -18,11 +18,11 @@
 # GNU Library General Public License for more details. 
 #
 ################################################
-import os,FreeCAD,FreeCADGui
+import os, FreeCAD, FreeCADGui
 
 from PySide import QtCore, QtGui
 from PySide.QtGui import QLineEdit, QRadioButton
-import FreeCAD, FreeCADGui, Draft, Part,PartDesign,PartDesignGui,Sketcher
+import Draft, Part, PartDesign, PartDesignGui, Sketcher
 import importAirfoilDAT
 
 def generateprofilgenerique(body,x_saumon,y_saumon,x_emplature, y_emplature, hauteur, largeur,i):
@@ -576,8 +576,7 @@ def generateWingtmp(name):
                                             float(FreeCAD.ActiveDocument.AirPlaneData.getContents('E29')),
                                             number_of_panels,sketchcteton)
 
-    
-    
+
     if i!=number_of_panels*2-2 :
         delta_emplature=delta_saumon
         delta_saumon=-float(FreeCAD.ActiveDocument.AirPlaneData.getContents(chr(ord('B') + i/2+1)+str(16)))
@@ -606,11 +605,11 @@ class GenerateWingCommand():
 
     def GetResources(self):
         return {
-                #'Pixmap'  : ':/AirPlaneDesign/icons/importPart_update.svg', 
-                #'Accel' : 'Shift+S', # a default shortcut (optional)
+                #'Pixmap' : ':/AirPlaneDesign/icons/importPart_update.svg', 
+                #'Accel'  : 'Shift+S', # a default shortcut (optional)
                 'MenuText': 'Generate Wing',
-                'ToolTip' : 'Generate Wing  What my new command does'
-                  }
+                'ToolTip' : 'Generate Wing'
+                }
 
     def Activated(self):
         generateWing('blabla')
