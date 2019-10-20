@@ -1,6 +1,12 @@
 # The FreeCAD Air Plane Design Workbench
 FreeCAD Air Plane Design WorkBench for FreeCAD >=v0.17
 **Warning:** This is highly experimental code.
+# Release Notes
+V0.3 : NACA Rib generator
+V0.2 : new release with parametric objects based on a dedicated UI.
+V0.1 : initial release based on sheet.
+V0.001 11 July 2018: Initial version.
+
 
 
 ![](https://github.com/FredsFactory/FreeCAD_AirPlaneDesign/blob/master/AirplaneDesign001.png)
@@ -27,10 +33,4 @@ Ability to choose the:
 # Feedback
 Feedback can be provided via the [discussion thread](https://forum.freecadweb.org/viewtopic.php?f=9&t=38917) on the FreeCAD forums
 
-# Release Notes
-V0.2 : new release with parametric objects based on a dedicated UI.
-
-V0.1 : initial release based on sheet.
-
-V0.001 11 July 2018: Initial version.
 
