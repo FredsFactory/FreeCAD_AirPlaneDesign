@@ -23,15 +23,13 @@ Use the FreeCAD [Addon Manager](https://github.com/FreeCAD/FreeCAD-addons#instal
 
 ## Usage
 After installation a new menu appears:  
-1. Wizard: do not use this yet! (**Note:** UI under heavy development!)  
-2. Init New Plane: initializes a new document which includes a spreadsheet with many parameters  
-3. Generate Wing: generate the wing based on the parameters in the spreadsheet AirPlaneData  
-4. Generate Wing Rib: (**Note:** before using this function make a clone of the wing and apply the function on this clone) The parameters are currently in [`generateWingRibs.py`](generateWingRibs.py) and are currently being outsourced to the spreadsheet. **Note:** Under development
+1. Create a rib
+you can import DAT file or generate NACA Profil.
+
+2.Create a wing
 
 Ability to choose the:  
-* Decomposition of the wing panel: cell B3  
-* Number of profile: cell B4  
-* Profiles you want to import: B6 (.dat format)  
+* Profiles you want to import in the UI (.dat format)  
  **Note:** 2 profiles are installed with the workbench ([eppler 205](wingribprofil/e205.dat) and [eppler 207](wingribprofil/e207.dat)). If you'd like to use different profile(s), simply include said .dat file(s) in to the [`wingribprofil`](wingribprofil/) directory.
 
 ## Roadmap
