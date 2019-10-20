@@ -19,7 +19,7 @@
 #
 ################################################
 
-__title__="FreeCAD Arch Stairs"
+__title__="FreeCAD Air Plane Panel"
 __author__ = "F. Nivoix"
 __url__ = "https://fredsfactory.fr"
 

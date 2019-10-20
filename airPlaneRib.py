@@ -41,12 +41,16 @@ from airPlaneAirFoilNaca import generateNaca
 
 
 class WingRib:
-    def __init__(self, obj,_profil,_chord,_x,_y,_z,_xrot,_yrot,_zrot):
+    def __init__(self, obj,_profil,_nacagene,_nacaNbrPoint,_chord,_x,_y,_z,_xrot,_yrot,_zrot):
         '''Rib properties'''
         obj.Proxy = self
         obj.addProperty("App::PropertyFile","RibProfil","Rib","Profil type").RibProfil=_profil
-        obj.addProperty("App::PropertyString","NacaProfil","NacaProfil","NacaProfil").NacaProfil=""
-        obj.addProperty("App::PropertyInteger","NacaNbrPoint","NacaProfil","NacaNbrPoint").NacaNbrPoint=240
+        if _nacagene==True :
+            obj.addProperty("App::PropertyString","NacaProfil","NacaProfil","NacaProfil").NacaProfil=_profil
+        else :
+            obj.addProperty("App::PropertyString","NacaProfil","NacaProfil","NacaProfil").NacaProfil=""
+                
+        obj.addProperty("App::PropertyInteger","NacaNbrPoint","NacaProfil","NacaNbrPoint").NacaNbrPoint=_nacaNbrPoint
          #obj.addProperty("App::PropertyFloatList","PanelDelta","Rib","Delta").PanelDelta=[0,70.0]
         obj.addProperty("App::PropertyLength","Chord","Rib","chord").Chord=_chord
         obj.addProperty("App::PropertyLength","xrot","Rib","chord").xrot=_xrot
@@ -150,14 +154,23 @@ class CommandWingRib:
         r = editor.form.exec_()
         if r:
             #r=1 => OK
-            b=editor.form.listProfil.currentItem()
-            print(b.text())
             print("corde : /n")
-            print(editor.form.chord.value())
-            a=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","wrib")
-            #WingRib(a,u"/Users/fredericnivoix/Library/Preferences/FreeCAD/Mod/AirPlaneDesign/wingribprofil/e207.dat",100,0,0,0)
-            WingRib(a,b.text(),editor.form.chord.value(),0,0,0,0,0,0)
-            ViewProviderWingRib(a.ViewObject)
+            print (editor.form.NACANumber.text())
+            if editor.form.NACANumber.text()=="" :
+                b=editor.form.listProfil.currentItem()
+                print(b.text())
+                print(editor.form.choord.value())
+                a=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","wrib")
+                #WingRib(a,u"/Users/fredericnivoix/Library/Preferences/FreeCAD/Mod/AirPlaneDesign/wingribprofil/e207.dat",100,0,0,0)
+                WingRib(a,b.text(),False,0,editor.form.choord.value(),0,0,0,0,0,0)
+                ViewProviderWingRib(a.ViewObject)
+            else :
+                print("Naca : ") 
+                print( editor.form.NACANumber)
+                b=editor.form.NACANumber
+                a=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","wrib")
+                WingRib(a,b.text(),True,int(editor.form.nacaNbrPoint.value()),editor.form.choord.value(),0,0,0,0,0,0)
+                ViewProviderWingRib(a.ViewObject)
             FreeCAD.ActiveDocument.recompute()
         else :
             print("Canceled")

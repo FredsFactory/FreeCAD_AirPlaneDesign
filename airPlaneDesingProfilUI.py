@@ -39,10 +39,12 @@ class SelectObjectUI():
         path_to_ui = FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/resources/selectRibProfil.ui'
         self.form = FreeCADGui.PySideUic.loadUi(path_to_ui)
         profil_dir=FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/wingribprofil'
+        
         a=listdirectory(profil_dir)
+      
         print(a)
         for obj in a:
-            self.form.listProfil.addItem(obj)
+            self.form.listProfil.addItem(obj) #tabWidget.fileTab.fileTab..tabWidget
         self.form.listProfil.itemSelectionChanged.connect(self.selectionChanged)
         sel = FreeCADGui.Selection.getSelection()
         if sel:

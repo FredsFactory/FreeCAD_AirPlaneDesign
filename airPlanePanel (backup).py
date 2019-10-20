@@ -19,7 +19,7 @@
 #
 ################################################
 
-__title__="FreeCAD Airplane Design"
+__title__="FreeCAD Arch Stairs"
 __author__ = "F. Nivoix"
 __url__ = "https://fredsfactory.fr"
 
@@ -47,54 +47,57 @@ if open.__module__ in ['__builtin__','io']:
 _wingRibProfilDir=FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/wingribprofil'
 
 class WPanel:
-    def __init__(self, obj,_NberOfPanel,_panelInput):
+    def __init__(self, obj,_NberOfPanel,_panel):
         '''Add some custom properties to our box feature'''
         
         obj.Proxy = self
+        #obj.addProperty("App::PropertyFile","PanelProfil","WingPanel","Profil type").PanelProfil=_wingRibProfilDir+u"/e207.dat"
         obj.addProperty("App::PropertyInteger","NberOfPanel","WingPanel","Number of Panel").NberOfPanel=_NberOfPanel
-        obj.addProperty("App::PropertyLinkList", "Rib", "Ribs", "Ribs")
-        #obj.addProperty("App::PropertyLinkList", "RibTip", "Ribs", "Tip Ribs")
-
+        obj.addProperty("App::PropertyFile","PanelProfil","WingPanel","Profil type").PanelProfil=_wingRibProfilDir+u"/e207.dat"
+        obj.addProperty("App::PropertyFloatList","PanelLength","WingPanel","Length of the Wing").PanelLength=[100.0,100.0,100,70,50]
+        obj.addProperty("App::PropertyFloatList","PanelDelta","WingPanel","Delta").PanelDelta=[0.0,70.0]
+        obj.addProperty("App::PropertyLinkList", "RibRoot", "Ribs", "Root Ribs")
+        obj.addProperty("App::PropertyLinkList", "RibTip", "Ribs", "Tip Ribs")
+        
         _ribs=[]
-        #_ribsRoot=[]
         _panel=[]
         _position=0
-        _PanelLength=[]
-        profil=[]
-        #for i in range(0,obj.NberOfPanel) :
+
         for i in range(0,obj.NberOfPanel) :
-           _row=_panelInput[i]
-           print(_row)
-           profil.append(_row[2])
-            #_wingRibProfilDir+u"/e207.dat"
-           _PanelLength.append(float(_row[4]))
-           #obj.addProperty("App::PropertyFloatList","PanelDelta","WingPanel","Delta").PanelDelta=[0.0,70.0]
-           #obj.addProperty("App::PropertyLinkList", "RibRoot", "Ribs", "Root Ribs")
-           #obj.addProperty("App::PropertyLinkList", "RibTip", "Ribs", "Tip Ribs")
-        
-           FreeCAD.Console.PrintMessage("Panel creation : "+str(i))
-           #FreeCAD.Console.PrintMessage(i)
+           FreeCAD.Console.PrintMessage("Panel creation : ")
+           FreeCAD.Console.PrintMessage(i)
            FreeCAD.Console.PrintMessage("\n")
            
            # Add Rib Root
            FreeCAD.Console.PrintMessage("Add Rib Root")
            _ribs.append(FreeCAD.ActiveDocument.addObject("Part::FeaturePython","RibRoot_"+str(i)))
-           #WingRib(_ribs[i*2],obj.PanelProfil,100,0,_position,0)
-           #obj.RibRoot.append(
-           WingRib(_ribs[i*2],_row[2],False,0,_row[3],_row[6],_position,_row[8],0,0,0)
+           WingRib(_ribs[i*2],obj.PanelProfil,100,0,_position,0)
            ViewProviderWingRib(_ribs[i*2].ViewObject)
-           #obj.RibRoot.append(_ribs[i*2])
-           #_ribsRoot.append(_ribs[i*2].Label)
+           obj.RibRoot.append(_ribs[i*2])
+        
            # Add Rib tip
            FreeCAD.Console.PrintMessage("Add Rib tip")
            FreeCAD.Console.PrintMessage(i+1)
-           #_position=_position+obj.PanelLength[i]
-           _position=_position+float(_row[5])
+           _position=_position+obj.PanelLength[i]
+           
            _ribs.append(FreeCAD.ActiveDocument.addObject("Part::FeaturePython","RibTip_"+str(i)))
-           #WingRib(_ribs[i*2+1],obj.PanelProfil,100,0,_position,0)
-           WingRib(_ribs[i*2+1],_row[2],False,0,_row[4],_row[7],_position,_row[9],0,0,0)
+           WingRib(_ribs[i*2+1],obj.PanelProfil,100,0,_position,0)
            ViewProviderWingRib(_ribs[i*2+1].ViewObject)
-           #obj.RibTip.append(_ribs[i*2+1])
+           obj.RibTip.append(_ribs[i*2+1])
+       
+        
+        #_ribs.append(FreeCAD.ActiveDocument.addObject("Part::FeaturePython","RibRoot"))
+        #WingRib(_ribs[0],obj.PanelProfil,100,0,0,0)
+        #ViewProviderWingRib(_ribs[0].ViewObject)
+        #obj.RibRoot.append(_ribs[0])
+
+        # Add Rib Root
+        
+        #_ribs.append(FreeCAD.ActiveDocument.addObject("Part::FeaturePython","RibTip"))
+        #WingRib(_ribs[1],obj.PanelProfil,100,0,obj.PanelLength[0],0)
+        #ViewProviderWingRib(_ribs[1].ViewObject)
+        #obj.RibTip.append(_ribs[1])
+
 
            FreeCAD.Console.PrintMessage("create the panel")
            _panel.append(FreeCAD.ActiveDocument.addObject('Part::Loft','panel'))
@@ -103,13 +106,11 @@ class WPanel:
            _panel[i].Ruled=False
            FreeCAD.ActiveDocument.recompute()
         
-        obj.Rib=_ribs
-        obj.addProperty("App::PropertyFloatList","PanelLength","WingPanel","Length of the Wing").PanelLength=_PanelLength
-        obj.addProperty("App::PropertyStringList","PanelProfil","WingPanel","Profil type").PanelProfil=profil
-        a=FreeCAD.activeDocument().addObject("Part::MultiFuse","Wing")
-        a.Shapes = _panel
-        obj.Group=a#_panel
-        
+        obj.Group=_panel
+
+        #obj.addProperty("App::PropertyLink", "Operations", "Base", "Operations ")
+        # Ordonner les champs
+        #obj.OrderOutputBy = ['NumberOfPanel','Length', 'Width', 'Height','Delta']
 
     def onChanged(self, fp, prop):
         '''Do something when a property has changed'''
