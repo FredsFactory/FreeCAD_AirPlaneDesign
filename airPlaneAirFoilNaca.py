@@ -274,10 +274,10 @@ def naca5(number, n, finite_TE = False, half_cosine_spacing = False):
     Z = yu[::-1] + yl[1:]
 
     # AiplaneDesign modification - start
-    coords=[] 
+    choords=[] 
     for i in range(len(X)) :
-        coords.append(Vector(X[i],0,Z[i]))
-    return coords
+        choords.append(Vector(X[i],0,Z[i]))
+    return choords
 
    # AiplaneDesign modification - end
 
@@ -287,19 +287,24 @@ def naca5(number, n, finite_TE = False, half_cosine_spacing = False):
 ###########################
 #
 ###########################
-def generateNaca(number, n=240, finite_TE = False, half_cosine_spacing = False,scale=1,posX=0,posY=0,posZ=0,rotX=0,rotY=0,rotZ=0):
-    coords=[]
+def generateNacaChoords(number, n, finite_TE, half_cosine_spacing,scale,posX,posY,posZ,rotX,rotY,rotZ):
+    choords=[]
     if len(number)==4:
-        coords=naca4(number, n, finite_TE, half_cosine_spacing)
+        choords=naca4(number, n, finite_TE, half_cosine_spacing)
     elif len(number)==5:
-        coords=naca5(number, n, finite_TE, half_cosine_spacing)
+        choords=naca5(number, n, finite_TE, half_cosine_spacing)
     else:
         raise Exception
-        
+    return choords
+
+
+def generateNaca(number, n=240, finite_TE = False, half_cosine_spacing = False,scale=1,posX=0,posY=0,posZ=0,rotX=0,rotY=0,rotZ=0):
+    choords=[]
+    choords=generateNacaChoords(number, n, finite_TE , half_cosine_spacing ,scale,posX,posY,posZ,rotX,rotY,rotZ) 
     lines = []
     first_v = None
     last_v = None
-    for v in coords:
+    for v in choords:
             if first_v == None:
                 first_v = v
             # End of if first_v == None
