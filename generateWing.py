@@ -608,7 +608,7 @@ class GenerateWingCommand():
                 #'Pixmap' : ':/AirPlaneDesign/icons/importPart_update.svg', 
                 #'Accel'  : 'Shift+S', # a default shortcut (optional)
                 'MenuText': 'Generate Wing',
-                'ToolTip' : 'Generate Wing'
+                'ToolTip' : 'Create a new Wing based on Panel'
                 }
 
     def Activated(self):

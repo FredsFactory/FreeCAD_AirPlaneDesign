@@ -21,7 +21,8 @@
 #------------------------------------------------------
 #AirPlaneDesign 
 #------------------------------------------------------
-import path_locator
+
+#import path_locator
 
 smWBpath = os.path.dirname(path_locator.__file__)
 smWB_icons_path =  os.path.join( smWBpath, 'resources', 'icons')

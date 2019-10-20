@@ -39,8 +39,11 @@ class WingEditorPanel():
     def loadPanelTable(self):
         _wingRibProfilDir=FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/wingribprofil'
         #self.form.NumberOfPanel.setItem=5
+        
+        ##########################
         # Numéro du panneau, profil, fichier profil, , corde emplature, corde saumon, longueur paneau, X emplature, X saumon, Y emplature, Y saumon, Z emplature, Z saumon, X Rotation, Y Rotation, Z Rotation
-        # Panel #, profile, profile file....X Rot(ation), Y Rot, Z Rot
+        # Panel Number, Profil, Profil file (DAT), Root rib choord, End rib choords, panel length, X position of Root rib ,X position of end rib , Y position of Root rib ,Y position of end rib, Z position of Root rib ,Z position of end rib, X angle of root rib,   Y angle of root rib,  Z angle of root rib,    
+     
         initPanelTable = [
              ["1","Eppler207",_wingRibProfilDir+u"/naca/naca2412.dat","250","222","122","0","0","0.0","-54.","0","0","22"],
              ["2","Eppler207",_wingRibProfilDir+u"/naca/naca2412.dat","222","196","35.","0","0","-54","-54","0","54","0"],

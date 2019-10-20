@@ -185,7 +185,7 @@ class GenerateWingRibsCommand():
                 #'Pixmap'  : ':/AirPlaneDesign/icons/importPart_update.svg', 
                 #'Accel' : 'Shift+S', # a default shortcut (optional)
                 'MenuText': 'Generate Wing Ribs',
-                'ToolTip' : 'Generate Wing Ribs'
+                'ToolTip' : 'Create a Rib based on DAT file or Generate NACA profil'
                   }
 
     def Activated(self):
