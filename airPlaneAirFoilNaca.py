@@ -24,23 +24,19 @@ __author__ = "F. Nivoix"
 __url__ = "https://fredsfactory.fr"
 
 
-
-
-import os,FreeCAD,FreeCADGui
+import os, re, os, string, cProfile
+import FreeCAD, FreeCADGui, Draft, Part, PartDesign, PartDesignGui, Sketcher
 from PySide import QtCore, QtGui
 from PySide.QtGui import QLineEdit, QRadioButton
 from pivy import coin
 from FreeCAD import Vector, Base
 from Draft import makeWire
 
-import re, FreeCAD, FreeCADGui, Draft, Part, PartDesign,PartDesignGui,Sketcher,cProfile, os, string
-
 from math import cos, sin, tan
 from math import atan
 from math import pi
 from math import pow
 from math import sqrt
-
 
 
 #Start #### Copyright (C) 2011 by Dirk Gorissen <dgorissen@gmail.com>####
@@ -198,19 +194,19 @@ def naca4(number, n, finite_TE = False, half_cosine_spacing = False):
 
     X = xu[::-1] + xl[1:]
     Z = yu[::-1] + yl[1:]
-    # AiplaneDesing modification - start
+    # AiplaneDesign modification - start
     coords=[] 
     for i in range(len(X)) :
         coords.append(Vector(X[i],0,Z[i]))
     return coords
-   
-   # AiplaneDesing modification - end 
-    
+
+   # AiplaneDesign modification - end
+
 def naca5(number, n, finite_TE = False, half_cosine_spacing = False):
     """
     Returns 2*n+1 points in [0 1] for the given 5 digit NACA number string
     """
- 
+
 
     naca1 = int(number[0])
     naca23 = int(number[1:3])
@@ -276,14 +272,14 @@ def naca5(number, n, finite_TE = False, half_cosine_spacing = False):
     
     X = xu[::-1] + xl[1:]
     Z = yu[::-1] + yl[1:]
- 
-    # AiplaneDesing modification - start
+
+    # AiplaneDesign modification - start
     coords=[] 
     for i in range(len(X)) :
         coords.append(Vector(X[i],0,Z[i]))
     return coords
-   
-   # AiplaneDesing modification - end 
+
+   # AiplaneDesign modification - end
 
 ##### Copyright (C) 2011 by Dirk Gorissen <dgorissen@gmail.com>####End
 

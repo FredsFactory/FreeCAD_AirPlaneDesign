@@ -163,7 +163,7 @@ class _WPanel:
         obj.addProperty("App::PropertyLength","Length","WingPanel","Length of the wing").Length=1.0
         obj.addProperty("App::PropertyLength","Width","WingPanel","Width of the wing").Width=1.0
         obj.addProperty("App::PropertyLength","Height","WingPanel", "Height of the wing").Height=1.0
-        obj.addProperty("App::PropertyStringList","PanelProfil","WingPanel","Profil type").PanelProfil=[u"/Users/fredericnivoix/Library/Preferences/FreeCAD/Mod/AirPlaneDesign/wingribprofil/e207.dat"]
+        obj.addProperty("App::PropertyStringList","PanelProfil","WingPanel","Profil type").PanelProfil=[u"Mod/AirPlaneDesign/wingribprofil/e207.dat"]
         obj.addProperty("App::PropertyLength","PanelLength","WingPanel","Length of the Wing").PanelLength=100.0
         obj.addProperty("App::PropertyFloatList","PanelDelta","WingPanel","Delta").PanelDelta=[0,70.0]
         obj.addProperty("App::PropertyLength","PanelWidth","WingPanel","Width of the panel").PanelWidth=300.0
