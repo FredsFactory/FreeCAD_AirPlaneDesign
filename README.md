@@ -35,6 +35,7 @@ Ability to choose the:
 ## Roadmap
 
 - [ ] Add NACA profil generator
+- [ ] Improve RIB file selection 
 - [ ] Add ability to translate workbench
 - [ ] Tutorials
 
