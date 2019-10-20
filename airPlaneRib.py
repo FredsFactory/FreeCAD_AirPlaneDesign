@@ -23,6 +23,9 @@ __title__="FreeCAD airPlaneRib"
 __author__ = "F. Nivoix"
 __url__ = "https://fredsfactory.fr"
 
+#import cv2
+
+
 import os,FreeCAD,FreeCADGui
 from PySide import QtCore, QtGui
 from PySide.QtGui import QLineEdit, QRadioButton
@@ -33,6 +36,7 @@ from Draft import makeWire
 import re, FreeCAD, FreeCADGui, Draft, Part, PartDesign,PartDesignGui,Sketcher,cProfile, os, string
 from airPlaneAirFoil import process,decodeName
 from airPlaneDesingProfilUI import SelectObjectUI
+from airPlaneAirFoilNaca import generateNaca
 
 
 
@@ -40,8 +44,10 @@ class WingRib:
     def __init__(self, obj,_profil,_chord,_x,_y,_z,_xrot,_yrot,_zrot):
         '''Rib properties'''
         obj.Proxy = self
-        obj.addProperty("App::PropertyFile","RibProfil","Rib","Profil type").RibProfil=_profil#[u"/Users/fredericnivoix/Library/Preferences/FreeCAD/Mod/AirPlaneDesign/wingribprofil/e207.dat"]
-        #obj.addProperty("App::PropertyFloatList","PanelDelta","Rib","Delta").PanelDelta=[0,70.0]
+        obj.addProperty("App::PropertyFile","RibProfil","Rib","Profil type").RibProfil=_profil
+        obj.addProperty("App::PropertyString","NacaProfil","NacaProfil","NacaProfil").NacaProfil=""
+        obj.addProperty("App::PropertyInteger","NacaNbrPoint","NacaProfil","NacaNbrPoint").NacaNbrPoint=240
+         #obj.addProperty("App::PropertyFloatList","PanelDelta","Rib","Delta").PanelDelta=[0,70.0]
         obj.addProperty("App::PropertyLength","Chord","Rib","chord").Chord=_chord
         obj.addProperty("App::PropertyLength","xrot","Rib","chord").xrot=_xrot
         obj.addProperty("App::PropertyLength","yrot","Rib","chord").yrot=_yrot
@@ -56,11 +62,16 @@ class WingRib:
     
     def execute(self, fp):
         #   Do something when doing a recomputation, this method is mandatory
-        FreeCAD.Console.PrintMessage("Create Rib Start\n")
-        name=decodeName(fp.RibProfil)
-        #fp.addProperty("App::PropertyLink", "Rib", "Panel", "Rib")
-        FreeCAD.Console.PrintMessage(name)
-        a=process(FreeCAD.ActiveDocument.Name,fp.RibProfil,fp.Chord,fp.Placement.Base.x,fp.Placement.Base.y,fp.Placement.Base.z,fp.xrot,fp.yrot,fp.zrot)
+        if fp.NacaProfil =="" :
+             FreeCAD.Console.PrintMessage("Create Rib Start\n")
+             name=decodeName(fp.RibProfil)
+             #fp.addProperty("App::PropertyLink", "Rib", "Panel", "Rib")
+             FreeCAD.Console.PrintMessage(name)
+             a=process(FreeCAD.ActiveDocument.Name,fp.RibProfil,fp.Chord,fp.Placement.Base.x,fp.Placement.Base.y,fp.Placement.Base.z,fp.xrot,fp.yrot,fp.zrot)
+        else :
+             a=generateNaca(fp.NacaProfil, fp.NacaNbrPoint, False, False,fp.Chord,fp.Placement.Base.x,fp.Placement.Base.y,fp.Placement.Base.z,fp.xrot,fp.yrot,fp.zrot)
+
+        
         fp.Shape=a
         FreeCAD.Console.PrintMessage("Create Rib End\n")
 
