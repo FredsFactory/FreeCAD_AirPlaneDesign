@@ -6,7 +6,7 @@ A FreeCAD workbench dedicated to Airplane Design
 
 ![WingProfile-screenshot](resources/AirplaneDesign001.png)
 
-![AirPlaneDesign-UI-screen](resources/AirPlaneDesignWorkbench.png)
+![AirPlaneDesign-UI-screen](resources/AirPlaneDesignWorkbench-V0.3.png)
 
 ## Release Notes
 **v0.3**: NACA Rib generator  
