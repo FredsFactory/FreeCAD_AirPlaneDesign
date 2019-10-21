@@ -22,6 +22,7 @@ import os,FreeCAD,FreeCADGui
 
 from PySide import QtCore, QtGui
 from PySide.QtGui import QLineEdit, QRadioButton
+from  airPlaneAirFoilNaca import generateNacaChoords
 import FreeCAD, FreeCADGui, Draft, Part
 import glob, os.path
 
@@ -38,13 +39,10 @@ class SelectObjectUI():
     def __init__(self):
         path_to_ui = FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/resources/selectRibProfil.ui'
         self.form = FreeCADGui.PySideUic.loadUi(path_to_ui)
-        profil_dir=FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/wingribprofil'
-        
-        a=listdirectory(profil_dir)
-      
-        print(a)
+        profil_dir=FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/wingribprofil'     
+        a=listdirectory(profil_dir)  
         for obj in a:
-            self.form.listProfil.addItem(obj) #tabWidget.fileTab.fileTab..tabWidget
+            self.form.listProfil.addItem(obj) 
         self.form.listProfil.itemSelectionChanged.connect(self.selectionChanged)
         sel = FreeCADGui.Selection.getSelection()
         if sel:
@@ -52,6 +50,7 @@ class SelectObjectUI():
             print(selected)
         else:
             selected = None
+        #self.updateGraphicsViewRib()    
 
     def accept(self):
         #_profil=sel[0].Label
@@ -72,11 +71,69 @@ class SelectObjectUI():
         a=self.form.listProfil.currentItem()
         item=a.text()
         print("Selected items: ",item)
-        #print filter(lambda obj: obj.Label == label, FreeCAD.ActiveDocument.Objects)[0]
+        
         return
     
     def setupUi(self):
         # Connect Signals and Slots
         #self.form.testButton.clicked.connect(self.importFile)
+        self.form.NACANumber.textChanged.connect(self.updateGraphicsViewRib)
+        self.form.choord.valueChanged.connect(self.updateGraphicsViewRib)
+        self.form.nacaNbrPoint.valueChanged.connect(self.updateGraphicsViewRib)
         return
+        
+    def updateGraphicsViewRib(self):
+        choords=[]
+        number=self.form.NACANumber.text()
+        if len(number)==4:
+             #choords=naca4(number, n, finite_TE, half_cosine_spacing)
+             choords=generateNacaChoords(number,self.form.nacaNbrPoint.value(),False,0,self.form.choord.value(),0,0,0,0,0,0)
+        elif len(number)==5:
+             #choords=naca5(number, n, finite_TE, half_cosine_spacing)
+             choords=generateNacaChoords(number,self.form.nacaNbrPoint.value(),False,0,self.form.choord.value(),0,0,0,0,0,0)
+        else :
+             return    
+        
+        if (len(number)==4) or (len(number))==5 :
+             print(number)
+             scale=self.form.choord.value()
+             scene=QtGui.QGraphicsScene()
+             self.form.ribView.setScene(scene)
+             #scene.setSceneRect(QtCore.QRectF(-10, -400, 400, 10+self.form.choord.value()))
+             #item=QtGui.QGraphicsLineItem(-100,  0, 1000,  0)
+             #scene.addItem(item)
+             points=[]
+             first_v = None
+             last_v = None
+             for v in choords:
+                 if first_v == None:
+                     first_v = v
+            # End of if first_v == None
+            # Line between v and last_v if they're not equal
+                 if (last_v != None) and (last_v != v):
+                     points.append(QtCore.QPointF(last_v.x*scale,last_v.z*scale ))
+                     points.append(QtCore.QPointF(v.x*scale,v.z*scale ))
+            # End of if (last_v != None) and (last_v != v)
+            # The new last_v
+                 last_v = v
+                 print("last_v:")
+                 print(last_v.x)
+                 print("/n")
 
+        # End of for v in upper
+        # close the wire if needed
+             if last_v != first_v:
+                     print("last_v:")
+                     print(last_v.x)
+                     print("/n")
+                     points.append(QtCore.QPointF(last_v.x*scale,last_v.z*scale ))
+                     points.append(QtCore.QPointF(first_v.x*scale,first_v.z*scale ))
+             item=QtGui.QGraphicsPolygonItem(QtGui.QPolygonF(points))
+             item.setPen(QtGui.QPen(QtCore.Qt.blue))
+             scene.addItem(item)
+             self.form.ribView.setFocus()
+             self.form.ribView.show()
+        #else:
+             #raise Exception            
+        return
+                
