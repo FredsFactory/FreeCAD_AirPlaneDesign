@@ -39,7 +39,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="fileTab">
     <attribute name="title">
@@ -49,7 +49,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>20</y>
+       <y>10</y>
        <width>441</width>
        <height>41</height>
       </rect>
@@ -58,12 +58,12 @@
       <string>Select the profil/sélectionner un profil</string>
      </property>
     </widget>
-    <widget class="QListWidget" name="listProfil">
+    <widget class="QTreeView" name="listProfil">
      <property name="geometry">
       <rect>
        <x>-20</x>
-       <y>50</y>
-       <width>781</width>
+       <y>40</y>
+       <width>401</width>
        <height>311</height>
       </rect>
      </property>
