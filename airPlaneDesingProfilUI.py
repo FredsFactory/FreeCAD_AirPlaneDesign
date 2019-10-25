@@ -39,19 +39,28 @@ class SelectObjectUI():
     def __init__(self):
         path_to_ui = FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/resources/selectRibProfil.ui'
         self.form = FreeCADGui.PySideUic.loadUi(path_to_ui)
-        profil_dir=FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/wingribprofil'     
-        a=listdirectory(profil_dir)  
-        for obj in a:
-            self.form.listProfil.addItem(obj) 
-        self.form.listProfil.itemSelectionChanged.connect(self.selectionChanged)
-        sel = FreeCADGui.Selection.getSelection()
-        if sel:
-            selected = sel[0].Label
-            print(selected)
-        else:
-            selected = None
-        #self.updateGraphicsViewRib()    
-
+        profil_dir=FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/wingribprofil' 
+        self.filePath=""
+        
+        #QTreeView.__init__(self)
+        self.model = QtGui.QFileSystemModel()
+        self.model.setRootPath( profil_dir)
+        tree =  self.form.listProfil
+        tree.setModel(self.model)
+        tree.hideColumn(1)
+        tree.hideColumn(2)
+        tree.hideColumn(3)
+        tree.hideColumn(4)        
+        tree.resizeColumnToContents(0)
+        tree.setRootIndex(self.model.index(profil_dir))
+              
+    def on_treeView_clicked(self,index):
+        self.filePath = self.model.filePath(index)
+        return 
+        
+    def profilSelectedFilePath(self):
+        return self.filePath
+        
     def accept(self):
         #_profil=sel[0].Label
         print(_profil)
@@ -80,6 +89,7 @@ class SelectObjectUI():
         self.form.NACANumber.textChanged.connect(self.updateGraphicsViewRib)
         self.form.choord.valueChanged.connect(self.updateGraphicsViewRib)
         self.form.nacaNbrPoint.valueChanged.connect(self.updateGraphicsViewRib)
+        self.form.listProfil.clicked.connect(self.on_treeView_clicked)
         return
         
     def updateGraphicsViewRib(self):

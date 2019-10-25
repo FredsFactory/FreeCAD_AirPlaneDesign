@@ -157,12 +157,9 @@ class CommandWingRib:
             print("corde : /n")
             print (editor.form.NACANumber.text())
             if editor.form.NACANumber.text()=="" :
-                b=editor.form.listProfil.currentItem()
-                print(b.text())
-                print(editor.form.choord.value())
+                b=editor.profilSelectedFilePath()#currentItem()
                 a=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","wrib")
-                #WingRib(a,u"/Users/fredericnivoix/Library/Preferences/FreeCAD/Mod/AirPlaneDesign/wingribprofil/e207.dat",100,0,0,0)
-                WingRib(a,b.text(),False,0,editor.form.choord.value(),0,0,0,0,0,0)
+                WingRib(a,b,False,0,editor.form.choord.value(),0,0,0,0,0,0)
                 ViewProviderWingRib(a.ViewObject)
             else :
                 print("Naca : ") 
