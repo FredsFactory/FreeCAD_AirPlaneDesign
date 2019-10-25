@@ -40,7 +40,7 @@ class SelectObjectUI():
         path_to_ui = FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/resources/selectRibProfil.ui'
         self.form = FreeCADGui.PySideUic.loadUi(path_to_ui)
         profil_dir=FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/wingribprofil' 
-        self.filePath=""
+        #self.filePath=""
         
         #QTreeView.__init__(self)
         self.model = QtGui.QFileSystemModel()
