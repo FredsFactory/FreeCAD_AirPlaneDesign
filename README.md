@@ -4,7 +4,7 @@ A FreeCAD workbench dedicated to Airplane Design
 
 **Warning:** This is highly experimental code. Testers are welcome.
 
-![AirPlaneDesign-UI-screen](resources/wingresult.png)
+![AirPlaneDesign-UI-screen](resources/WingResult.png)
 
 ![WingProfile-screenshot](resources/AirplaneDesign001.png)
 
