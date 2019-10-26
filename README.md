@@ -11,7 +11,7 @@ A FreeCAD workbench dedicated to Airplane Design
 ## Release Notes
 **v0.3**: NACA Rib generator  
 **v0.2**: New release with parametric objects based on a dedicated UI  
-**v0.1**: Initial release based on sheet  
+**v0.1**: Initial release based on sheet  deprecated!
 
 **v0.001**: 11 July 2018: Initial version
 
