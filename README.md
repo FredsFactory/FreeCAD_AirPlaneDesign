@@ -4,7 +4,7 @@ A FreeCAD workbench dedicated to Airplane Design
 
 **Warning:** This is highly experimental code. Testers are welcome.
 
-![AirPlaneDesign-UI-screen](resources/AirPlaneDesignWorkbench-V0.3.png)
+![AirPlaneDesign-UI-screen](resources/wingresult.png)
 
 ![WingProfile-screenshot](resources/AirplaneDesign001.png)
 
@@ -22,9 +22,19 @@ A FreeCAD workbench dedicated to Airplane Design
 Use the FreeCAD [Addon Manager](https://github.com/FreeCAD/FreeCAD-addons#installing) to install AirPlaneDesign Workbench.
 
 ## Usage
-After installation a new menu appears:  
-1. Create a rib
-you can import DAT file or generate NACA Profil.
+After installation a new menu appears with to function :  
+1. Create a rib : you can import DAT file or generate NACA Profil.
+1.1 Import a DAT File
+Simply copy the DAT File in the folde
+
+![DAT folder](resources/Ribsfolder.png)
+1.2 Create a Rib based on a DAT file
+In the menu AiplaneDesign select create a RIB, the dialog below appears, clic on the tab "Import DAT File"
+
+![DAT folder](resources/RIBSGUI1.png)
+
+Select in the tree the dat file you want to use and define the choord of the rib and clic OK. That's all.
+You can change directly in the GUI of the object the Dat File, the Choord (in mm). 
 
 2.Create a wing
 
