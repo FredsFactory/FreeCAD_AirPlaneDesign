@@ -65,7 +65,7 @@ Ability to choose the:
 - [ ] Tutorials
 
 ## Feedback
-Feedback can be provided via the [discussion thread](https://forum.freecadweb.org/viewtopic.php?f=9&t=38917) on the FreeCAD forums
+Feedback can be provided via the [discussion thread in english](https://forum.freecadweb.org/viewtopic.php?f=9&t=38917) or [discussion thread in french](https://forum.freecadweb.org/viewtopic.php?f=12&t=40376) on the FreeCAD forums  
 
 ## License
 LGPLv2.1  
