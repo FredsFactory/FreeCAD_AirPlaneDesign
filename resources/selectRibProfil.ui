@@ -187,6 +187,25 @@
     <string>Chord in mm/ Corde en mm</string>
    </property>
   </widget>
+  <widget class="QCheckBox" name="kingOfLines">
+   <property name="geometry">
+    <rect>
+     <x>320</x>
+     <y>390</y>
+     <width>121</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If select the rib will be created with BSpline&lt;/p&gt;&lt;p&gt;If not  the rib will be created with with wire&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="text">
+    <string>Make a BSpline</string>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections>
