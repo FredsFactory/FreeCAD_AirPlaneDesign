@@ -29,17 +29,14 @@ from PySide import QtCore, QtGui
 from PySide.QtGui import QLineEdit, QRadioButton
 from pivy import coin
 from FreeCAD import Vector, Base
-from Draft import makeWire
 
-import re, FreeCAD, FreeCADGui, Draft, Part, PartDesign,PartDesignGui,Sketcher,cProfile, os, string
+import re, FreeCAD, FreeCADGui, Part, PartDesign,PartDesignGui,Sketcher,cProfile, os, string
 #################################################
 #  This module provides tools to build a
 #  wing panel
 #################################################
 if open.__module__ in ['__builtin__','io']:
     pythonopen = open
-
-useDraftWire = False #True #
 
 def decodeName(name):
     "decodes encoded strings"
@@ -74,7 +71,7 @@ def insert(filename,docname):
     importgroup.Label = decodeName(groupname)
     process(doc,filename)
 
-def process(doc,filename,scale,posX,posY,posZ,rotX,rotY,rotZ):
+def process(doc,filename,scale,posX,posY,posZ,rotX,rotY,rotZ, useSpline = True):
     # The common airfoil dat format has many flavors, This code should work with almost every dialect,
     #Regex to identify data rows and throw away unused metadata
     regex = re.compile(r'^\s*(?P<xval>(\-|\d*)\.\d+(E\-?\d+)?)\,?\s*(?P<yval>\-?\s*\d*\.\d+(E\-?\d+)?)\s*$')
@@ -115,11 +112,14 @@ def process(doc,filename,scale,posX,posY,posZ,rotX,rotY,rotZ):
             upper.append(i)
         coords = upper
 
-    # do we use the parametric Draft Wire?
-    if useDraftWire:
-        obj = makeWire ( coords, True )
-        face=obj
-        #obj.label = airfoilname
+    # do we use a BSpline?
+    if useSpline:
+        spline = Part.BSplineCurve()
+        spline.interpolate(coords)
+        if coords[0] != coords[-1]:
+            wire = Part.Wire([spline.toShape(),Part.makeLine(coords[0],coords[-1])])
+        else:
+            wire = Part.Wire(spline.toShape())
     else:
         # alternate solution, uses common Part Faces
         lines = []
@@ -140,20 +140,21 @@ def process(doc,filename,scale,posX,posY,posZ,rotX,rotY,rotZ):
         if last_v != first_v:
                 lines.append(Part.makeLine(last_v, first_v))
         wire = Part.Wire(lines)
-        face = Part.Face(wire)
-        #Scale the foil
-        myScale = Base.Matrix()
-        myScale.scale(scale,1,scale)
-        face=face.transformGeometry(myScale)
-        #
-#move(face, FreeCAD.Vector(posX, posY, posZ))
-        face.Placement=FreeCAD.Placement(FreeCAD.Vector(1,0,0),FreeCAD.Rotation(FreeCAD.Vector(0,0,0),posX))
-        face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,1,0),FreeCAD.Rotation(FreeCAD.Vector(0,0,0),posY))
-        face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,1),FreeCAD.Rotation(FreeCAD.Vector(0,0,0),posZ))
-        face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(1,0,0),rotX))
-        face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(0,1,0),rotY))
-        face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(0,0,1),rotZ))
 
+    face = Part.Face(wire)
+
+    #Scale the foil
+    myScale = Base.Matrix()
+    myScale.scale(scale,1,scale)
+    face=face.transformGeometry(myScale)
+
+#move(face, FreeCAD.Vector(posX, posY, posZ))
+    face.Placement=FreeCAD.Placement(FreeCAD.Vector(1,0,0),FreeCAD.Rotation(FreeCAD.Vector(0,0,0),posX))
+    face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,1,0),FreeCAD.Rotation(FreeCAD.Vector(0,0,0),posY))
+    face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,1),FreeCAD.Rotation(FreeCAD.Vector(0,0,0),posZ))
+    face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(1,0,0),rotX))
+    face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(0,1,0),rotY))
+    face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(0,0,1),rotZ))
 
 #face.Placement(App.Vector(0,1,0),App.Rotation(App.Vector(0,0,0),posY))
 #face.Placement(App.Vector(0,0,1),App.Rotation(App.Vector(0,0,0),posZ))

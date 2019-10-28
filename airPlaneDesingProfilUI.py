@@ -22,7 +22,7 @@ import os,FreeCAD,FreeCADGui
 
 from PySide import QtCore, QtGui
 from PySide.QtGui import QLineEdit, QRadioButton
-from  airPlaneAirFoilNaca import generateNacaChoords
+from  airPlaneAirFoilNaca import generateNacaCoords
 import FreeCAD, FreeCADGui, Draft, Part
 import glob, os.path
 
@@ -93,14 +93,14 @@ class SelectObjectUI():
         return
         
     def updateGraphicsViewRib(self):
-        choords=[]
+        coords=[]
         number=self.form.NACANumber.text()
         if len(number)==4:
-             #choords=naca4(number, n, finite_TE, half_cosine_spacing)
-             choords=generateNacaChoords(number,self.form.nacaNbrPoint.value(),False,0,self.form.choord.value(),0,0,0,0,0,0)
+             #coords=naca4(number, n, finite_TE, half_cosine_spacing)
+             coords=generateNacaCoords(number,self.form.nacaNbrPoint.value(),False,0,self.form.choord.value(),0,0,0,0,0,0)
         elif len(number)==5:
-             #choords=naca5(number, n, finite_TE, half_cosine_spacing)
-             choords=generateNacaChoords(number,self.form.nacaNbrPoint.value(),False,0,self.form.choord.value(),0,0,0,0,0,0)
+             #coords=naca5(number, n, finite_TE, half_cosine_spacing)
+             coords=generateNacaCoords(number,self.form.nacaNbrPoint.value(),False,0,self.form.choord.value(),0,0,0,0,0,0)
         else :
              return    
         
@@ -115,7 +115,7 @@ class SelectObjectUI():
              points=[]
              first_v = None
              last_v = None
-             for v in choords:
+             for v in coords:
                  if first_v == None:
                      first_v = v
             # End of if first_v == None
