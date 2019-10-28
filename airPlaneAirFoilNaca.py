@@ -25,12 +25,11 @@ __url__ = "https://fredsfactory.fr"
 
 
 import os, re, os, string, cProfile
-import FreeCAD, FreeCADGui, Draft, Part, PartDesign, PartDesignGui, Sketcher
+import FreeCAD, FreeCADGui, Part, PartDesign, PartDesignGui, Sketcher
 from PySide import QtCore, QtGui
 from PySide.QtGui import QLineEdit, QRadioButton
 from pivy import coin
 from FreeCAD import Vector, Base
-from Draft import makeWire
 
 from math import cos, sin, tan
 from math import atan
@@ -274,10 +273,10 @@ def naca5(number, n, finite_TE = False, half_cosine_spacing = False):
     Z = yu[::-1] + yl[1:]
 
     # AiplaneDesign modification - start
-    choords=[] 
+    coords=[]
     for i in range(len(X)) :
-        choords.append(Vector(X[i],0,Z[i]))
-    return choords
+        coords.append(Vector(X[i],0,Z[i]))
+    return coords
 
    # AiplaneDesign modification - end
 
@@ -287,24 +286,33 @@ def naca5(number, n, finite_TE = False, half_cosine_spacing = False):
 ###########################
 #
 ###########################
-def generateNacaChoords(number, n, finite_TE, half_cosine_spacing,scale,posX,posY,posZ,rotX,rotY,rotZ):
-    choords=[]
+def generateNacaCoords(number, n, finite_TE, half_cosine_spacing,scale,posX,posY,posZ,rotX,rotY,rotZ):
+    coords=[]
     if len(number)==4:
-        choords=naca4(number, n, finite_TE, half_cosine_spacing)
+        coords=naca4(number, n, finite_TE, half_cosine_spacing)
     elif len(number)==5:
-        choords=naca5(number, n, finite_TE, half_cosine_spacing)
+        coords=naca5(number, n, finite_TE, half_cosine_spacing)
     else:
         raise Exception
-    return choords
+    return coords
 
 
-def generateNaca(number, n=240, finite_TE = False, half_cosine_spacing = False,scale=1,posX=0,posY=0,posZ=0,rotX=0,rotY=0,rotZ=0):
-    choords=[]
-    choords=generateNacaChoords(number, n, finite_TE , half_cosine_spacing ,scale,posX,posY,posZ,rotX,rotY,rotZ) 
-    lines = []
-    first_v = None
-    last_v = None
-    for v in choords:
+def generateNaca(number, n=240, finite_TE = False, half_cosine_spacing = False,scale=1,posX=0,posY=0,posZ=0,rotX=0,rotY=0,rotZ=0, useSpline = True):
+    coords=[]
+    coords=generateNacaCoords(number, n, finite_TE , half_cosine_spacing ,scale,posX,posY,posZ,rotX,rotY,rotZ)
+    if useSpline:
+        spline = Part.BSplineCurve()
+        spline.interpolate(coords)
+        if coords[0] != coords[-1]:
+            wire = Part.Wire([spline.toShape(),Part.makeLine(coords[0],coords[-1])])
+        else:
+            wire = Part.Wire(spline.toShape())
+    else:
+        # alternate solution, uses common Part Faces
+        lines = []
+        first_v = None
+        last_v = None
+        for v in coords:
             if first_v == None:
                 first_v = v
             # End of if first_v == None
@@ -316,15 +324,16 @@ def generateNaca(number, n=240, finite_TE = False, half_cosine_spacing = False,s
             last_v = v
         # End of for v in upper
         # close the wire if needed
-    if last_v != first_v:
+        if last_v != first_v:
                 lines.append(Part.makeLine(last_v, first_v))
-    wire = Part.Wire(lines)
+        wire = Part.Wire(lines)
+
     face = Part.Face(wire)
+
         #Scale the foil
     myScale = Base.Matrix()
     myScale.scale(scale,1,scale)
     face=face.transformGeometry(myScale)
-        #
 #move(face, FreeCAD.Vector(posX, posY, posZ))
     face.Placement=FreeCAD.Placement(FreeCAD.Vector(1,0,0),FreeCAD.Rotation(FreeCAD.Vector(0,0,0),posX))
     face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,1,0),FreeCAD.Rotation(FreeCAD.Vector(0,0,0),posY))
