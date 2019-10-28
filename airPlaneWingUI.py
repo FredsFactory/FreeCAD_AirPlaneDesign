@@ -15,13 +15,16 @@ import FreeCADGui
 from PySide import QtCore, QtGui
 
 
-
 class WingEditorPanel():
     def __init__(self):
         path_to_ui = FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/resources/airPlaneDesignWingdialog.ui'
         self.form = FreeCADGui.PySideUic.loadUi(path_to_ui)
         self.form.airPlaneName.setText("nom")
-
+        #backgroundPicture=QPixmap pix("monImage.png")
+        #pixmap=path_to_ui+ 'Mod/AirPlaneDesign/resources/plane.svg'
+        #self.form.backGroundPlane.setPixmap(pixmap)
+        
+        
     def accept(self):
         pass
 
@@ -57,24 +60,56 @@ class WingEditorPanel():
             for col_number, data in enumerate(row_data):
                self.form.PanelTable.setItem(row_number,col_number,QtGui.QTableWidgetItem(str(data)))#,QtGui.QTableWidgetItem(str(data)))
 
-
     def accept(self):
         print("OK")
         return
-
 
     def setupUi(self):
         # Connect Signals and Slots
         print("setupUI")
         #self.form.testButton.clicked.connect(self.importFile)
         self.loadPanelTable()
+        self.updateGraphicsView()
         #self.loadPanelTable()
         #self.updateGraphicsViewWings2()
-
         #self.form.btnCopyTools.setEnabled(False)
-
         #self.setFields()
-
+        
+    def loadImage(self):
+        self._photo.setPixmap(QtGui.QPixmap(FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/resources/plane.svg'))
+         
+    def setPhoto(self, pixmap=None):
+        self._zoom = 0
+        if pixmap and not pixmap.isNull():
+            self._empty = False
+            self.setDragMode(QtGui.QGraphicsView.ScrollHandDrag)
+            self._photo.setPixmap(pixmap)
+        else:
+            self._empty = True
+            self.setDragMode(QtGui.QGraphicsView.NoDrag)
+            self._photo.setPixmap(QtGui.QPixmap())
+        self.fitInView()
+ 
+    def updateGraphicsView(self):
+        #load picture in Plane Tab
+        
+        self._scene=QtGui.QGraphicsScene()
+        self.form.planeView.setScene(self._scene)
+        
+        self._photo = QtGui.QGraphicsPixmapItem()
+        self._photo.setPixmap(QtGui.QPixmap(FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/resources/plane.png'))
+        self._scene.addItem(self._photo)
+        self.form.planeView.show()
+        
+        #self.loadImage()
+        
+        #self.form.planeView.setScene(selc._scene)
+        #self._photo = self.form.planeView()
+        #scene.addItem(self.form.planeView()) #self._photo)
+        
+        #scene.setSceneRect(QtCore.QRectF(-10, -400, 400, 10+self.form.choord.value()))
+        #item=QtGui.QGraphicsLineItem(-100,  0, 1000,  0)
+        
 class CommandWizard():
     def edit(self):
         editor = WingEditorPanel()

@@ -41,7 +41,7 @@ from airPlaneAirFoilNaca import generateNaca
 
 
 class WingRib:
-    def __init__(self, obj,_profil,_nacagene,_nacaNbrPoint,_chord,_x,_y,_z,_xrot,_yrot,_zrot):
+    def __init__(self, obj,_profil,_nacagene,_nacaNbrPoint,_chord,_x,_y,_z,_xrot,_yrot,_zrot,_useSpline = True):
         '''Rib properties'''
         obj.Proxy = self
         obj.addProperty("App::PropertyFile","RibProfil","Rib","Profil type").RibProfil=_profil
@@ -52,6 +52,7 @@ class WingRib:
                 
         obj.addProperty("App::PropertyInteger","NacaNbrPoint","NacaProfil","NacaNbrPoint").NacaNbrPoint=_nacaNbrPoint
          #obj.addProperty("App::PropertyFloatList","PanelDelta","Rib","Delta").PanelDelta=[0,70.0]
+        obj.addProperty("App::PropertyBool","useSpline","Rib","useSpline").useSpline =_useSpline
         obj.addProperty("App::PropertyLength","Chord","Rib","chord").Chord=_chord
         obj.addProperty("App::PropertyLength","xrot","Rib","chord").xrot=_xrot
         obj.addProperty("App::PropertyLength","yrot","Rib","chord").yrot=_yrot
@@ -71,9 +72,9 @@ class WingRib:
              name=decodeName(fp.RibProfil)
              #fp.addProperty("App::PropertyLink", "Rib", "Panel", "Rib")
              FreeCAD.Console.PrintMessage(name)
-             a=process(FreeCAD.ActiveDocument.Name,fp.RibProfil,fp.Chord,fp.Placement.Base.x,fp.Placement.Base.y,fp.Placement.Base.z,fp.xrot,fp.yrot,fp.zrot)
+             a=process(FreeCAD.ActiveDocument.Name,fp.RibProfil,fp.Chord,fp.Placement.Base.x,fp.Placement.Base.y,fp.Placement.Base.z,fp.xrot,fp.yrot,fp.zrot,fp.useSpline)
         else :
-             a=generateNaca(fp.NacaProfil, fp.NacaNbrPoint, False, False,fp.Chord,fp.Placement.Base.x,fp.Placement.Base.y,fp.Placement.Base.z,fp.xrot,fp.yrot,fp.zrot)
+             a=generateNaca(fp.NacaProfil, fp.NacaNbrPoint, False, False,fp.Chord,fp.Placement.Base.x,fp.Placement.Base.y,fp.Placement.Base.z,fp.xrot,fp.yrot,fp.zrot,fp.useSpline)
 
         
         fp.Shape=a
