@@ -87,7 +87,7 @@ class SelectObjectUI():
         # Connect Signals and Slots
         #self.form.testButton.clicked.connect(self.importFile)
         self.form.NACANumber.textChanged.connect(self.updateGraphicsViewRib)
-        self.form.choord.valueChanged.connect(self.updateGraphicsViewRib)
+        self.form.chord.valueChanged.connect(self.updateGraphicsViewRib)
         self.form.nacaNbrPoint.valueChanged.connect(self.updateGraphicsViewRib)
         self.form.listProfil.clicked.connect(self.on_treeView_clicked)
         return
@@ -97,19 +97,19 @@ class SelectObjectUI():
         number=self.form.NACANumber.text()
         if len(number)==4:
              #coords=naca4(number, n, finite_TE, half_cosine_spacing)
-             coords=generateNacaCoords(number,self.form.nacaNbrPoint.value(),False,0,self.form.choord.value(),0,0,0,0,0,0)
+             coords=generateNacaCoords(number,self.form.nacaNbrPoint.value(),False,0,self.form.chord.value(),0,0,0,0,0,0)
         elif len(number)==5:
              #coords=naca5(number, n, finite_TE, half_cosine_spacing)
-             coords=generateNacaCoords(number,self.form.nacaNbrPoint.value(),False,0,self.form.choord.value(),0,0,0,0,0,0)
+             coords=generateNacaCoords(number,self.form.nacaNbrPoint.value(),False,0,self.form.chord.value(),0,0,0,0,0,0)
         else :
              return    
         
         if (len(number)==4) or (len(number))==5 :
              print(number)
-             scale=self.form.choord.value()
+             scale=self.form.chord.value()
              scene=QtGui.QGraphicsScene()
              self.form.ribView.setScene(scene)
-             #scene.setSceneRect(QtCore.QRectF(-10, -400, 400, 10+self.form.choord.value()))
+             #scene.setSceneRect(QtCore.QRectF(-10, -400, 400, 10+self.form.chord.value()))
              #item=QtGui.QGraphicsLineItem(-100,  0, 1000,  0)
              #scene.addItem(item)
              points=[]
