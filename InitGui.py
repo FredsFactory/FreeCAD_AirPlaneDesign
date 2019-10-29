@@ -23,11 +23,18 @@
 #------------------------------------------------------
 
 import path_locator
+from PySide import QtCore
+
+
+# Qt tanslation handling
+from DraftGui import translate
+from DraftGui import utf8_decode
 
 smWBpath = os.path.dirname(path_locator.__file__)
 smWB_icons_path =  os.path.join( smWBpath, 'resources', 'icons')
 global main_smWB_Icon
 main_smWB_Icon = os.path.join( smWB_icons_path , 'appicon.svg')
+
 
 class AirPlaneDesignWorkbench(Workbench):
     def __init__(self):
@@ -37,16 +44,26 @@ class AirPlaneDesignWorkbench(Workbench):
      #Icon = """paste here the contents of a 16x16 xpm icon"""
 
     def Initialize(self):
+        def QT_TRANSLATE_NOOP(scope, text):
+          return text
         #"This function is executed when FreeCAD starts"
-        import airPlaneDesignInitPlane,airPlanePanel,generateWing,airPlaneDesignUI,generateWingRibs,airPlaneWingUI
+        import airPlanePanel
+        #import airPlaneDesignUI # old release. V0.1
+        import airPlaneWingUI  #airPlaneDesignInitPlane,,generateWing,generateWingRibs
         import airPlaneRib
        #self.list 
-        commandslistV0= ['airPlaneDesignEdit','airPlaneDesignInitPlane','generateWing','generateWingRibs']
-        commandslistV1= ['airPlaneDesingWRib','airPlaneDesingWPanel']
-        self.appendToolbar("Air Plane Design",commandslistV1) # creates a new toolbar with your commands
+        #commandslistV0= ['airPlaneDesignEdit','airPlaneDesignInitPlane','generateWing','generateWingRibs']
+        self.comList= ['airPlaneDesingWRib','airPlaneDesingWPanel']
         
-        #self.appendMenu('Air Plane Design V0',commandslistV0+["Separator"] )#self.list) # creates a new menu
-        self.appendMenu('Air Plane Design',["Separator"] +commandslistV1+["Separator"])
+        # creates a new toolbar with your commands
+        #self.appendToolbar("Air Plane Design",commandslistV1) 
+        self.appendToolbar(QT_TRANSLATE_NOOP("AirPlaneDesign", "Air Plane Design"), self.comList)
+        #self.appendToolbar(translate("AirPlaneDesign", "Air Plane Design"), commandslistV1)
+        
+        #self.appendMenu('Air Plane Design V0',commandslistV0+["Separator"] )#self.list) # old release. V0.1
+        # creates a new menu
+        #self.appendMenu('Air Plane Design',["Separator"] + self.comList+["Separator"])
+        self.appendMenu([QT_TRANSLATE_NOOP("Air Plane Design","Air Plane &Design")],self.comList)
 
     def Activated(self):
         #This function is executed when the workbench is activated
