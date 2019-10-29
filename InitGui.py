@@ -48,7 +48,7 @@ class AirPlaneDesignWorkbench(Workbench):
           return text
         #"This function is executed when FreeCAD starts"
         import airPlanePanel
-        #import airPlaneDesignUI # old release. V0.1
+        import airPlaneDesignUI 
         import airPlaneWingUI  #airPlaneDesignInitPlane,,generateWing,generateWingRibs
         import airPlaneRib
        #self.list 
