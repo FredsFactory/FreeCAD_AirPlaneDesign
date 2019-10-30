@@ -33,11 +33,11 @@ In the menu AiplaneDesign select create a RIB, the dialog below appears, clic on
 
 ![DAT folder](resources/RIBSGUI1.png)
 
-Select in the tree the dat file you want to use and define the choord of the rib and clic OK. That's all.
-You can change directly in the GUI of the object the Dat File, the Choord (in mm). 
+Select in the tree the dat file you want to use and define the chord of the rib and clic OK. That's all.
+You can change directly in the GUI of the object the Dat File, the chord (in mm). 
 
 1.3 Use the NACA Generator
-You can generate Naca profil 4 or 5 digits. In the menu AiplaneDesign select create a RIB, the dialog below appears, clic on the tab "NACA Generator". Simply fil the NACA Number, the number of points you want to generate and the choord in mm. A preview is automatically generate. 
+You can generate Naca profil 4 or 5 digits. In the menu AiplaneDesign select create a RIB, the dialog below appears, clic on the tab "NACA Generator". Simply fil the NACA Number, the number of points you want to generate and the chord in mm. A preview is automatically generate. 
 
 ![RibGUI](resources/RibGUI.png)
 
