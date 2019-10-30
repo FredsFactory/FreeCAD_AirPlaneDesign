@@ -45,7 +45,7 @@ class WingEditorPanel():
         
         ##########################
         # Numéro du panneau, profil, fichier profil, , corde emplature, corde saumon, longueur paneau, X emplature, X saumon, Y emplature, Y saumon, Z emplature, Z saumon, X Rotation, Y Rotation, Z Rotation
-        # Panel Number, Profil, Profil file (DAT), Root rib choord, End rib choords, panel length, X position of Root rib ,X position of end rib , Y position of Root rib ,Y position of end rib, Z position of Root rib ,Z position of end rib, X angle of root rib,   Y angle of root rib,  Z angle of root rib,    
+        # Panel Number, Profil, Profil file (DAT), Root rib chord, End rib chords, panel length, X position of Root rib ,X position of end rib , Y position of Root rib ,Y position of end rib, Z position of Root rib ,Z position of end rib, X angle of root rib,   Y angle of root rib,  Z angle of root rib,    
      
         initPanelTable = [
              ["1","Eppler207",_wingRibProfilDir+u"/naca/naca2412.dat","250","222","122","0","0","0.0","-54.","0","0","22"],
@@ -107,7 +107,7 @@ class WingEditorPanel():
         #self._photo = self.form.planeView()
         #scene.addItem(self.form.planeView()) #self._photo)
         
-        #scene.setSceneRect(QtCore.QRectF(-10, -400, 400, 10+self.form.choord.value()))
+        #scene.setSceneRect(QtCore.QRectF(-10, -400, 400, 10+self.form.chord.value()))
         #item=QtGui.QGraphicsLineItem(-100,  0, 1000,  0)
         
 class CommandWizard():
