@@ -22,12 +22,15 @@
      <height>501</height>
     </rect>
    </property>
+   <property name="locale">
+    <locale language="English" country="UnitedStates"/>
+   </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="Global">
     <attribute name="title">
-     <string>Général</string>
+     <string>General</string>
     </attribute>
     <widget class="QLineEdit" name="fuselageLength">
      <property name="geometry">
@@ -104,7 +107,7 @@
        <x>60</x>
        <y>260</y>
        <width>111</width>
-       <height>61</height>
+       <height>41</height>
       </rect>
      </property>
     </widget>
@@ -118,7 +121,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Levier Nez</string>
+      <string>Nose Lever</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_7">
@@ -250,7 +253,7 @@
    </widget>
    <widget class="QWidget" name="Wing">
     <attribute name="title">
-     <string>Aile</string>
+     <string>Wing</string>
     </attribute>
     <widget class="QTableWidget" name="PanelTable">
      <property name="geometry">
@@ -258,7 +261,7 @@
        <x>0</x>
        <y>40</y>
        <width>1121</width>
-       <height>261</height>
+       <height>381</height>
       </rect>
      </property>
      <property name="toolTip">
@@ -293,7 +296,7 @@
      </column>
      <column>
       <property name="text">
-       <string extracomment="File (dat)">Fichier (dat)</string>
+       <string extracomment="File (dat)">File (dat)</string>
       </property>
      </column>
      <column>
@@ -386,26 +389,42 @@
       </property>
      </widget>
     </widget>
+    <widget class="QPushButton" name="filSheet">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>430</y>
+       <width>201</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Fill in Sheet with an example</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="Rudder">
     <attribute name="title">
-     <string>Dérive</string>
+     <string>Rudder</string>
     </attribute>
    </widget>
    <widget class="QWidget" name="Stab">
     <attribute name="title">
-     <string>Stabilisateur</string>
+     <string>Elevator</string>
     </attribute>
    </widget>
   </widget>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>700</x>
+     <x>850</x>
      <y>520</y>
-     <width>341</width>
+     <width>191</width>
      <height>32</height>
     </rect>
+   </property>
+   <property name="locale">
+    <locale language="English" country="UnitedStates"/>
    </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
@@ -428,7 +447,7 @@
    </property>
    <widget class="QLabel" name="label">
     <property name="text">
-     <string>Nom/Name</string>
+     <string>Name</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="airPlaneName"/>
