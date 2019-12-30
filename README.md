@@ -61,6 +61,7 @@ Ability to choose the:
 
 - [ ] Add NACA profil generator
 - [ ] Improve RIB file selection 
+- [ ] Import profil from UIUC Airfoil Database
 - [ ] Add ability to translate workbench
 - [ ] Tutorials
 
