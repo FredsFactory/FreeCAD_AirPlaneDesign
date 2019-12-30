@@ -68,6 +68,7 @@ Ability to choose the:
 
 ## Feedback
 Feedback can be provided via the [discussion thread in english](https://forum.freecadweb.org/viewtopic.php?f=9&t=38917) or [discussion thread in french](https://forum.freecadweb.org/viewtopic.php?f=12&t=40376) on the FreeCAD forums  
+Some dicussions here : https://forum.freecadweb.org/viewtopic.php?f=3&t=41159&p=356564#p356564
 
 ## License
 LGPLv2.1  
