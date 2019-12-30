@@ -26,7 +26,7 @@
     <locale language="English" country="UnitedStates"/>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="Global">
     <attribute name="title">
@@ -301,37 +301,37 @@
      </column>
      <column>
       <property name="text">
-       <string extracomment="Root Chord ">Corde emplature</string>
+       <string extracomment="Root Chord ">Root Chord</string>
       </property>
      </column>
      <column>
       <property name="text">
-       <string extracomment="Tip chord">Corde saumon</string>
+       <string extracomment="Tip chord">Tip Chord</string>
       </property>
      </column>
      <column>
       <property name="text">
-       <string>Longueur paneau</string>
+       <string>Panel Lengh</string>
       </property>
      </column>
      <column>
       <property name="text">
-       <string>X emplature</string>
+       <string>X root</string>
       </property>
      </column>
      <column>
       <property name="text">
-       <string>X saumon</string>
+       <string>X tip</string>
       </property>
      </column>
      <column>
       <property name="text">
-       <string>Z emplature</string>
+       <string>Z root</string>
       </property>
      </column>
      <column>
       <property name="text">
-       <string>Z saumon</string>
+       <string>Z tip</string>
       </property>
      </column>
      <column>
@@ -351,7 +351,7 @@
      </column>
      <column>
       <property name="text">
-       <string>Nombre de nervure</string>
+       <string>Ribs number</string>
       </property>
      </column>
      <item row="0" column="0">
@@ -368,7 +368,7 @@
       <rect>
        <x>10</x>
        <y>0</y>
-       <width>331</width>
+       <width>221</width>
        <height>21</height>
       </rect>
      </property>
@@ -377,7 +377,7 @@
      </property>
      <widget class="QLabel" name="label_3">
       <property name="text">
-       <string>Nombre de paneaux/Number of panels:</string>
+       <string>Panels number</string>
       </property>
      </widget>
      <widget class="QSpinBox" name="NumberOfPanel">
