@@ -66,6 +66,7 @@ V0.4 :
 - [ ] Import profil from UIUC Airfoil Database
 - [ ] Add ability to translate workbench
 - [ ] Tutorials
+
 V0.5 : Some ideas....
 - [ ] Genrate RIb from Wing
 - [ ] ----------
