@@ -2,7 +2,7 @@
 #
 # Airfoil creation - Aircraft
 # 
-# Copyright (c) F. Nivoix - 2019 - V0.1
+# Copyright (c) F. Nivoix - 2019 - V0.3
 #
 # For FreeCAD Versions = or > 0.17 Revision xxxx
 #
@@ -23,58 +23,84 @@ __title__="FreeCAD airPlaneRib"
 __author__ = "F. Nivoix"
 __url__ = "https://fredsfactory.fr"
 
-#import cv2
-
 
 import os,FreeCAD,FreeCADGui
+import re
+import Draft
+import Part
+import PartDesign
+import PartDesignGui
+import Sketcher
+import cProfile
+import string
+
 from PySide import QtCore, QtGui
 from PySide.QtGui import QLineEdit, QRadioButton
 from pivy import coin
 from FreeCAD import Vector, Base
 from Draft import makeWire
-
-import re, FreeCAD, FreeCADGui, Draft, Part, PartDesign,PartDesignGui,Sketcher,cProfile, os, string
 from airPlaneAirFoil import process,decodeName
 from airPlaneDesingProfilUI import SelectObjectUI
 from airPlaneAirFoilNaca import generateNaca
 
+FreeCADGui.addLanguagePath(":/translations")
+
+# Qt translation handling
+def translate(context, text, disambig=None):
+    return QtCore.QCoreApplication.translate(context, text, disambig)
 
 
 class WingRib:
-    def __init__(self, obj,_profil,_nacagene,_nacaNbrPoint,_chord,_x,_y,_z,_xrot,_yrot,_zrot,_useSpline = True):
+    def __init__(self, obj,_profil,_nacagene,_nacaNbrPoint,_chord,_x,_y,_z,_xrot,_yrot,_zrot,_thickness=0,_useSpline = True):
         '''Rib properties'''
         obj.Proxy = self
-        obj.addProperty("App::PropertyFile","RibProfil","Rib","Profil type").RibProfil=_profil
+        obj.addProperty("App::PropertyFile","RibProfil","Rib",QtCore.QT_TRANSLATE_NOOP("App::Property","Profil type")).RibProfil=_profil        
         if _nacagene==True :
-            obj.addProperty("App::PropertyString","NacaProfil","NacaProfil","NacaProfil").NacaProfil=_profil
+            obj.addProperty("App::PropertyString","NacaProfil","NacaProfil",QtCore.QT_TRANSLATE_NOOP("App::Property","Naca Profil")).NacaProfil=_profil
         else :
-            obj.addProperty("App::PropertyString","NacaProfil","NacaProfil","NacaProfil").NacaProfil=""
+            obj.addProperty("App::PropertyString","NacaProfil","NacaProfil",QtCore.QT_TRANSLATE_NOOP("App::Property","Naca Profil")).NacaProfil=""
                 
-        obj.addProperty("App::PropertyInteger","NacaNbrPoint","NacaProfil","NacaNbrPoint").NacaNbrPoint=_nacaNbrPoint
-         #obj.addProperty("App::PropertyFloatList","PanelDelta","Rib","Delta").PanelDelta=[0,70.0]
-        obj.addProperty("App::PropertyBool","useSpline","Rib","useSpline").useSpline =_useSpline
-        obj.addProperty("App::PropertyLength","Chord","Rib","chord").Chord=_chord
+        #obj.addProperty("App::PropertyInteger","NacaNbrPoint","NacaProfil","NacaNbrPoint").NacaNbrPoint=_nacaNbrPoint
+        obj.addProperty("App::PropertyInteger","NacaNbrPoint","NacaProfil",QtCore.QT_TRANSLATE_NOOP("App::Property","Naca Number of Points")).NacaNbrPoint=_nacaNbrPoint
+        #obj.addProperty("App::PropertyBool","useSpline","Rib","useSpline").useSpline =_useSpline
+        obj.addProperty("App::PropertyBool","useSpline","Rib",QtCore.QT_TRANSLATE_NOOP("App::Property","use Spline")).useSpline =_useSpline
+        #obj.addProperty("App::PropertyLength","Chord","Rib","chord").Chord=_chord
+        obj.addProperty("App::PropertyLength","Chord","Rib",QtCore.QT_TRANSLATE_NOOP("App::Property","Chord")).Chord=_chord
+        obj.addProperty("App::PropertyLength","Thickness","Rib",QtCore.QT_TRANSLATE_NOOP("App::Property","Thickness")).Thickness=_thickness
         obj.addProperty("App::PropertyLength","xrot","Rib","chord").xrot=_xrot
         obj.addProperty("App::PropertyLength","yrot","Rib","chord").yrot=_yrot
         obj.addProperty("App::PropertyLength","zrot","Rib","chord").zrot=_zrot
         obj.Placement.Base.x=_x
         obj.Placement.Base.y=_y
         obj.Placement.Base.z=_z
+        # List Geomtry to edit list of points
+        obj.addProperty("Part::PropertyGeometryList","Geometry","Rib","Geometry").Geometry=[]
+        #obj.setEditorMode("MyPropertyName", mode) #2 -- hidden
     
     def onChanged(self, fp, prop):
         '''Do something when a property has changed'''
-        FreeCAD.Console.PrintMessage("Change property: " + str(prop) + "\n")
+        #FreeCAD.Console.PrintMessage("Change property: " + str(prop) + "\n")
     
     def execute(self, fp):
         #   Do something when doing a recomputation, this method is mandatory
         if fp.NacaProfil =="" :
              FreeCAD.Console.PrintMessage("Create Rib Start\n")
              name=decodeName(fp.RibProfil)
-             #fp.addProperty("App::PropertyLink", "Rib", "Panel", "Rib")
              FreeCAD.Console.PrintMessage(name)
-             a=process(FreeCAD.ActiveDocument.Name,fp.RibProfil,fp.Chord,fp.Placement.Base.x,fp.Placement.Base.y,fp.Placement.Base.z,fp.xrot,fp.yrot,fp.zrot,fp.useSpline)
+              # process(doc,filename,
+              #         scale,
+              #         posX,posY,posZ,
+              #         rotX,rotY,rotZ,
+              #         thickness,
+              #         useSpline = False,coords=[]):
+             a,fp.Geometry=process(FreeCAD.ActiveDocument.Name,fp.RibProfil,
+                                   fp.Chord,
+                                   fp.Placement.Base.x,fp.Placement.Base.y,fp.Placement.Base.z,
+                                   fp.xrot,fp.yrot,fp.zrot,
+                                   0,
+                                   fp.useSpline,fp.Geometry)
         else :
-             a=generateNaca(fp.NacaProfil, fp.NacaNbrPoint, False, False,fp.Chord,fp.Placement.Base.x,fp.Placement.Base.y,fp.Placement.Base.z,fp.xrot,fp.yrot,fp.zrot,fp.useSpline)
+             a,fp.Geometry=generateNaca(fp.NacaProfil, fp.NacaNbrPoint, False, False,fp.Chord,fp.Placement.Base.x,fp.Placement.Base.y,fp.Placement.Base.z,fp.xrot,fp.yrot,fp.zrot,fp.useSpline,fp.Geometry)
 
         
         fp.Shape=a
@@ -132,19 +158,10 @@ class ViewProviderWingRib:
             Since no data were serialized nothing needs to be done here.'''
         return None
 
-    #def makeWing():
-    # FreeCAD.newDocument()
-    # a=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","wpanel")
-    #a=FreeCAD.ActiveDocument.addObject("Wing::FeaturePython","Wing")
-    #Wing(a)
-    #ViewProviderWing(a.ViewObject)
-#App.ActiveDocument.recompute()
-#makeWing()
-
 class CommandWingRib:
     "the WingPanel command definition"
     def GetResources(self):
-        return {'MenuText': "Create a Rib(under dev)"}
+        return {'MenuText': "Create a Rib"}
     
     def IsActive(self):
         return not FreeCAD.ActiveDocument is None
@@ -155,20 +172,20 @@ class CommandWingRib:
         r = editor.form.exec_()
         if r:
             #r=1 => OK
-            print("corde : /n")
-            print (editor.form.NACANumber.text())
+            #print("corde : /n")
+            #print (editor.form.NACANumber.text())
             
             if editor.form.NACANumber.text()=="" :
-                b=editor.profilSelectedFilePath()#currentItem()
+                b=editor.profilSelectedFilePath()
                 a=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","wrib")
-                WingRib(a,b,False,0,editor.form.chord.value(),0,0,0,0,0,0,(editor.form.kingOfLines.isChecked() == True))
+                WingRib(a,b,False,0,editor.form.chord.value(),0,0,0,0,0,0,editor.form.thickness.value(),(editor.form.kingOfLines.isChecked() == True))
                 ViewProviderWingRib(a.ViewObject)
             else :
                 print("Naca : ") 
                 print( editor.form.NACANumber)
                 b=editor.form.NACANumber
                 a=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","wrib")
-                WingRib(a,b.text(),True,int(editor.form.nacaNbrPoint.value()),editor.form.chord.value(),0,0,0,0,0,0,(editor.form.kingOfLines.isChecked() == True))
+                WingRib(a,b.text(),True,int(editor.form.nacaNbrPoint.value()),editor.form.chord.value(),0,0,0,0,0,0,editor.form.thickness.value(),(editor.form.kingOfLines.isChecked() == True))
                 ViewProviderWingRib(a.ViewObject)
             FreeCAD.ActiveDocument.recompute()
         else :

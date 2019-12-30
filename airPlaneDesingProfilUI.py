@@ -2,7 +2,7 @@
 #
 # Airfoil creation - Aircraft
 # 
-# Copyright (c) F. Nivoix - 2018 - V0.1
+# Copyright (c) F. Nivoix - 2018 - V0.3
 #
 # For FreeCAD Versions = or > 0.17 Revision xxxx
 #
@@ -18,13 +18,26 @@
 # GNU Library General Public License for more details. 
 #
 ################################################
-import os,FreeCAD,FreeCADGui
+import os
+import FreeCAD
+import FreeCADGui 
+import Draft
+import Part
+import glob
+import os.path
 
 from PySide import QtCore, QtGui
 from PySide.QtGui import QLineEdit, QRadioButton
 from  airPlaneAirFoilNaca import generateNacaCoords
-import FreeCAD, FreeCADGui, Draft, Part
-import glob, os.path
+from airPlaneAirFoil import process,decodeName,readpointsonfile
+from FreeCAD import Vector, Base
+
+FreeCADGui.addLanguagePath(":/translations")
+
+# Qt translation handling
+def translate(context, text, disambig=None):
+    return QtCore.QCoreApplication.translate(context, text, disambig)
+
 
 
 def listdirectory(path):
@@ -86,32 +99,82 @@ class SelectObjectUI():
     def setupUi(self):
         # Connect Signals and Slots
         #self.form.testButton.clicked.connect(self.importFile)
-        self.form.NACANumber.textChanged.connect(self.updateGraphicsViewRib)
-        self.form.chord.valueChanged.connect(self.updateGraphicsViewRib)
-        self.form.nacaNbrPoint.valueChanged.connect(self.updateGraphicsViewRib)
+        self.form.NACANumber.textChanged.connect(self.updateGraphicsNACAViewRib)
+        self.form.chord.valueChanged.connect(self.updateGraphicsNACAViewRib)
+        self.form.nacaNbrPoint.valueChanged.connect(self.updateGraphicsNACAViewRib)
         self.form.listProfil.clicked.connect(self.on_treeView_clicked)
+        self.form.listProfil.clicked.connect(self.updateTableViewDAT)
         return
-        
-    def updateGraphicsViewRib(self):
+    
+
+ 
+    def updateGraphicsViewRib(self,coords):
+        #coords=_coords 
+        scale=self.form.chord.value()*2
+        scene=QtGui.QGraphicsScene()
+        self.form.ribView.setScene(scene)
+            
+        points=[]
+        first_v = None
+        last_v = None
+        for v in coords:
+                 if first_v == None:
+                     first_v = v
+            # End of if first_v == None
+            # Line between v and last_v if they're not equal
+                 if (last_v != None) and (last_v != v):
+                     points.append(QtCore.QPointF(last_v.x*scale,-last_v.y*scale ))
+                     points.append(QtCore.QPointF(v.x*scale,-v.y*scale ))
+            # End of if (last_v != None) and (last_v != v)
+            # The new last_v
+                 last_v = v
+
+        # End of for v in upper
+        # close the wire if needed
+        if last_v != first_v:
+                     points.append(QtCore.QPointF(last_v.x*scale,-last_v.y*scale ))
+                     points.append(QtCore.QPointF(first_v.x*scale,-first_v.y*scale ))
+        item=QtGui.QGraphicsPolygonItem(QtGui.QPolygonF(points))
+        item.setPen(QtGui.QPen(QtCore.Qt.blue))
+        scene.addItem(item)
+        self.form.ribView.setFocus()
+        self.form.ribView.show()
+                 
+        return    
+
+    
+    def updateGraphicsNACAViewRib(self):
         coords=[]
         number=self.form.NACANumber.text()
         if len(number)==4:
              #coords=naca4(number, n, finite_TE, half_cosine_spacing)
-             coords=generateNacaCoords(number,self.form.nacaNbrPoint.value(),False,0,self.form.chord.value(),0,0,0,0,0,0)
+             coords=generateNacaCoords(number,self.form.nacaNbrPoint.value(),False,0,self.form.chord.value(),0,0,0,0,0,0,coords)
         elif len(number)==5:
              #coords=naca5(number, n, finite_TE, half_cosine_spacing)
-             coords=generateNacaCoords(number,self.form.nacaNbrPoint.value(),False,0,self.form.chord.value(),0,0,0,0,0,0)
+             coords=generateNacaCoords(number,self.form.nacaNbrPoint.value(),False,0,self.form.chord.value(),0,0,0,0,0,0,coords)
         else :
              return    
         
+        b=coords
+        print(b)
+        self.eraseTableViewDAT()
+     
+        row_number=0
+        for v in coords :
+            print(v.z)
+            self.form.profilTable.insertRow(row_number) 
+            self.form.profilTable.setItem(row_number,0,QtGui.QTableWidgetItem(str(v.x)))
+            self.form.profilTable.setItem(row_number,1,QtGui.QTableWidgetItem(str(v.z)))
+            row_number=row_number+1
+            #coords.append(Vector(b[row_number].X,b[row_number].Z)) 
+        
+        
         if (len(number)==4) or (len(number))==5 :
              print(number)
-             scale=self.form.chord.value()
+             scale=self.form.chord.value()*2
              scene=QtGui.QGraphicsScene()
              self.form.ribView.setScene(scene)
              #scene.setSceneRect(QtCore.QRectF(-10, -400, 400, 10+self.form.chord.value()))
-             #item=QtGui.QGraphicsLineItem(-100,  0, 1000,  0)
-             #scene.addItem(item)
              points=[]
              first_v = None
              last_v = None
@@ -126,16 +189,9 @@ class SelectObjectUI():
             # End of if (last_v != None) and (last_v != v)
             # The new last_v
                  last_v = v
-                 print("last_v:")
-                 print(last_v.x)
-                 print("/n")
-
         # End of for v in upper
         # close the wire if needed
              if last_v != first_v:
-                     print("last_v:")
-                     print(last_v.x)
-                     print("/n")
                      points.append(QtCore.QPointF(last_v.x*scale,last_v.z*scale ))
                      points.append(QtCore.QPointF(first_v.x*scale,first_v.z*scale ))
              item=QtGui.QGraphicsPolygonItem(QtGui.QPolygonF(points))
@@ -146,4 +202,25 @@ class SelectObjectUI():
         #else:
              #raise Exception            
         return
-                
+     
+    def eraseTableViewDAT(self):
+        for i in range(self.form.profilTable.rowCount()) :
+          self.form.profilTable.removeRow(0)
+        self.form.profilTable.clearContents()
+        self.form.profilTable.clear()
+        return
+           
+    def updateTableViewDAT(self):        
+        self.eraseTableViewDAT()
+        a,b=readpointsonfile(self.filePath)
+        coords=[]
+        
+        for row_number in range(len(b)-1) :
+            print(b[row_number].X)
+            self.form.profilTable.insertRow(row_number)
+            self.form.profilTable.setItem(row_number,0,QtGui.QTableWidgetItem(str(b[row_number].X)))
+            self.form.profilTable.setItem(row_number,1,QtGui.QTableWidgetItem(str(b[row_number].Z)))
+            coords.append(Vector(b[row_number].X,b[row_number].Z))   
+        self.updateGraphicsViewRib(coords)    
+        
+        return

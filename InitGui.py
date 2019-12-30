@@ -29,11 +29,20 @@ from PySide import QtCore
 # Qt tanslation handling
 from DraftGui import translate
 from DraftGui import utf8_decode
+FreeCADGui.addLanguagePath(":/translations")
+
 
 smWBpath = os.path.dirname(path_locator.__file__)
 smWB_icons_path =  os.path.join( smWBpath, 'resources', 'icons')
 global main_smWB_Icon
 main_smWB_Icon = os.path.join( smWB_icons_path , 'appicon.svg')
+
+#def QT_TRANSLATE_NOOP(scope, text):
+#    return text
+
+# Qt translation handling
+def translate(context, text, disambig=None):
+    return QtCore.QCoreApplication.translate(context, text, disambig)
 
 
 class AirPlaneDesignWorkbench(Workbench):
@@ -63,7 +72,7 @@ class AirPlaneDesignWorkbench(Workbench):
         #self.appendMenu('Air Plane Design V0',commandslistV0+["Separator"] )#self.list) # old release. V0.1
         # creates a new menu
         #self.appendMenu('Air Plane Design',["Separator"] + self.comList+["Separator"])
-        self.appendMenu([QT_TRANSLATE_NOOP("Air Plane Design","Air Plane &Design")],self.comList)
+        self.appendMenu([QT_TRANSLATE_NOOP("AirPlaneDesign","Air Plane &Design")],self.comList)
 
     def Activated(self):
         #This function is executed when the workbench is activated

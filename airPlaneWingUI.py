@@ -3,7 +3,7 @@
 #
 # ASK13 - Airfoil creation - Aircraft
 #
-# F. Nivoix - 2018 - V0.1
+# F. Nivoix - 2018 - V0.3
 # For FreeCAD Versions = or > 0.17 Revision xxxx
 #
 # Works best with OCC/OCE = or > 6.7
@@ -12,7 +12,14 @@
 ################################################
 import FreeCAD
 import FreeCADGui
-from PySide import QtCore, QtGui
+from PySide import QtCore
+from PySide import QtGui
+
+FreeCADGui.addLanguagePath(":/translations")
+# Qt translation handling
+def translate(context, text, disambig=None):
+    return QtCore.QCoreApplication.translate(context, text, disambig)
+
 
 
 class WingEditorPanel():
@@ -22,8 +29,7 @@ class WingEditorPanel():
         self.form.airPlaneName.setText("nom")
         #backgroundPicture=QPixmap pix("monImage.png")
         #pixmap=path_to_ui+ 'Mod/AirPlaneDesign/resources/plane.svg'
-        #self.form.backGroundPlane.setPixmap(pixmap)
-        
+        #self.form.backGroundPlane.setPixmap(pixmap)     
         
     def accept(self):
         pass
@@ -37,7 +43,6 @@ class WingEditorPanel():
 
     def getStandardButtons(self):
         return int(QtGui.QDialogButtonBox.Ok)
-
 
     def loadPanelTable(self):
         _wingRibProfilDir=FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/wingribprofil'
@@ -61,20 +66,15 @@ class WingEditorPanel():
                self.form.PanelTable.setItem(row_number,col_number,QtGui.QTableWidgetItem(str(data)))#,QtGui.QTableWidgetItem(str(data)))
 
     def accept(self):
-        print("OK")
+        #print("OK")
         return
 
     def setupUi(self):
-        # Connect Signals and Slots
-        print("setupUI")
-        #self.form.testButton.clicked.connect(self.importFile)
-        self.loadPanelTable()
+      
         self.updateGraphicsView()
-        #self.loadPanelTable()
-        #self.updateGraphicsViewWings2()
-        #self.form.btnCopyTools.setEnabled(False)
-        #self.setFields()
-        
+        # Connect Signals and Slots              
+        self.form.filSheet.clicked.connect(self.loadPanelTable) # fil sheet with an example, #self.loadPanelTable()
+       
     def loadImage(self):
         self._photo.setPixmap(QtGui.QPixmap(FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/resources/plane.svg'))
          
@@ -91,8 +91,7 @@ class WingEditorPanel():
         self.fitInView()
  
     def updateGraphicsView(self):
-        #load picture in Plane Tab
-        
+        #load picture in Plane Tab   
         self._scene=QtGui.QGraphicsScene()
         self.form.planeView.setScene(self._scene)
         
@@ -100,15 +99,6 @@ class WingEditorPanel():
         self._photo.setPixmap(QtGui.QPixmap(FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/resources/plane.png'))
         self._scene.addItem(self._photo)
         self.form.planeView.show()
-        
-        #self.loadImage()
-        
-        #self.form.planeView.setScene(selc._scene)
-        #self._photo = self.form.planeView()
-        #scene.addItem(self.form.planeView()) #self._photo)
-        
-        #scene.setSceneRect(QtCore.QRectF(-10, -400, 400, 10+self.form.chord.value()))
-        #item=QtGui.QGraphicsLineItem(-100,  0, 1000,  0)
         
 class CommandWizard():
     def edit(self):

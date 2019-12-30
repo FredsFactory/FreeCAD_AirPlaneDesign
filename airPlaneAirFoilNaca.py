@@ -286,7 +286,7 @@ def naca5(number, n, finite_TE = False, half_cosine_spacing = False):
 ###########################
 #
 ###########################
-def generateNacaCoords(number, n, finite_TE, half_cosine_spacing,scale,posX,posY,posZ,rotX,rotY,rotZ):
+def generateNacaCoords(number, n, finite_TE, half_cosine_spacing,scale,posX,posY,posZ,rotX,rotY,rotZ,coords=[]):
     coords=[]
     if len(number)==4:
         coords=naca4(number, n, finite_TE, half_cosine_spacing)
@@ -297,9 +297,18 @@ def generateNacaCoords(number, n, finite_TE, half_cosine_spacing,scale,posX,posY
     return coords
 
 
-def generateNaca(number, n=240, finite_TE = False, half_cosine_spacing = False,scale=1,posX=0,posY=0,posZ=0,rotX=0,rotY=0,rotZ=0, useSpline = True):
+def generateNaca(number, n=240, finite_TE = False, half_cosine_spacing = False,scale=1,posX=0,posY=0,posZ=0,rotX=0,rotY=0,rotZ=0, useSpline = True,coords=[]):
     coords=[]
-    coords=generateNacaCoords(number, n, finite_TE , half_cosine_spacing ,scale,posX,posY,posZ,rotX,rotY,rotZ)
+    a=[]
+    if len(coords) == 0 :
+        coords=generateNacaCoords(number, n, finite_TE , half_cosine_spacing ,scale,posX,posY,posZ,rotX,rotY,rotZ,coords)
+    else :
+        print("list of points are empty")
+    
+    
+    for i in coords:
+      a.append(Part.Point(FreeCAD.Vector(i)))
+    
     if useSpline:
         spline = Part.BSplineCurve()
         spline.interpolate(coords)
@@ -342,4 +351,4 @@ def generateNaca(number, n=240, finite_TE = False, half_cosine_spacing = False,s
     face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(0,1,0),rotY))
     face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(0,0,1),rotZ))
         
-    return face   
+    return face, a   

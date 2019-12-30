@@ -20,8 +20,9 @@
 #*   USA                                                                   *
 #*                                                                         *
 #***************************************************************************
-# Modificaiotn by F. Nivoix to integrate in Airplane workbench 2019 - V0.1
-#
+# Modificaiotn by F. Nivoix to integrate 
+# in Airplane workbench 2019 - 
+# V0.1, V0.2 & V0.3
 #***************************************************************************
 
 import os,FreeCAD,FreeCADGui
@@ -29,6 +30,12 @@ from PySide import QtCore, QtGui
 from PySide.QtGui import QLineEdit, QRadioButton
 from pivy import coin
 from FreeCAD import Vector, Base
+FreeCADGui.addLanguagePath(":/translations")
+
+# Qt translation handling
+def translate(context, text, disambig=None):
+    return QtCore.QCoreApplication.translate(context, text, disambig)
+
 
 import re, FreeCAD, FreeCADGui, Part, PartDesign,PartDesignGui,Sketcher,cProfile, os, string
 #################################################
@@ -70,15 +77,16 @@ def insert(filename,docname):
     importgroup = doc.addObject("App::DocumentObjectGroup",groupname)
     importgroup.Label = decodeName(groupname)
     process(doc,filename)
-
-def process(doc,filename,scale,posX,posY,posZ,rotX,rotY,rotZ, useSpline = True):
-    # The common airfoil dat format has many flavors, This code should work with almost every dialect,
-    #Regex to identify data rows and throw away unused metadata
+    
+def readpointsonfile(filename):
+        # The common airfoil dat format has many flavors, This code should work with almost every dialect,
+    # Regex to identify data rows and throw away unused metadata
     regex = re.compile(r'^\s*(?P<xval>(\-|\d*)\.\d+(E\-?\d+)?)\,?\s*(?P<yval>\-?\s*\d*\.\d+(E\-?\d+)?)\s*$')
     afile = pythonopen(filename,'r')
     # read the airfoil name which is always at the first line
     airfoilname = afile.readline().strip()
     coords=[]
+    geometry=[]
     upside=True
     last_x=None
     # Collect the data for the upper and the lower side separately if possible
@@ -87,11 +95,12 @@ def process(doc,filename,scale,posX,posY,posZ,rotX,rotY,rotZ, useSpline = True):
         if curdat != None:
            #x = float(curdat.group("xval"))
            #y = float(curdat.group("yval"))
-           x = float(curdat.group("xval"))#+posX
+           x = float(curdat.group("xval"))
            y = 0#posY
-           z = float(curdat.group("yval"))#+posZ
+           z = float(curdat.group("yval"))
            # the normal processing
            coords.append(Vector(x,y,z))
+           geometry.append(Part.Point(FreeCAD.Vector(x,y,z)))
         # End of if curdat != None
     # End of for lin in file
     afile.close
@@ -104,13 +113,32 @@ def process(doc,filename,scale,posX,posY,posZ,rotX,rotY,rotZ, useSpline = True):
     # check for start coordinates in the middle of list
 
     if coords[0:-1].count(coords[0]) > 1:
+        geometry=[]
         flippoint = coords.index(coords[0],1)
         upper = coords[0:flippoint]
         lower = coords[flippoint+1:]
         lower.reverse()
         for i in lower:
             upper.append(i)
+            geometry.append(Part.Point(FreeCAD.Vector(i)))
         coords = upper
+        
+    geometry.append(Part.Point(FreeCAD.Vector(-26.923075,-9.423077,0)))
+    return coords,geometry
+
+def process(doc,filename,scale,posX,posY,posZ,rotX,rotY,rotZ,thickness,useSpline = False,coords=[]):
+    print("")
+    print("Enter in process file airPlaneFoil.py--------")
+    print("doc:",doc, ", scale :",scale )
+    print("posX :",posX,"posY :",posY,"posZ :",posZ)
+    print("rotX :",rotX,"rotY :",rotY,"rotZ :",rotZ)
+    print("thickness :",thickness, ", useSpline:",useSpline)
+    print("coords :", coords)
+    
+    if len(coords) == 0 :
+        coords,geometry = readpointsonfile(filename)
+    else :
+        print("list of points are empty")
 
     # do we use a BSpline?
     if useSpline:
@@ -148,7 +176,7 @@ def process(doc,filename,scale,posX,posY,posZ,rotX,rotY,rotZ, useSpline = True):
     myScale.scale(scale,1,scale)
     face=face.transformGeometry(myScale)
 
-#move(face, FreeCAD.Vector(posX, posY, posZ))
+    #move(face, FreeCAD.Vector(posX, posY, posZ))
     face.Placement=FreeCAD.Placement(FreeCAD.Vector(1,0,0),FreeCAD.Rotation(FreeCAD.Vector(0,0,0),posX))
     face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,1,0),FreeCAD.Rotation(FreeCAD.Vector(0,0,0),posY))
     face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,1),FreeCAD.Rotation(FreeCAD.Vector(0,0,0),posZ))
@@ -156,7 +184,7 @@ def process(doc,filename,scale,posX,posY,posZ,rotX,rotY,rotZ, useSpline = True):
     face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(0,1,0),rotY))
     face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(0,0,1),rotZ))
 
-#face.Placement(App.Vector(0,1,0),App.Rotation(App.Vector(0,0,0),posY))
-#face.Placement(App.Vector(0,0,1),App.Rotation(App.Vector(0,0,0),posZ))
+    #face.Placement(App.Vector(0,1,0),App.Rotation(App.Vector(0,0,0),posY))
+    #face.Placement(App.Vector(0,0,1),App.Rotation(App.Vector(0,0,0),posZ))
 
-    return face
+    return face, geometry
