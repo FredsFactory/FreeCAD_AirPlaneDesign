@@ -59,12 +59,18 @@ Ability to choose the:
 
 ## Roadmap
 
+V0.4 :
 - [X] Add NACA profil generator
 - [X] Add Preview profil and sheet
 - [ ] Improve RIB file selection 
 - [ ] Import profil from UIUC Airfoil Database
 - [ ] Add ability to translate workbench
 - [ ] Tutorials
+V0.5 : Some ideas....
+- [ ] Genrate RIb from Wing
+- [ ] ----------
+- [ ] ----------
+- [ ] ----------
 
 ## Feedback
 Feedback can be provided via the [discussion thread in english](https://forum.freecadweb.org/viewtopic.php?f=9&t=38917) or [discussion thread in french](https://forum.freecadweb.org/viewtopic.php?f=12&t=40376) on the FreeCAD forums  
