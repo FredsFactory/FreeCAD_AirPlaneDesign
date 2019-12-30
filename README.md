@@ -59,7 +59,8 @@ Ability to choose the:
 
 ## Roadmap
 
-- [ ] Add NACA profil generator
+- [X] Add NACA profil generator
+- [X] Add Preview profil and sheet
 - [ ] Improve RIB file selection 
 - [ ] Import profil from UIUC Airfoil Database
 - [ ] Add ability to translate workbench
