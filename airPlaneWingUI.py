@@ -71,7 +71,7 @@ class WingEditorPanel():
 
     def setupUi(self):
       
-        self.updateGraphicsView()
+        #self.updateGraphicsView()
         # Connect Signals and Slots              
         self.form.filSheet.clicked.connect(self.loadPanelTable) # fil sheet with an example, #self.loadPanelTable()
        
