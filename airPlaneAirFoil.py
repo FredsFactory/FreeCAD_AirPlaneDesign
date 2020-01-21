@@ -123,7 +123,6 @@ def readpointsonfile(filename):
             geometry.append(Part.Point(FreeCAD.Vector(i)))
         coords = upper
         
-    geometry.append(Part.Point(FreeCAD.Vector(-26.923075,-9.423077,0)))
     return coords,geometry
 
 def process(doc,filename,scale,posX,posY,posZ,rotX,rotY,rotZ,thickness,useSpline = False,coords=[]):
