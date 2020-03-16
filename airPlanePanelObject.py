@@ -23,7 +23,7 @@ __title__="FreeCAD Air Plane Panel"
 __author__ = "F. Nivoix"
 __url__ = "https://fredsfactory.fr"
 
-import os,FreeCAD,FreeCADGui
+import FreeCAD,FreeCADGui
 from PySide import QtCore, QtGui
 from PySide.QtGui import QLineEdit, QRadioButton
 from pivy import coin
