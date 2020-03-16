@@ -60,26 +60,10 @@ def decodeName(name):
                 decodedName = name
     return decodedName
 
-def open(filename):
-    "called when freecad opens a file"
-    docname = os.path.splitext(os.path.basename(filename))[0]
-    doc = FreeCAD.newDocument(docname)
-    doc.Label = decodeName(docname[:-4])
-    process(doc,filename)
 
-def insert(filename,docname):
-    "called when freecad imports a file"
-    groupname = os.path.splitext(os.path.basename(filename))[0]
-    try:
-        doc=FreeCAD.getDocument(docname)
-    except NameError:
-        doc=FreeCAD.newDocument(docname)
-    importgroup = doc.addObject("App::DocumentObjectGroup",groupname)
-    importgroup.Label = decodeName(groupname)
-    process(doc,filename)
     
 def readpointsonfile(filename):
-        # The common airfoil dat format has many flavors, This code should work with almost every dialect,
+    # The common airfoil dat format has many flavors, This code should work with almost every dialect,
     # Regex to identify data rows and throw away unused metadata
     regex = re.compile(r'^\s*(?P<xval>(\-|\d*)\.\d+(E\-?\d+)?)\,?\s*(?P<yval>\-?\s*\d*\.\d+(E\-?\d+)?)\s*$')
     afile = pythonopen(filename,'r')
@@ -118,11 +102,14 @@ def readpointsonfile(filename):
         upper = coords[0:flippoint]
         lower = coords[flippoint+1:]
         lower.reverse()
-        for i in lower:
-            upper.append(i)
-            geometry.append(Part.Point(FreeCAD.Vector(i)))
-        coords = upper
+        #for i in lower:
+            #upper.append(i)
+            #geometry.append(Part.Point(FreeCAD.Vector(i)))
+        #coords = upper
         
+        coords = upper
+        coords.extend(lower)
+        geometry=coords
     return coords,geometry
 
 def process(doc,filename,scale,posX,posY,posZ,rotX,rotY,rotZ,thickness,useSpline = False,coords=[]):
