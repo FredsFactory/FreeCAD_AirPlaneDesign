@@ -1,5 +1,5 @@
 # The FreeCAD Airplane Design Workbench
-
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/FredsFactory/FreeCAD_AirPlaneDesign.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/FredsFactory/FreeCAD_AirPlaneDesign/alerts/) [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/FredsFactory/FreeCAD_AirPlaneDesign.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/FredsFactory/FreeCAD_AirPlaneDesign/context:python)  
 A FreeCAD workbench dedicated to Airplane Design  
 
 **Warning:** This is highly experimental code. Testers are welcome.
