@@ -27,8 +27,8 @@ import FreeCAD,FreeCADGui
 from PySide import QtCore, QtGui
 from PySide.QtGui import QLineEdit, QRadioButton
 from pivy import coin
-from FreeCAD import Vector, Base
-from Draft import makeWire
+#from FreeCAD import Vector, Base
+#from Draft import makeWire
 
 import re, FreeCAD, FreeCADGui, Draft, Part, PartDesign,PartDesignGui,Sketcher,cProfile, os, string
 import importAirfoilDAT
