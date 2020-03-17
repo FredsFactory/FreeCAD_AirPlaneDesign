@@ -228,7 +228,7 @@ class CommandWPanel:
           FreeCAD.Gui.activeDocument().activeView().viewAxonometric()
           FreeCAD.Gui.SendMsgToActiveView("ViewFit")
 
-          pass
+ 
 
 
 if FreeCAD.GuiUp:
