@@ -21,8 +21,8 @@
 import os
 import FreeCAD
 import FreeCADGui 
-import Draft
-import Part
+#import Draft
+#import Part
 import glob
 import os.path
 
