@@ -30,7 +30,7 @@ from PySide import QtCore, QtGui
 from PySide.QtGui import QLineEdit, QRadioButton
 from  airPlaneAirFoilNaca import generateNacaCoords
 from airPlaneAirFoil import process,decodeName,readpointsonfile
-from FreeCAD import Vector, Base
+from FreeCAD import Vector #, Base
 
 FreeCADGui.addLanguagePath(":/translations")
 
