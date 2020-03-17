@@ -31,8 +31,8 @@ class WingEditorPanel():
         #pixmap=path_to_ui+ 'Mod/AirPlaneDesign/resources/plane.svg'
         #self.form.backGroundPlane.setPixmap(pixmap)     
         
-    def accept(self):
-        pass
+   
+ 
 
     def importFile(self):
         print("commande")
