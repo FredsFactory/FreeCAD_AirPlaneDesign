@@ -24,7 +24,7 @@ __author__ = "F. Nivoix"
 __url__ = "https://fredsfactory.fr"
 
 
-import os,FreeCAD,FreeCADGui
+import FreeCAD,FreeCADGui
 #import re
 #import Draft
 #import Part
