@@ -25,19 +25,18 @@
 # V0.1, V0.2 & V0.3
 #***************************************************************************
 
-import os,FreeCAD,FreeCADGui
-from PySide import QtCore, QtGui
-from PySide.QtGui import QLineEdit, QRadioButton
-from pivy import coin
+import FreeCAD,FreeCADGui
+from PySide import QtCore
 from FreeCAD import Vector, Base
 FreeCADGui.addLanguagePath(":/translations")
+import re, Part
 
 # Qt translation handling
 def translate(context, text, disambig=None):
     return QtCore.QCoreApplication.translate(context, text, disambig)
 
 
-import re, FreeCAD, FreeCADGui, Part, PartDesign,PartDesignGui,Sketcher,cProfile, string
+
 #################################################
 #  This module provides tools to build a
 #  wing panel
@@ -68,11 +67,11 @@ def readpointsonfile(filename):
     regex = re.compile(r'^\s*(?P<xval>(\-|\d*)\.\d+(E\-?\d+)?)\,?\s*(?P<yval>\-?\s*\d*\.\d+(E\-?\d+)?)\s*$')
     afile = pythonopen(filename,'r')
     # read the airfoil name which is always at the first line
-    airfoilname = afile.readline().strip()
+    #airfoilname = afile.readline().strip()
     coords=[]
     geometry=[]
-    upside=True
-    last_x=None
+    #upside=True
+    #last_x=None
     # Collect the data for the upper and the lower side separately if possible
     for lin in afile:
         curdat = regex.match(lin)
