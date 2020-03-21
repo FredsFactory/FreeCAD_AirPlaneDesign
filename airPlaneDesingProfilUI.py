@@ -27,9 +27,9 @@ import glob
 import os.path
 
 from PySide import QtCore, QtGui
-from PySide.QtGui import QLineEdit, QRadioButton
+
 from  airPlaneAirFoilNaca import generateNacaCoords
-from airPlaneAirFoil import process,decodeName,readpointsonfile
+from airPlaneAirFoil import readpointsonfile #,decodeName,process
 from FreeCAD import Vector #, Base
 
 FreeCADGui.addLanguagePath(":/translations")
