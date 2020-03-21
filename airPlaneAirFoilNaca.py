@@ -24,14 +24,11 @@ __author__ = "F. Nivoix"
 __url__ = "https://fredsfactory.fr"
 
 
-import os, re, os, string, cProfile
-import FreeCAD, FreeCADGui, Part, PartDesign, PartDesignGui, Sketcher
-from PySide import QtCore, QtGui
-from PySide.QtGui import QLineEdit, QRadioButton
-from pivy import coin
+
+import FreeCAD, Part
 from FreeCAD import Vector, Base
 
-from math import cos, sin, tan
+from math import cos, sin
 from math import atan
 from math import pi
 from math import pow
