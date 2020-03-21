@@ -34,11 +34,7 @@ import FreeCAD,FreeCADGui
 #import cProfile
 #import string
 
-from PySide import QtCore, QtGui
-from PySide.QtGui import QLineEdit, QRadioButton
-from pivy import coin
-from FreeCAD import Vector, Base
-from Draft import makeWire
+from PySide import QtCore
 from airPlaneAirFoil import process,decodeName
 from airPlaneDesingProfilUI import SelectObjectUI
 from airPlaneAirFoilNaca import generateNaca
