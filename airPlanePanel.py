@@ -28,25 +28,6 @@ __url__ = "https://fredsfactory.fr"
 import FreeCAD
 import FreeCADGui
 
-
-import Draft
-import Sketcher
-import PartDesign
-import PartDesignGui
-
-import re 
-import os
-import cProfile
-import string
-
-from PySide import QtCore, QtGui
-from PySide.QtGui import QLineEdit, QRadioButton
-from pivy import coin
-from FreeCAD import Vector, Base
-from Draft import makeWire
-
-
-import airPlaneRib
 from airPlaneRib import WingRib, ViewProviderWingRib
 from airPlaneWingUI import WingEditorPanel
 
