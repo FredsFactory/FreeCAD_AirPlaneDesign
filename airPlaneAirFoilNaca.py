@@ -319,9 +319,9 @@ def generateNaca(number, n=240, finite_TE = False, half_cosine_spacing = False,s
         first_v = None
         last_v = None
         for v in coords:
-            if first_v == None:
+            if first_v is None:
                 first_v = v
-            # End of if first_v == None
+            # End of if first_v is None
             # Line between v and last_v if they're not equal
             if (last_v != None) and (last_v != v):
                 lines.append(Part.makeLine(last_v, v))
