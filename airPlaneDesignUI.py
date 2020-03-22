@@ -104,11 +104,11 @@ class EditorPanel():
     
         scene.addItem(item)
         #item=QtGui.QGraphicsPolygonItem(QtGui.QPolygonF( [
-                                                          QtCore.QPointF( 100,  300),
-                                                          QtCore.QPointF( 100,  300),
-                                                          QtCore.QPointF( 100+700,  300),
-                                                          QtCore.QPointF( 100+700,  0)
-                                                          ]  ),)
+         #                                                 QtCore.QPointF( 100,  300),
+          #                                                QtCore.QPointF( 100,  300),
+           #                                               QtCore.QPointF( 100+700,  300),
+            #                                              QtCore.QPointF( 100+700,  0)
+             #                                             ]  ),)
         item = QtGui.QGraphicsEllipseItem(-60, -40, 60, 40)
         scene.addItem(item)
         
