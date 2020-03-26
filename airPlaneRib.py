@@ -96,9 +96,9 @@ class WingRib:
                                    0,
                                    fp.useSpline,fp.Geometry)
         else :
-             a,fp.Geometry=generateNaca(fp.NacaProfil, fp.NacaNbrPoint, False, False,fp.Chord,fp.Placement.Base.x,fp.Placement.Base.y,fp.Placement.Base.z,fp.xrot,fp.yrot,fp.zrot,fp.useSpline,fp.Geometry)
+             a,fp.Geometry=generateNaca(fp.NacaProfil, fp.NacaNbrPoint, False, True,fp.Chord,fp.Placement.Base.x,fp.Placement.Base.y,fp.Placement.Base.z,fp.xrot,fp.yrot,fp.zrot,fp.useSpline,fp.Geometry)
 
-        
+
         fp.Shape=a
         FreeCAD.Console.PrintMessage("Create Rib End\n")
 

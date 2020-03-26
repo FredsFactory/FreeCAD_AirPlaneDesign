@@ -294,7 +294,7 @@ def generateNacaCoords(number, n, finite_TE, half_cosine_spacing,scale,posX,posY
     return coords
 
 
-def generateNaca(number, n=240, finite_TE = False, half_cosine_spacing = False,scale=1,posX=0,posY=0,posZ=0,rotX=0,rotY=0,rotZ=0, useSpline = True,coords=[]):
+def generateNaca(number, n=240, finite_TE = False, half_cosine_spacing = True,scale=1,posX=0,posY=0,posZ=0,rotX=0,rotY=0,rotZ=0, useSpline = True,coords=[]):
     coords=[]
     a=[]
     if len(coords) == 0 :
