@@ -27,8 +27,8 @@ from PySide import QtCore
 
 
 # Qt tanslation handling
-from DraftGui import translate
-from DraftGui import utf8_decode
+#from DraftGui import translate
+#from DraftGui import utf8_decode
 FreeCADGui.addLanguagePath(":/translations")
 
 
