@@ -39,18 +39,17 @@ def translate(context, text, disambig=None):
 
 
 class WingRib:
-    def __init__(self, obj,_profil,_nacagene,_nacaNbrPoint,_chord,_x,_y,_z,_xrot,_yrot,_zrot,_thickness=0,_useSpline = True):
+    def __init__(self, obj,_profil,_nacagene,_nacaNbrPoint,_chord,_x,_y,_z,_xrot,_yrot,_zrot,_thickness=0,_useSpline = True,_finite_TE = False):
         '''Rib properties'''
         obj.Proxy = self
-        obj.addProperty("App::PropertyFile","RibProfil","Rib",QtCore.QT_TRANSLATE_NOOP("App::Property","Profil type")).RibProfil=_profil        
+        obj.addProperty("App::PropertyFile","RibProfil","Rib",QtCore.QT_TRANSLATE_NOOP("App::Property","Profil type")).RibProfil=_profil
         if _nacagene==True :
             obj.addProperty("App::PropertyString","NacaProfil","NacaProfil",QtCore.QT_TRANSLATE_NOOP("App::Property","Naca Profil")).NacaProfil=_profil
         else :
             obj.addProperty("App::PropertyString","NacaProfil","NacaProfil",QtCore.QT_TRANSLATE_NOOP("App::Property","Naca Profil")).NacaProfil=""
-                
-        #obj.addProperty("App::PropertyInteger","NacaNbrPoint","NacaProfil","NacaNbrPoint").NacaNbrPoint=_nacaNbrPoint
+
         obj.addProperty("App::PropertyInteger","NacaNbrPoint","NacaProfil",QtCore.QT_TRANSLATE_NOOP("App::Property","Naca Number of Points")).NacaNbrPoint=_nacaNbrPoint
-        #obj.addProperty("App::PropertyBool","useSpline","Rib","useSpline").useSpline =_useSpline
+        obj.addProperty("App::PropertyBool","finite_TE","NacaProfil",QtCore.QT_TRANSLATE_NOOP("App::Property","Use a finite thickness at TE")).finite_TE=_finite_TE
         obj.addProperty("App::PropertyBool","useSpline","Rib",QtCore.QT_TRANSLATE_NOOP("App::Property","use Spline")).useSpline =_useSpline
         #obj.addProperty("App::PropertyLength","Chord","Rib","chord").Chord=_chord
         obj.addProperty("App::PropertyLength","Chord","Rib",QtCore.QT_TRANSLATE_NOOP("App::Property","Chord")).Chord=_chord
@@ -88,7 +87,7 @@ class WingRib:
                                    0,
                                    fp.useSpline,fp.Coordinates)
         else :
-             fp.Shape,fp.Coordinates=generateNaca(fp.NacaProfil, fp.NacaNbrPoint, False, True,fp.Chord,fp.Placement.Base.x,fp.Placement.Base.y,fp.Placement.Base.z,fp.xrot,fp.yrot,fp.zrot,fp.useSpline,fp.Coordinates)
+             fp.Shape,fp.Coordinates=generateNaca(fp.NacaProfil, fp.NacaNbrPoint, fp.finite_TE, True,fp.Chord,fp.Placement.Base.x,fp.Placement.Base.y,fp.Placement.Base.z,fp.xrot,fp.yrot,fp.zrot,fp.useSpline,fp.Coordinates)
 
         if fp.Thickness != 0 :
             fp.Shape = fp.Shape.extrude(FreeCAD.Base.Vector(0,fp.Thickness,0))
