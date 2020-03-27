@@ -24,16 +24,13 @@ __author__ = "F. Nivoix"
 __url__ = "https://fredsfactory.fr"
 
 
-
-import FreeCAD, Part
-from FreeCAD import Vector, Base
+import FreeCAD,Part
 
 from math import cos, sin
 from math import atan
 from math import pi
 from math import pow
 from math import sqrt
-
 
 #Start #### Copyright (C) 2011 by Dirk Gorissen <dgorissen@gmail.com>####
 """
@@ -191,9 +188,9 @@ def naca4(number, n, finite_TE = False, half_cosine_spacing = False):
     X = xu[::-1] + xl[1:]
     Z = yu[::-1] + yl[1:]
     # AiplaneDesign modification - start
-    coords=[] 
+    coords=[]
     for i in range(len(X)) :
-        coords.append(Vector(X[i],0,Z[i]))
+        coords.append(FreeCAD.Vector(X[i],0,Z[i]))
     return coords
 
    # AiplaneDesign modification - end
@@ -272,7 +269,7 @@ def naca5(number, n, finite_TE = False, half_cosine_spacing = False):
     # AiplaneDesign modification - start
     coords=[]
     for i in range(len(X)) :
-        coords.append(Vector(X[i],0,Z[i]))
+        coords.append(FreeCAD.Vector(X[i],0,Z[i]))
     return coords
 
    # AiplaneDesign modification - end
@@ -294,18 +291,8 @@ def generateNacaCoords(number, n, finite_TE, half_cosine_spacing,scale,posX,posY
     return coords
 
 
-def generateNaca(number, n=240, finite_TE = False, half_cosine_spacing = False,scale=1,posX=0,posY=0,posZ=0,rotX=0,rotY=0,rotZ=0, useSpline = True,coords=[]):
-    coords=[]
-    a=[]
-    if len(coords) == 0 :
-        coords=generateNacaCoords(number, n, finite_TE , half_cosine_spacing ,scale,posX,posY,posZ,rotX,rotY,rotZ,coords)
-    else :
-        print("list of points are empty")
-    
-    
-    for i in coords:
-      a.append(Part.Point(FreeCAD.Vector(i)))
-    
+def generateNaca(number, n=240, finite_TE = False, half_cosine_spacing = True,scale=1,posX=0,posY=0,posZ=0,rotX=0,rotY=0,rotZ=0, useSpline = True,coords=[]):
+    coords=generateNacaCoords(number, n, finite_TE , half_cosine_spacing ,scale,posX,posY,posZ,rotX,rotY,rotZ,coords)
     if useSpline:
         spline = Part.BSplineCurve()
         spline.interpolate(coords)
@@ -337,7 +324,7 @@ def generateNaca(number, n=240, finite_TE = False, half_cosine_spacing = False,s
     face = Part.Face(wire)
 
         #Scale the foil
-    myScale = Base.Matrix()
+    myScale = FreeCAD.Base.Matrix()
     myScale.scale(scale,1,scale)
     face=face.transformGeometry(myScale)
 #move(face, FreeCAD.Vector(posX, posY, posZ))
@@ -347,5 +334,5 @@ def generateNaca(number, n=240, finite_TE = False, half_cosine_spacing = False,s
     face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(1,0,0),rotX))
     face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(0,1,0),rotY))
     face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(0,0,1),rotZ))
-        
-    return face, a   
+
+    return face, coords

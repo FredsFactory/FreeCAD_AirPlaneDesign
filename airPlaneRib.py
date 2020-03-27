@@ -25,14 +25,6 @@ __url__ = "https://fredsfactory.fr"
 
 
 import FreeCAD,FreeCADGui
-#import re
-#import Draft
-#import Part
-#import PartDesign
-#import PartDesignGui
-#import Sketcher
-#import cProfile
-#import string
 
 from PySide import QtCore
 from airPlaneAirFoil import process,decodeName
@@ -70,13 +62,13 @@ class WingRib:
         obj.Placement.Base.y=_y
         obj.Placement.Base.z=_z
         # List Geomtry to edit list of points
-        obj.addProperty("Part::PropertyGeometryList","Geometry","Rib","Geometry").Geometry=[]
+        obj.addProperty("App::PropertyVectorList","Coordinates","Rib","Vector list that defines the airfoil's geometry").Coordinates=[]
         #obj.setEditorMode("MyPropertyName", mode) #2 -- hidden
-    
+
     def onChanged(self, fp, prop):
         '''Do something when a property has changed'''
         #FreeCAD.Console.PrintMessage("Change property: " + str(prop) + "\n")
-    
+
     def execute(self, fp):
         #   Do something when doing a recomputation, this method is mandatory
         if fp.NacaProfil =="" :
@@ -89,17 +81,16 @@ class WingRib:
               #         rotX,rotY,rotZ,
               #         thickness,
               #         useSpline = False,coords=[]):
-             a,fp.Geometry=process(FreeCAD.ActiveDocument.Name,fp.RibProfil,
+             fp.Shape,fp.Coordinates=process(FreeCAD.ActiveDocument.Name,fp.RibProfil,
                                    fp.Chord,
                                    fp.Placement.Base.x,fp.Placement.Base.y,fp.Placement.Base.z,
                                    fp.xrot,fp.yrot,fp.zrot,
                                    0,
-                                   fp.useSpline,fp.Geometry)
+                                   fp.useSpline,fp.Coordinates)
         else :
-             a,fp.Geometry=generateNaca(fp.NacaProfil, fp.NacaNbrPoint, False, False,fp.Chord,fp.Placement.Base.x,fp.Placement.Base.y,fp.Placement.Base.z,fp.xrot,fp.yrot,fp.zrot,fp.useSpline,fp.Geometry)
+             fp.Shape,fp.Coordinates=generateNaca(fp.NacaProfil, fp.NacaNbrPoint, False, True,fp.Chord,fp.Placement.Base.x,fp.Placement.Base.y,fp.Placement.Base.z,fp.xrot,fp.yrot,fp.zrot,fp.useSpline,fp.Coordinates)
 
-        
-        fp.Shape=a
+
         FreeCAD.Console.PrintMessage("Create Rib End\n")
 
 class ViewProviderWingRib:

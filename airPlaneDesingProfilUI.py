@@ -148,10 +148,10 @@ class SelectObjectUI():
         number=self.form.NACANumber.text()
         if len(number)==4:
              #coords=naca4(number, n, finite_TE, half_cosine_spacing)
-             coords=generateNacaCoords(number,self.form.nacaNbrPoint.value(),False,0,self.form.chord.value(),0,0,0,0,0,0,coords)
+             coords=generateNacaCoords(number,self.form.nacaNbrPoint.value(),False,True,self.form.chord.value(),0,0,0,0,0,0,coords)
         elif len(number)==5:
              #coords=naca5(number, n, finite_TE, half_cosine_spacing)
-             coords=generateNacaCoords(number,self.form.nacaNbrPoint.value(),False,0,self.form.chord.value(),0,0,0,0,0,0,coords)
+             coords=generateNacaCoords(number,self.form.nacaNbrPoint.value(),False,True,self.form.chord.value(),0,0,0,0,0,0,coords)
         else :
              return    
         
@@ -184,16 +184,16 @@ class SelectObjectUI():
             # End of if first_v is None
             # Line between v and last_v if they're not equal
                  if (last_v != None) and (last_v != v):
-                     points.append(QtCore.QPointF(last_v.x*scale,last_v.z*scale ))
-                     points.append(QtCore.QPointF(v.x*scale,v.z*scale ))
+                     points.append(QtCore.QPointF(last_v.x*scale,-last_v.z*scale ))
+                     points.append(QtCore.QPointF(v.x*scale,-v.z*scale ))
             # End of if (last_v != None) and (last_v != v)
             # The new last_v
                  last_v = v
         # End of for v in upper
         # close the wire if needed
              if last_v != first_v:
-                     points.append(QtCore.QPointF(last_v.x*scale,last_v.z*scale ))
-                     points.append(QtCore.QPointF(first_v.x*scale,first_v.z*scale ))
+                     points.append(QtCore.QPointF(last_v.x*scale,-last_v.z*scale ))
+                     points.append(QtCore.QPointF(first_v.x*scale,-first_v.z*scale ))
              item=QtGui.QGraphicsPolygonItem(QtGui.QPolygonF(points))
              item.setPen(QtGui.QPen(QtCore.Qt.blue))
              scene.addItem(item)

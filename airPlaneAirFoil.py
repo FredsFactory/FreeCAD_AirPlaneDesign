@@ -20,16 +20,13 @@
 #*   USA                                                                   *
 #*                                                                         *
 #***************************************************************************
-# Modificaiotn by F. Nivoix to integrate 
-# in Airplane workbench 2019 - 
+# Modificaiotn by F. Nivoix to integrate
+# in Airplane workbench 2019 -
 # V0.1, V0.2 & V0.3
 #***************************************************************************
 
-import FreeCAD,FreeCADGui
-from PySide import QtCore
-from FreeCAD import Vector, Base
+import FreeCAD,FreeCADGui,Part
 FreeCADGui.addLanguagePath(":/translations")
-import re, Part
 
 # Qt translation handling
 def translate(context, text, disambig=None):
@@ -69,7 +66,6 @@ def readpointsonfile(filename):
     # read the airfoil name which is always at the first line
     #airfoilname = afile.readline().strip()
     coords=[]
-    geometry=[]
     #upside=True
     #last_x=None
     # Collect the data for the upper and the lower side separately if possible
@@ -82,8 +78,7 @@ def readpointsonfile(filename):
            y = 0#posY
            z = float(curdat.group("yval"))
            # the normal processing
-           coords.append(Vector(x,y,z))
-           geometry.append(Part.Point(FreeCAD.Vector(x,y,z)))
+           coords.append(FreeCAD.Vector(x,y,z))
         # End of if curdat != None
     # End of for lin in file
     afile.close
@@ -96,20 +91,14 @@ def readpointsonfile(filename):
     # check for start coordinates in the middle of list
 
     if coords[0:-1].count(coords[0]) > 1:
-        geometry=[]
         flippoint = coords.index(coords[0],1)
         upper = coords[0:flippoint]
         lower = coords[flippoint+1:]
         lower.reverse()
-        #for i in lower:
-            #upper.append(i)
-            #geometry.append(Part.Point(FreeCAD.Vector(i)))
-        #coords = upper
-        
+
         coords = upper
         coords.extend(lower)
-        geometry=coords
-    return coords,geometry
+    return coords
 
 def process(doc,filename,scale,posX,posY,posZ,rotX,rotY,rotZ,thickness,useSpline = False,coords=[]):
     print("")
@@ -119,9 +108,9 @@ def process(doc,filename,scale,posX,posY,posZ,rotX,rotY,rotZ,thickness,useSpline
     print("rotX :",rotX,"rotY :",rotY,"rotZ :",rotZ)
     print("thickness :",thickness, ", useSpline:",useSpline)
     print("coords :", coords)
-    
+
     if len(coords) == 0 :
-        coords,geometry = readpointsonfile(filename)
+        coords = readpointsonfile(filename)
     else :
         print("list of points are empty")
 
@@ -157,7 +146,7 @@ def process(doc,filename,scale,posX,posY,posZ,rotX,rotY,rotZ,thickness,useSpline
     face = Part.Face(wire)
 
     #Scale the foil
-    myScale = Base.Matrix()
+    myScale = FreeCAD.Base.Matrix()
     myScale.scale(scale,1,scale)
     face=face.transformGeometry(myScale)
 
@@ -172,4 +161,4 @@ def process(doc,filename,scale,posX,posY,posZ,rotX,rotY,rotZ,thickness,useSpline
     #face.Placement(App.Vector(0,1,0),App.Rotation(App.Vector(0,0,0),posY))
     #face.Placement(App.Vector(0,0,1),App.Rotation(App.Vector(0,0,0),posZ))
 
-    return face, geometry
+    return face, coords

@@ -40,9 +40,9 @@ class EditorPanel():
         headers = ["","Profil Num.","Name","File"]
         model = QtGui.QStandardItemModel()
         model.setHorizontalHeaderLabels(headers)
-        
-        model.setRowCount(10);
-        model.setColumnCount(3);
+
+        model.setRowCount(10)
+        model.setColumnCount(3)
         #self.form.tableWidget.setHorizontalHeaderLabels(QtGui.QTableWidgetItem("colonne1"))
         #model.appendRow(tooldata)
         self.form.tableWidget.setRowCount(0)
