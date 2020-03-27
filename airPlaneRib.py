@@ -162,18 +162,18 @@ class CommandWingRib:
             #r=1 => OK
             #print("corde : /n")
             #print (editor.form.NACANumber.text())
-            
+
             if editor.form.NACANumber.text()=="" :
                 b=editor.profilSelectedFilePath()
                 a=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","wrib")
-                WingRib(a,b,False,0,editor.form.chord.value(),0,0,0,0,0,0,editor.form.thickness.value(),(editor.form.kingOfLines.isChecked() == True))
+                WingRib(a,b,False,0,editor.form.chord.value(),0,0,0,0,0,0,editor.form.thickness.value(),editor.form.kingOfLines.isChecked())
                 ViewProviderWingRib(a.ViewObject)
             else :
-                print("Naca : ") 
+                print("Naca : ")
                 print( editor.form.NACANumber)
                 b=editor.form.NACANumber
                 a=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","wrib")
-                WingRib(a,b.text(),True,int(editor.form.nacaNbrPoint.value()),editor.form.chord.value(),0,0,0,0,0,0,editor.form.thickness.value(),(editor.form.kingOfLines.isChecked() == True))
+                WingRib(a,b.text(),True,int(editor.form.nacaNbrPoint.value()),editor.form.chord.value(),0,0,0,0,0,0,editor.form.thickness.value(),editor.form.kingOfLines.isChecked(),editor.form.finite_TE.isChecked())
                 ViewProviderWingRib(a.ViewObject)
             FreeCAD.ActiveDocument.recompute()
         else :

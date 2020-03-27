@@ -104,6 +104,7 @@ class SelectObjectUI():
         self.form.nacaNbrPoint.valueChanged.connect(self.updateGraphicsNACAViewRib)
         self.form.listProfil.clicked.connect(self.on_treeView_clicked)
         self.form.listProfil.clicked.connect(self.updateTableViewDAT)
+        self.form.finite_TE.clicked.connect(self.updateGraphicsNACAViewRib)
         return
     
 
@@ -148,27 +149,27 @@ class SelectObjectUI():
         number=self.form.NACANumber.text()
         if len(number)==4:
              #coords=naca4(number, n, finite_TE, half_cosine_spacing)
-             coords=generateNacaCoords(number,self.form.nacaNbrPoint.value(),False,True,self.form.chord.value(),0,0,0,0,0,0,coords)
+             coords=generateNacaCoords(number,self.form.nacaNbrPoint.value(),self.form.finite_TE.isChecked(),True,self.form.chord.value(),0,0,0,0,0,0,coords)
         elif len(number)==5:
              #coords=naca5(number, n, finite_TE, half_cosine_spacing)
-             coords=generateNacaCoords(number,self.form.nacaNbrPoint.value(),False,True,self.form.chord.value(),0,0,0,0,0,0,coords)
+             coords=generateNacaCoords(number,self.form.nacaNbrPoint.value(),self.form.finite_TE.isChecked(),True,self.form.chord.value(),0,0,0,0,0,0,coords)
         else :
-             return    
-        
+             return
+
         b=coords
         print(b)
         self.eraseTableViewDAT()
-     
+
         row_number=0
         for v in coords :
             print(v.z)
-            self.form.profilTable.insertRow(row_number) 
+            self.form.profilTable.insertRow(row_number)
             self.form.profilTable.setItem(row_number,0,QtGui.QTableWidgetItem(str(v.x)))
             self.form.profilTable.setItem(row_number,1,QtGui.QTableWidgetItem(str(v.z)))
             row_number=row_number+1
-            #coords.append(Vector(b[row_number].X,b[row_number].Z)) 
-        
-        
+            #coords.append(Vector(b[row_number].X,b[row_number].Z))
+
+
         if (len(number)==4) or (len(number))==5 :
              print(number)
              scale=self.form.chord.value()*2

@@ -38,7 +38,7 @@
      <x>10</x>
      <y>20</y>
      <width>281</width>
-     <height>431</height>
+     <height>421</height>
     </rect>
    </property>
    <property name="currentIndex">
@@ -58,7 +58,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Select the profil</string>
+      <string>Select the profile</string>
      </property>
     </widget>
     <widget class="QTreeView" name="listProfil">
@@ -105,7 +105,7 @@
     <widget class="QLineEdit" name="NACANumber">
      <property name="geometry">
       <rect>
-       <x>70</x>
+       <x>150</x>
        <y>40</y>
        <width>81</width>
        <height>21</height>
@@ -131,7 +131,26 @@
       <number>500</number>
      </property>
      <property name="value">
-      <number>240</number>
+      <number>50</number>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="finite_TE">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>101</y>
+       <width>80</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If selected the NACA rib will be created with a finite gap at the trailing Edge&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string>Finite TE</string>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
      </property>
     </widget>
    </widget>
@@ -144,7 +163,7 @@
   <widget class="QDoubleSpinBox" name="chord">
    <property name="geometry">
     <rect>
-     <x>190</x>
+     <x>260</x>
      <y>450</y>
      <width>111</width>
      <height>22</height>
@@ -163,9 +182,9 @@
   <widget class="QLabel" name="label_5">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>170</x>
      <y>440</y>
-     <width>181</width>
+     <width>90</width>
      <height>41</height>
     </rect>
    </property>
@@ -177,13 +196,13 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>480</y>
+     <y>450</y>
      <width>121</width>
      <height>20</height>
     </rect>
    </property>
    <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If select the rib will be created with BSpline&lt;/p&gt;&lt;p&gt;If not  the rib will be created with with wire&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If selected the rib will be created with BSpline&lt;/p&gt;&lt;p&gt;If not  the rib will be created with wire&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="text">
     <string>Make a BSpline</string>
@@ -192,31 +211,12 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QCheckBox" name="kingOfLines_2">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>500</y>
-     <width>121</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If select the rib will be created with BSpline&lt;/p&gt;&lt;p&gt;If not  the rib will be created with with wire&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-   <property name="text">
-    <string>Shape</string>
-   </property>
-   <property name="checked">
-    <bool>true</bool>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_6">
    <property name="geometry">
     <rect>
-     <x>330</x>
+     <x>410</x>
      <y>440</y>
-     <width>161</width>
+     <width>121</width>
      <height>41</height>
     </rect>
    </property>
@@ -227,7 +227,7 @@
   <widget class="QDoubleSpinBox" name="thickness">
    <property name="geometry">
     <rect>
-     <x>470</x>
+     <x>530</x>
      <y>450</y>
      <width>111</width>
      <height>22</height>
