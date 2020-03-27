@@ -123,8 +123,8 @@ class SelectObjectUI():
             # End of if first_v is None
             # Line between v and last_v if they're not equal
                  if (last_v != None) and (last_v != v):
-                     points.append(QtCore.QPointF(last_v.x*scale,-last_v.y*scale ))
-                     points.append(QtCore.QPointF(v.x*scale,-v.y*scale ))
+                     points.append(QtCore.QPointF(last_v.x*scale,-last_v.z*scale ))
+                     points.append(QtCore.QPointF(v.x*scale,-v.z*scale ))
             # End of if (last_v != None) and (last_v != v)
             # The new last_v
                  last_v = v
@@ -132,17 +132,17 @@ class SelectObjectUI():
         # End of for v in upper
         # close the wire if needed
         if last_v != first_v:
-                     points.append(QtCore.QPointF(last_v.x*scale,-last_v.y*scale ))
-                     points.append(QtCore.QPointF(first_v.x*scale,-first_v.y*scale ))
+                     points.append(QtCore.QPointF(last_v.x*scale,-last_v.z*scale ))
+                     points.append(QtCore.QPointF(first_v.x*scale,-first_v.z*scale ))
         item=QtGui.QGraphicsPolygonItem(QtGui.QPolygonF(points))
         item.setPen(QtGui.QPen(QtCore.Qt.blue))
         scene.addItem(item)
         self.form.ribView.setFocus()
         self.form.ribView.show()
-                 
-        return    
 
-    
+        return
+
+
     def updateGraphicsNACAViewRib(self):
         coords=[]
         number=self.form.NACANumber.text()
@@ -200,27 +200,28 @@ class SelectObjectUI():
              self.form.ribView.setFocus()
              self.form.ribView.show()
         #else:
-             #raise Exception            
+             #raise Exception
         return
-     
+
     def eraseTableViewDAT(self):
         for i in range(self.form.profilTable.rowCount()) :
           self.form.profilTable.removeRow(0)
         self.form.profilTable.clearContents()
         self.form.profilTable.clear()
         return
-           
-    def updateTableViewDAT(self):        
+
+    def updateTableViewDAT(self):
         self.eraseTableViewDAT()
-        a,b=readpointsonfile(self.filePath)
-        coords=[]
-        
-        for row_number in range(len(b)-1) :
-            print(b[row_number].X)
+        coords=readpointsonfile(self.filePath)
+
+        row_number=0
+        for v in coords :
+            print(v.z)
             self.form.profilTable.insertRow(row_number)
-            self.form.profilTable.setItem(row_number,0,QtGui.QTableWidgetItem(str(b[row_number].X)))
-            self.form.profilTable.setItem(row_number,1,QtGui.QTableWidgetItem(str(b[row_number].Z)))
-            coords.append(Vector(b[row_number].X,b[row_number].Z))   
-        self.updateGraphicsViewRib(coords)    
-        
+            self.form.profilTable.setItem(row_number,0,QtGui.QTableWidgetItem(str(v.x)))
+            self.form.profilTable.setItem(row_number,1,QtGui.QTableWidgetItem(str(v.z)))
+            row_number=row_number+1
+
+        self.updateGraphicsViewRib(coords)
+
         return
