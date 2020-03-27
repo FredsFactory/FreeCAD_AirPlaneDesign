@@ -25,14 +25,6 @@ __url__ = "https://fredsfactory.fr"
 
 
 import FreeCAD,FreeCADGui
-#import re
-#import Draft
-#import Part
-#import PartDesign
-#import PartDesignGui
-#import Sketcher
-#import cProfile
-#import string
 
 from PySide import QtCore
 from airPlaneAirFoil import process,decodeName

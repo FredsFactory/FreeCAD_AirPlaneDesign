@@ -24,16 +24,13 @@ __author__ = "F. Nivoix"
 __url__ = "https://fredsfactory.fr"
 
 
-
-import FreeCAD, Part
-from FreeCAD import Vector, Base
+import FreeCAD,Part
 
 from math import cos, sin
 from math import atan
 from math import pi
 from math import pow
 from math import sqrt
-
 
 #Start #### Copyright (C) 2011 by Dirk Gorissen <dgorissen@gmail.com>####
 """
@@ -193,7 +190,7 @@ def naca4(number, n, finite_TE = False, half_cosine_spacing = False):
     # AiplaneDesign modification - start
     coords=[]
     for i in range(len(X)) :
-        coords.append(Vector(X[i],0,Z[i]))
+        coords.append(FreeCAD.Vector(X[i],0,Z[i]))
     return coords
 
    # AiplaneDesign modification - end
@@ -272,7 +269,7 @@ def naca5(number, n, finite_TE = False, half_cosine_spacing = False):
     # AiplaneDesign modification - start
     coords=[]
     for i in range(len(X)) :
-        coords.append(Vector(X[i],0,Z[i]))
+        coords.append(FreeCAD.Vector(X[i],0,Z[i]))
     return coords
 
    # AiplaneDesign modification - end
@@ -327,7 +324,7 @@ def generateNaca(number, n=240, finite_TE = False, half_cosine_spacing = True,sc
     face = Part.Face(wire)
 
         #Scale the foil
-    myScale = Base.Matrix()
+    myScale = FreeCAD.Base.Matrix()
     myScale.scale(scale,1,scale)
     face=face.transformGeometry(myScale)
 #move(face, FreeCAD.Vector(posX, posY, posZ))

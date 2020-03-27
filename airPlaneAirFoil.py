@@ -20,16 +20,13 @@
 #*   USA                                                                   *
 #*                                                                         *
 #***************************************************************************
-# Modificaiotn by F. Nivoix to integrate 
-# in Airplane workbench 2019 - 
+# Modificaiotn by F. Nivoix to integrate
+# in Airplane workbench 2019 -
 # V0.1, V0.2 & V0.3
 #***************************************************************************
 
-import FreeCAD,FreeCADGui
-from PySide import QtCore
-from FreeCAD import Vector, Base
+import FreeCAD,FreeCADGui,Part
 FreeCADGui.addLanguagePath(":/translations")
-import re, Part
 
 # Qt translation handling
 def translate(context, text, disambig=None):
@@ -81,7 +78,7 @@ def readpointsonfile(filename):
            y = 0#posY
            z = float(curdat.group("yval"))
            # the normal processing
-           coords.append(Vector(x,y,z))
+           coords.append(FreeCAD.Vector(x,y,z))
         # End of if curdat != None
     # End of for lin in file
     afile.close
@@ -149,7 +146,7 @@ def process(doc,filename,scale,posX,posY,posZ,rotX,rotY,rotZ,thickness,useSpline
     face = Part.Face(wire)
 
     #Scale the foil
-    myScale = Base.Matrix()
+    myScale = FreeCAD.Base.Matrix()
     myScale.scale(scale,1,scale)
     face=face.transformGeometry(myScale)
 
