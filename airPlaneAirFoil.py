@@ -25,7 +25,7 @@
 # V0.1, V0.2 & V0.3
 #***************************************************************************
 
-import FreeCAD,FreeCADGui,Part
+import FreeCAD,FreeCADGui,Part,re
 FreeCADGui.addLanguagePath(":/translations")
 
 # Qt translation handling
@@ -57,7 +57,7 @@ def decodeName(name):
     return decodedName
 
 
-    
+
 def readpointsonfile(filename):
     # The common airfoil dat format has many flavors, This code should work with almost every dialect,
     # Regex to identify data rows and throw away unused metadata
