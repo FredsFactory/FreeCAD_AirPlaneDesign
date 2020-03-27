@@ -90,6 +90,8 @@ class WingRib:
         else :
              fp.Shape,fp.Coordinates=generateNaca(fp.NacaProfil, fp.NacaNbrPoint, False, True,fp.Chord,fp.Placement.Base.x,fp.Placement.Base.y,fp.Placement.Base.z,fp.xrot,fp.yrot,fp.zrot,fp.useSpline,fp.Coordinates)
 
+        if fp.Thickness != 0 :
+            fp.Shape = fp.Shape.extrude(FreeCAD.Base.Vector(0,fp.Thickness,0))
 
         FreeCAD.Console.PrintMessage("Create Rib End\n")
 
