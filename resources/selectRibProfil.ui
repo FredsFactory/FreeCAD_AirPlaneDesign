@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1015</width>
+    <width>1125</width>
     <height>528</height>
    </rect>
   </property>
@@ -19,7 +19,7 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>710</x>
+     <x>930</x>
      <y>480</y>
      <width>171</width>
      <height>32</height>
@@ -42,7 +42,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="fileTab">
     <attribute name="title">
@@ -248,7 +248,7 @@
     <rect>
      <x>780</x>
      <y>70</y>
-     <width>221</width>
+     <width>331</width>
      <height>371</height>
     </rect>
    </property>
