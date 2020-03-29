@@ -34,9 +34,9 @@ from math import sqrt
 
 #Start #### Copyright (C) 2011 by Dirk Gorissen <dgorissen@gmail.com>####
 """
-Python 2 and 3 code to generate 4 and 5 digit NACA profiles 
+Python 2 and 3 code to generate 4 and 5 digit NACA profiles
 The NACA airfoils are airfoil shapes for aircraft wings developed by the National Advisory Committee for Aeronautics (NACA).
-The shape of the NACA airfoils is described using a series of digits following the word "NACA". The parameters in the numerical 
+The shape of the NACA airfoils is described using a series of digits following the word "NACA". The parameters in the numerical
 code can be entered into equations to precisely generate the cross-section of the airfoil and calculate its properties.
     https://en.wikipedia.org/wiki/NACA_airfoil
 Pots of the Matlab code available here:
@@ -262,7 +262,7 @@ def naca5(number, n, finite_TE = False, half_cosine_spacing = False):
 
         xl = [xx + yy * sin(zz) for xx,yy,zz in zip(x,yt,theta)]
         yl = [xx - yy * cos(zz) for xx,yy,zz in zip(zc,yt,theta)]
-    
+
     X = xu[::-1] + xl[1:]
     Z = yu[::-1] + yl[1:]
 
@@ -291,15 +291,25 @@ def generateNacaCoords(number, n, finite_TE, half_cosine_spacing,scale,posX,posY
     return coords
 
 
-def generateNaca(number, n=240, finite_TE = False, half_cosine_spacing = True,scale=1,posX=0,posY=0,posZ=0,rotX=0,rotY=0,rotZ=0, useSpline = True,coords=[]):
+def generateNaca(number, n=240, finite_TE = False, half_cosine_spacing = True,scale=1,posX=0,posY=0,posZ=0,rotX=0,rotY=0,rotZ=0,useSpline=True,splitSpline=False,coords=[]):
     coords=generateNacaCoords(number, n, finite_TE , half_cosine_spacing ,scale,posX,posY,posZ,rotX,rotY,rotZ,coords)
     if useSpline:
-        spline = Part.BSplineCurve()
-        spline.interpolate(coords)
-        if coords[0] != coords[-1]:
-            wire = Part.Wire([spline.toShape(),Part.makeLine(coords[0],coords[-1])])
+        if splitSpline:
+            splineLower = Part.BSplineCurve()
+            splineUpper = Part.BSplineCurve()
+            splineUpper.interpolate(coords[:len(coords)//2+1])
+            splineLower.interpolate(coords[len(coords)//2:])
+            if coords[0] != coords[-1]:
+                wire = Part.Wire([splineUpper.toShape(),splineLower.toShape(),Part.makeLine(coords[0],coords[-1])])
+            else:
+                wire = Part.Wire([splineUpper.toShape(),splineLower.toShape()])
         else:
-            wire = Part.Wire(spline.toShape())
+            spline = Part.BSplineCurve()
+            spline.interpolate(coords)
+            if coords[0] != coords[-1]:
+                wire = Part.Wire([spline.toShape(),Part.makeLine(coords[0],coords[-1])])
+            else:
+                wire = Part.Wire(spline.toShape())
     else:
         # alternate solution, uses common Part Faces
         lines = []
