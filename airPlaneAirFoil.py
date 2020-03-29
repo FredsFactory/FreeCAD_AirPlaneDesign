@@ -72,13 +72,15 @@ def readpointsonfile(filename):
     for lin in afile:
         curdat = regex.match(lin)
         if curdat != None:
-           #x = float(curdat.group("xval"))
-           #y = float(curdat.group("yval"))
-           x = float(curdat.group("xval"))
-           y = 0#posY
-           z = float(curdat.group("yval"))
-           # the normal processing
-           coords.append(FreeCAD.Vector(x,y,z))
+            x = float(curdat.group("xval"))
+            y = 0#posY
+            z = float(curdat.group("yval"))
+            #ignore points out of range, small tolerance for x value and arbitrary limit for y value, this is necesary because Lednicer
+            #format airfoil files include a line indicating the number of coordinates in the same format of the coordinates.
+            if (x < 1.01) and (z < 1) and (x > -0.01) and (z > -1):
+                coords.append(FreeCAD.Vector(x,y,z))
+            else:
+                FreeCAD.Console.PrintWarning("Ignoring coordinates out of range -0.01<x<1.01 and/or -1<z<1. If this is a Lednicer format airfoil file there is nothing to worrya about.")
         # End of if curdat != None
     # End of for lin in file
     afile.close
@@ -92,21 +94,17 @@ def readpointsonfile(filename):
 
     if coords[0:-1].count(coords[0]) > 1:
         flippoint = coords.index(coords[0],1)
-        upper = coords[0:flippoint]
-        lower = coords[flippoint+1:]
-        lower.reverse()
+        coords[:flippoint+1]=coords[flippoint-1::-1]
 
-        coords = upper
-        coords.extend(lower)
     return coords
 
-def process(doc,filename,scale,posX,posY,posZ,rotX,rotY,rotZ,thickness,useSpline = False,coords=[]):
+def process(doc,filename,scale,posX,posY,posZ,rotX,rotY,rotZ,useSpline,splitSpline,coords=[]):
     print("")
     print("Enter in process file airPlaneFoil.py--------")
     print("doc:",doc, ", scale :",scale )
     print("posX :",posX,"posY :",posY,"posZ :",posZ)
     print("rotX :",rotX,"rotY :",rotY,"rotZ :",rotZ)
-    print("thickness :",thickness, ", useSpline:",useSpline)
+    print("useSpline: ",useSpline)
     print("coords :", coords)
 
     if len(coords) == 0 :
@@ -116,12 +114,27 @@ def process(doc,filename,scale,posX,posY,posZ,rotX,rotY,rotZ,thickness,useSpline
 
     # do we use a BSpline?
     if useSpline:
-        spline = Part.BSplineCurve()
-        spline.interpolate(coords)
-        if coords[0] != coords[-1]:
-            wire = Part.Wire([spline.toShape(),Part.makeLine(coords[0],coords[-1])])
+        if splitSpline: #do we split between upper and lower side?
+            if coords.__contains__(FreeCAD.Vector(0,0,0)):
+                flippoint = coords.index(FreeCAD.Vector(0,0,0))
+            else:
+                xlist=[v.x for v in coords]
+                flippoint = xlist.index(min(xlist))
+            splineLower = Part.BSplineCurve()
+            splineUpper = Part.BSplineCurve()
+            splineUpper.interpolate(coords[:flippoint+1])
+            splineLower.interpolate(coords[flippoint:])
+            if coords[0] != coords[-1]:
+                wire = Part.Wire([splineUpper.toShape(),splineLower.toShape(),Part.makeLine(coords[0],coords[-1])])
+            else:
+                wire = Part.Wire([splineUpper.toShape(),splineLower.toShape()])
         else:
-            wire = Part.Wire(spline.toShape())
+            spline = Part.BSplineCurve()
+            spline.interpolate(coords)
+            if coords[0] != coords[-1]:
+                wire = Part.Wire([spline.toShape(),Part.makeLine(coords[0],coords[-1])])
+            else:
+                wire = Part.Wire(spline.toShape())
     else:
         # alternate solution, uses common Part Faces
         lines = []

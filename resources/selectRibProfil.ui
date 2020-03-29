@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>Dialog</class>
  <widget class="QDialog" name="Dialog">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -163,7 +166,7 @@
   <widget class="QDoubleSpinBox" name="chord">
    <property name="geometry">
     <rect>
-     <x>260</x>
+     <x>110</x>
      <y>450</y>
      <width>111</width>
      <height>22</height>
@@ -182,7 +185,7 @@
   <widget class="QLabel" name="label_5">
    <property name="geometry">
     <rect>
-     <x>170</x>
+     <x>10</x>
      <y>440</y>
      <width>90</width>
      <height>41</height>
@@ -195,8 +198,8 @@
   <widget class="QCheckBox" name="kingOfLines">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>450</y>
+     <x>530</x>
+     <y>451</y>
      <width>121</width>
      <height>20</height>
     </rect>
@@ -214,7 +217,7 @@
   <widget class="QLabel" name="label_6">
    <property name="geometry">
     <rect>
-     <x>410</x>
+     <x>260</x>
      <y>440</y>
      <width>121</width>
      <height>41</height>
@@ -227,7 +230,7 @@
   <widget class="QDoubleSpinBox" name="thickness">
    <property name="geometry">
     <rect>
-     <x>530</x>
+     <x>380</x>
      <y>450</y>
      <width>111</width>
      <height>22</height>
@@ -285,6 +288,25 @@
     <enum>QGraphicsView::SmartViewportUpdate</enum>
    </property>
   </widget>
+  <widget class="QCheckBox" name="splitSpline">
+   <property name="geometry">
+    <rect>
+     <x>690</x>
+     <y>451</y>
+     <width>121</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If selected the spline will be splitted between the upper and lower side of the airfoil.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="text">
+    <string>Split splines</string>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections>
@@ -317,6 +339,22 @@
     <hint type="destinationlabel">
      <x>286</x>
      <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>kingOfLines</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>splitSpline</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>625</x>
+     <y>463</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>763</x>
+     <y>464</y>
     </hint>
    </hints>
   </connection>
