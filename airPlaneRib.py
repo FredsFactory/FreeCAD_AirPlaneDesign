@@ -185,7 +185,10 @@ class RibTaskPanel:
         fp.useSpline=self.form.kingOfLines.isChecked()
         
         
-        
+        print("-bug-------------------------------")
+        fp.RibProfil=self.form.fileName.text()
+        print(self.form.fileName.text())
+        print("-bug-------------------------------")
         
         FreeCAD.ActiveDocument.recompute()
         FreeCADGui.ActiveDocument.resetEdit()
@@ -193,7 +196,7 @@ class RibTaskPanel:
 
     def retranslateUi(self, TaskPanel):
         #TaskPanel.setWindowTitle(QtGui.QApplication.translate("draft", "Faces", None))
-        #self.addButton.setText(QtGui.QApplication.translate("draft", "Update", None))
+        self.addButton.setText(QtGui.QApplication.translate("draft", "Update", None))
         print("")
 
 
