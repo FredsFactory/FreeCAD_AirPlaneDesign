@@ -180,6 +180,10 @@ class ViewProviderPlane:
     def setEdit(self,vobj,mode):
         taskd = PlaneTaskPanel(vobj)
         FreeCADGui.Control.showDialog(taskd)
+        
+        # airPlaneDesignPlanedialog.ui
+        
+        
         return True
 
 

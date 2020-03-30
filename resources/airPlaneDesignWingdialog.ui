@@ -26,7 +26,7 @@
     <locale language="English" country="UnitedStates"/>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="Wing">
     <attribute name="title">
@@ -193,6 +193,16 @@
     <attribute name="title">
      <string>Elliptical Wing</string>
     </attribute>
+    <widget class="QGraphicsView" name="graphicsView">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>671</width>
+       <height>441</height>
+      </rect>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QDialogButtonBox" name="buttonBox">
