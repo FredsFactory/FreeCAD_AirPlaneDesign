@@ -70,7 +70,7 @@ V0.4 :
 
 V0.5 : Some ideas....
 - [ ] Genrate RIb from Wing
-- [ ] ----------
+- [ ] Xfoil integration
 - [ ] ----------
 - [ ] ----------
 
