@@ -90,18 +90,27 @@ class WPanel:
            #obj.RibTip.append(_ribs[i*2+1])
 
            FreeCAD.Console.PrintMessage("create the panel")
-           _panel.append(FreeCAD.ActiveDocument.addObject('Part::Loft','panel'))
-           _panel[i].Sections=[_ribs[i*2],_ribs[i*2+1]]
-           _panel[i].Solid=True
-           _panel[i].Ruled=False
+           if obj.NberOfPanel>1 :
+             _panel.append(FreeCAD.ActiveDocument.addObject('Part::Loft','panel'))
+             _panel[i].Sections=[_ribs[i*2],_ribs[i*2+1]]
+             _panel[i].Solid=True
+             _panel[i].Ruled=False
+           else :
+              a=FreeCAD.ActiveDocument.addObject('Part::Loft','Wing')
+              _panel.append(a)
+              _panel[i].Sections=[_ribs[i*2],_ribs[i*2+1]]
+              _panel[i].Solid=True
+              _panel[i].Ruled=False
+              obj.Group=a
            FreeCAD.ActiveDocument.recompute()
         
         obj.Rib=_ribs
-        obj.addProperty("App::PropertyFloatList","PanelLength","WingPanel","Length of the Wing").PanelLength=_PanelLength
-        obj.addProperty("App::PropertyStringList","PanelProfil","WingPanel","Profil type").PanelProfil=profil
-        a=FreeCAD.activeDocument().addObject("Part::MultiFuse","Wing")
-        a.Shapes = _panel
-        obj.Group=a#_panel
+        if obj.NberOfPanel>1 :
+           obj.addProperty("App::PropertyFloatList","PanelLength","WingPanel","Length of the Wing").PanelLength=_PanelLength
+           obj.addProperty("App::PropertyStringList","PanelProfil","WingPanel","Profil type").PanelProfil=profil
+           a=FreeCAD.activeDocument().addObject("Part::MultiFuse","Wing")
+           a.Shapes = _panel
+           obj.Group=a
         
 
     def onChanged(self, fp, prop):
@@ -195,7 +204,7 @@ class CommandWPanel:
         if r:
           #print(editor.form.PanelTable.rowCount())
           #print(editor.form.PanelTable.columnCount())
-          for row_number in range(editor.form.PanelTable.rowCount()-1):#int(editor.form.PanelTable.rowCount())):
+          for row_number in range(editor.form.PanelTable.rowCount()):#-1):#int(editor.form.PanelTable.rowCount())):
              rowData=[]
              for col_number in range(10):#int(editor.form.PanelTable.columnCount())):
                 rowData.append(editor.form.PanelTable.item(row_number,col_number).text())
@@ -203,7 +212,8 @@ class CommandWPanel:
           #print(PanelTable)
 
           a=FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroupPython","Wing")#Path::FeaturePython","wpanel") #"Part::FeaturePython","wpanel")
-          WPanel(a,editor.form.NumberOfPanel.value(),PanelTable)
+          #WPanel(a,editor.form.NumberOfPanel.value(),PanelTable)
+          WPanel(a,editor.form.PanelTable.rowCount(),PanelTable)
           ViewProviderPanel(a.ViewObject)
           FreeCAD.ActiveDocument.recompute()
           FreeCAD.Gui.activeDocument().activeView().viewAxonometric()
