@@ -31,8 +31,6 @@ class WingEditorPanel():
         #pixmap=path_to_ui+ 'Mod/AirPlaneDesign/resources/plane.svg'
         #self.form.backGroundPlane.setPixmap(pixmap)     
         
-   
- 
 
     def importFile(self):
         print("commande")
@@ -64,16 +62,32 @@ class WingEditorPanel():
             self.form.PanelTable.insertRow(row_number)
             for col_number, data in enumerate(row_data):
                self.form.PanelTable.setItem(row_number,col_number,QtGui.QTableWidgetItem(str(data)))#,QtGui.QTableWidgetItem(str(data)))
+    def addLine(self):
+        print("add line")
+        initPanelTable = [
+             ["-","-","","100","100","100","0","0","0.0","0","0","0","22"],
+                         ]
+        #self.form.PanelTable.setRowCount(0)
+        for row_number,row_data in enumerate(initPanelTable):
+            self.form.PanelTable.insertRow(row_number)
+            for col_number, data in enumerate(row_data):
+               self.form.PanelTable.setItem(row_number,col_number,QtGui.QTableWidgetItem(str(data)))#,QtGui.QTableWidgetItem(str(data)))
+
+    def delLine(self):
+        print("del line")
+        self.form.PanelTable.removeRow(self.form.PanelTable.currentRow())
+        
 
     def accept(self):
         #print("OK")
         return
 
-    def setupUi(self):
-      
+    def setupUi(self):     
         #self.updateGraphicsView()
         # Connect Signals and Slots              
         self.form.filSheet.clicked.connect(self.loadPanelTable) # fil sheet with an example, #self.loadPanelTable()
+        self.form.addline.clicked.connect(self.addLine)
+        self.form.delline.clicked.connect(self.delLine)
        
     def loadImage(self):
         self._photo.setPixmap(QtGui.QPixmap(FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/resources/plane.svg'))
