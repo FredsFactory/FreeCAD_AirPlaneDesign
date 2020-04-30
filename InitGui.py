@@ -47,35 +47,22 @@ def translate(context, text, disambig=None):
 
 class AirPlaneDesignWorkbench(Workbench):
     def __init__(self):
-     self.__class__.Icon = main_smWB_Icon# ':/AirPlaneDesign/resources/icons/favicon.svg'
-     self.__class__.MenuText = "AirPlaneDesign"
-     self.__class__.ToolTip = "A description of my workbench"
-     #Icon = """paste here the contents of a 16x16 xpm icon"""
+        self.__class__.Icon = main_smWB_Icon
+        self.__class__.MenuText = "AirPlaneDesign"
+        self.__class__.ToolTip = "A description of my workbench"
 
     def Initialize(self):
         def QT_TRANSLATE_NOOP(scope, text):
           return text
         #"This function is executed when FreeCAD starts"
         import airPlanePanel
-        import airPlaneDesignUI 
-        import airPlaneWingUI  
         import airPlaneRib
         import airPlanePlane
-       #self.list 
-        #commandslistV0= ['airPlaneDesignEdit','airPlaneDesignInitPlane','generateWing','generateWingRibs']
         self.comList= ['airPlaneDesingWRib','airPlaneDesingWPanel','airPlaneDesingPlane']
-        
         # creates a new toolbar with your commands
-        #self.appendToolbar("Air Plane Design",commandslistV1) 
         self.appendToolbar(QT_TRANSLATE_NOOP("AirPlaneDesign", "Air Plane Design"), self.comList)
-        #self.appendToolbar(translate("AirPlaneDesign", "Air Plane Design"), commandslistV1)
-        
-        #self.appendMenu('Air Plane Design V0',commandslistV0+["Separator"] )#self.list) # old release. V0.1
         # creates a new menu
-        #self.appendMenu('Air Plane Design',["Separator"] + self.comList+["Separator"])
-        self.appendMenu([QT_TRANSLATE_NOOP("AirPlaneDesign","Air Plane &Design")],self.comList)
-        
-       
+        self.appendMenu([QT_TRANSLATE_NOOP("AirPlaneDesign","Air Plane Design")],self.comList)
 
     def Activated(self):
         #This function is executed when the workbench is activated
