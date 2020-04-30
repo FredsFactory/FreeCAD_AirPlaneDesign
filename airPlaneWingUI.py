@@ -27,9 +27,6 @@ class WingEditorPanel():
         path_to_ui = FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/resources/airPlaneDesignWingdialog.ui'
         self.form = FreeCADGui.PySideUic.loadUi(path_to_ui)
         self.form.airPlaneName.setText("nom")
-        #backgroundPicture=QPixmap pix("monImage.png")
-        #pixmap=path_to_ui+ 'Mod/AirPlaneDesign/resources/plane.svg'
-        #self.form.backGroundPlane.setPixmap(pixmap)     
         
 
     def importFile(self):
@@ -44,7 +41,6 @@ class WingEditorPanel():
 
     def loadPanelTable(self):
         _wingRibProfilDir=FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/wingribprofil'
-        #self.form.NumberOfPanel.setItem=5
         
         ##########################
         # Numéro du panneau, profil, fichier profil, , corde emplature, corde saumon, longueur paneau, X emplature, X saumon, Y emplature, Y saumon, Z emplature, Z saumon, X Rotation, Y Rotation, Z Rotation
@@ -62,8 +58,8 @@ class WingEditorPanel():
             self.form.PanelTable.insertRow(row_number)
             for col_number, data in enumerate(row_data):
                self.form.PanelTable.setItem(row_number,col_number,QtGui.QTableWidgetItem(str(data)))#,QtGui.QTableWidgetItem(str(data)))
+
     def addLine(self):
-        print("add line")
         initPanelTable = [
              ["-","-","","100","100","100","0","0","0.0","0","0","0","22"],
                          ]
@@ -74,7 +70,6 @@ class WingEditorPanel():
                self.form.PanelTable.setItem(row_number,col_number,QtGui.QTableWidgetItem(str(data)))#,QtGui.QTableWidgetItem(str(data)))
 
     def delLine(self):
-        print("del line")
         self.form.PanelTable.removeRow(self.form.PanelTable.currentRow())
         
 
@@ -83,57 +78,7 @@ class WingEditorPanel():
         return
 
     def setupUi(self):     
-        #self.updateGraphicsView()
         # Connect Signals and Slots              
         self.form.filSheet.clicked.connect(self.loadPanelTable) # fil sheet with an example, #self.loadPanelTable()
         self.form.addline.clicked.connect(self.addLine)
         self.form.delline.clicked.connect(self.delLine)
-       
-    def loadImage(self):
-        self._photo.setPixmap(QtGui.QPixmap(FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/resources/plane.svg'))
-         
-    def setPhoto(self, pixmap=None):
-        self._zoom = 0
-        if pixmap and not pixmap.isNull():
-            self._empty = False
-            self.setDragMode(QtGui.QGraphicsView.ScrollHandDrag)
-            self._photo.setPixmap(pixmap)
-        else:
-            self._empty = True
-            self.setDragMode(QtGui.QGraphicsView.NoDrag)
-            self._photo.setPixmap(QtGui.QPixmap())
-        self.fitInView()
- 
-    def updateGraphicsView(self):
-        #load picture in Plane Tab   
-        self._scene=QtGui.QGraphicsScene()
-        self.form.planeView.setScene(self._scene)
-        
-        self._photo = QtGui.QGraphicsPixmapItem()
-        self._photo.setPixmap(QtGui.QPixmap(FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/resources/plane.png'))
-        self._scene.addItem(self._photo)
-        self.form.planeView.show()
-        
-class CommandWizard():
-    def edit(self):
-        editor = WingEditorPanel()
-        editor.setupUi()
-        r = editor.form.exec_()
-        if r:
-            pass
-
-    def GetResources(self):
-     return {'MenuText': "Create a wing",
-             'ToolTip':  "Create a wing"
-            }
-
-    def IsActive(self):
-        return not FreeCAD.ActiveDocument is None #Si pas de document ouvert, le menu est grisé
-
-    def Activated(self):
-
-        self.edit()
-
-if FreeCAD.GuiUp:
-    #register the FreeCAD command
-    FreeCADGui.addCommand('airPlaneWingCreate',CommandWizard())

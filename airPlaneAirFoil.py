@@ -52,7 +52,7 @@ def decodeName(name):
             try:
                 decodedName = (name.decode("utf8"))
             except UnicodeDecodeError:
-                print("AirfoilDAT: error: couldn't determine character encoding")
+                FreeCAD.Console.PrintWarning("AirfoilDAT: couldn't determine character encoding")
                 decodedName = name
     return decodedName
 
@@ -63,11 +63,7 @@ def readpointsonfile(filename):
     # Regex to identify data rows and throw away unused metadata
     regex = re.compile(r'^\s*(?P<xval>(\-|\d*)\.\d+(E\-?\d+)?)\,?\s*(?P<yval>\-?\s*\d*\.\d+(E\-?\d+)?)\s*$')
     afile = pythonopen(filename,'r')
-    # read the airfoil name which is always at the first line
-    #airfoilname = afile.readline().strip()
     coords=[]
-    #upside=True
-    #last_x=None
     # Collect the data for the upper and the lower side separately if possible
     for lin in afile:
         curdat = regex.match(lin)
@@ -86,7 +82,7 @@ def readpointsonfile(filename):
     afile.close
 
     if len(coords) < 3:
-        print('Did not find enough coordinates\n')
+        FreeCAD.Console.PrintError('Did not find enough coordinates\n')
         return
     # sometimes coords are divided in upper an lower side
     # so that x-coordinate begin new from leading or trailing edge
@@ -99,27 +95,16 @@ def readpointsonfile(filename):
     return coords
 
 def process(doc,filename,scale,posX,posY,posZ,rotX,rotY,rotZ,useSpline,splitSpline,coords=[]):
-    print("")
-    print("Enter in process file airPlaneFoil.py--------")
-    print("doc:",doc, ", scale :",scale )
-    print("posX :",posX,"posY :",posY,"posZ :",posZ)
-    print("rotX :",rotX,"rotY :",rotY,"rotZ :",rotZ)
-    print("useSpline: ",useSpline)
-    print("coords :", coords)
-
     if len(coords) == 0 :
         coords = readpointsonfile(filename)
-    else :
-        print("list of points are empty")
-
     # do we use a BSpline?
     if useSpline:
         if splitSpline: #do we split between upper and lower side?
             if coords.__contains__(FreeCAD.Vector(0,0,0)):
                 flippoint = coords.index(FreeCAD.Vector(0,0,0))
             else:
-                xlist=[v.x for v in coords]
-                flippoint = xlist.index(min(xlist))
+                lenghtList=[v.Lenght for v in coords]
+                flippoint = lenghtList.index(min(xlist))
             splineLower = Part.BSplineCurve()
             splineUpper = Part.BSplineCurve()
             splineUpper.interpolate(coords[:flippoint+1])
@@ -157,21 +142,5 @@ def process(doc,filename,scale,posX,posY,posZ,rotX,rotY,rotZ,useSpline,splitSpli
         wire = Part.Wire(lines)
 
     face = Part.Face(wire)
-
-    #Scale the foil
-    myScale = FreeCAD.Base.Matrix()
-    myScale.scale(scale,1,scale)
-    face=face.transformGeometry(myScale)
-
-    #move(face, FreeCAD.Vector(posX, posY, posZ))
-    face.Placement=FreeCAD.Placement(FreeCAD.Vector(1,0,0),FreeCAD.Rotation(FreeCAD.Vector(0,0,0),posX))
-    face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,1,0),FreeCAD.Rotation(FreeCAD.Vector(0,0,0),posY))
-    face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,1),FreeCAD.Rotation(FreeCAD.Vector(0,0,0),posZ))
-    face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(1,0,0),rotX))
-    face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(0,1,0),rotY))
-    face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(0,0,1),rotZ))
-
-    #face.Placement(App.Vector(0,1,0),App.Rotation(App.Vector(0,0,0),posY))
-    #face.Placement(App.Vector(0,0,1),App.Rotation(App.Vector(0,0,0),posZ))
-
+    face = face.scale(scale) #Scale the foil
     return face, coords

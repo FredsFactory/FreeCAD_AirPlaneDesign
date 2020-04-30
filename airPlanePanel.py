@@ -43,7 +43,6 @@ _wingRibProfilDir=FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/wingribprofil
 class WPanel:
     def __init__(self, obj,_NberOfPanel,_panelInput):
         '''Add some custom properties to our box feature'''
-        print("init method WPanel - file : airPlanePanel.py")
         obj.Proxy = self
         obj.addProperty("App::PropertyInteger","NberOfPanel","WingPanel","Number of Panel").NberOfPanel=_NberOfPanel
         obj.addProperty("App::PropertyLinkList", "Rib", "Ribs", "Ribs")
@@ -58,7 +57,6 @@ class WPanel:
         #for i in range(0,obj.NberOfPanel) :
         for i in range(0,obj.NberOfPanel) :
            _row=_panelInput[i]
-           print(_row)
            profil.append(_row[2])
             #_wingRibProfilDir+u"/e207.dat"
            _PanelLength.append(float(_row[4]))
@@ -202,14 +200,11 @@ class CommandWPanel:
         editor.setupUi()
         r = editor.form.exec_()
         if r:
-          #print(editor.form.PanelTable.rowCount())
-          #print(editor.form.PanelTable.columnCount())
           for row_number in range(editor.form.PanelTable.rowCount()):#-1):#int(editor.form.PanelTable.rowCount())):
              rowData=[]
              for col_number in range(10):#int(editor.form.PanelTable.columnCount())):
                 rowData.append(editor.form.PanelTable.item(row_number,col_number).text())
              PanelTable.append(rowData)
-          #print(PanelTable)
 
           a=FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroupPython","Wing")#Path::FeaturePython","wpanel") #"Part::FeaturePython","wpanel")
           #WPanel(a,editor.form.NumberOfPanel.value(),PanelTable)

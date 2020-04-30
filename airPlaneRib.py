@@ -63,7 +63,6 @@ class WingRib:
         obj.Placement.Base.z=_z
         # List Geomtry to edit list of points
         obj.addProperty("App::PropertyVectorList","Coordinates","Rib","Vector list that defines the airfoil's geometry").Coordinates=[]
-        #obj.setEditorMode("MyPropertyName", mode) #2 -- hidden
 
     def onChanged(self, fp, prop):
         '''Do something when a property has changed'''
@@ -73,9 +72,7 @@ class WingRib:
     def execute(self, fp):
         #   Do something when doing a recomputation, this method is mandatory
         if fp.NacaProfil =="" :
-            FreeCAD.Console.PrintMessage("Create Rib Start\n")
             name=decodeName(fp.RibProfil)
-            FreeCAD.Console.PrintMessage(name)
             fp.Shape,fp.Coordinates=process(FreeCAD.ActiveDocument.Name,fp.RibProfil,
                                     fp.Chord,fp.Placement.Base.x,fp.Placement.Base.y,fp.Placement.Base.z,
                                     fp.xrot,fp.yrot,fp.zrot,fp.useSpline,fp.splitSpline,fp.Coordinates)
@@ -198,7 +195,6 @@ class RibTaskPanel:
 class ViewProviderWingRib:
     def __init__(self, obj):
         '''Set this object to the proxy object of the actual view provider'''
-        obj.addProperty("App::PropertyColor","Color","Wing","Color of the wing").Color=(1.0,0.0,0.0)
         obj.Proxy = self
 
     def getDefaultDisplayMode(self):
@@ -271,25 +267,19 @@ class CommandWingRib:
         editor.setupUi()
         r = editor.form.exec_()
         if r:
-            #r=1 => OK
-            #print("corde : /n")
-            #print (editor.form.NACANumber.text())
-
             if editor.form.NACANumber.text()=="" :
-                b=editor.profilSelectedFilePath()
+                b=editor.filePath
                 a=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","wrib")
-                WingRib(a,b,False,0,editor.form.chord.value(),0,0,0,0,0,0,editor.form.thickness.value(),editor.form.kingOfLines.isChecked(),editor.form.splitSpline.isChecked())
+                WingRib(a,b,False,0,editor.form.chord.value(),0,0,0,0,0,0,editor.form.thickness.value(),editor.form.useSpline.isChecked(),editor.form.splitSpline.isChecked())
                 ViewProviderWingRib(a.ViewObject)
             else :
-                print("Naca : ")
-                print( editor.form.NACANumber)
                 b=editor.form.NACANumber
                 a=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","wrib")
-                WingRib(a,b.text(),True,int(editor.form.nacaNbrPoint.value()),editor.form.chord.value(),0,0,0,0,0,0,editor.form.thickness.value(),editor.form.kingOfLines.isChecked(),editor.form.finite_TE.isChecked(),editor.form.splitSpline.isChecked())
+                WingRib(a,b.text(),True,int(editor.form.nacaNbrPoint.value()),editor.form.chord.value(),0,0,0,0,0,0,editor.form.thickness.value(),editor.form.useSpline.isChecked(),editor.form.finite_TE.isChecked(),editor.form.splitSpline.isChecked())
                 ViewProviderWingRib(a.ViewObject)
             FreeCAD.ActiveDocument.recompute()
         else :
-            print("Canceled")
+            FreeCAD.Console.PrintMessage("Rib creation canceled")
 
 if FreeCAD.GuiUp:
     #register the FreeCAD command

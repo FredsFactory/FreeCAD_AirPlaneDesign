@@ -332,17 +332,5 @@ def generateNaca(number, n=240, finite_TE = False, half_cosine_spacing = True,sc
         wire = Part.Wire(lines)
 
     face = Part.Face(wire)
-
-        #Scale the foil
-    myScale = FreeCAD.Base.Matrix()
-    myScale.scale(scale,1,scale)
-    face=face.transformGeometry(myScale)
-#move(face, FreeCAD.Vector(posX, posY, posZ))
-    face.Placement=FreeCAD.Placement(FreeCAD.Vector(1,0,0),FreeCAD.Rotation(FreeCAD.Vector(0,0,0),posX))
-    face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,1,0),FreeCAD.Rotation(FreeCAD.Vector(0,0,0),posY))
-    face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,1),FreeCAD.Rotation(FreeCAD.Vector(0,0,0),posZ))
-    face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(1,0,0),rotX))
-    face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(0,1,0),rotY))
-    face.Placement=FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(0,0,1),rotZ))
-
+    face = face.scale(scale) #Scale the foil
     return face, coords
