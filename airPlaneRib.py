@@ -24,7 +24,7 @@ __author__ = "F. Nivoix"
 __url__ = "https://fredsfactory.fr"
 
 
-import FreeCAD,FreeCADGui
+import FreeCAD,FreeCADGui,os
 
 from PySide import QtCore
 from PySide import QtGui
@@ -33,6 +33,7 @@ from airPlaneDesingProfilUI import SelectObjectUI
 from airPlaneAirFoilNaca import generateNaca
 
 FreeCADGui.addLanguagePath(":/translations")
+smWB_icons_path =  os.path.join( os.path.dirname(__file__), 'resources', 'icons')
 
 # Qt translation handling
 def translate(context, text, disambig=None):
@@ -204,33 +205,7 @@ class ViewProviderWingRib:
     def getIcon(self):
         '''Return the icon in XPM format which will appear in the tree view. This method is\
             optional and if not defined a default icon is shown.'''
-        return """
-            /* XPM */
-            static const char * ViewProviderBox_xpm[] = {
-            "16 16 6 1",
-            "   c None",
-            ".  c #141010",
-            "+  c #615BD2",
-            "@  c #C39D55",
-            "#  c #000000",
-            "$  c #57C355",
-            "        ........",
-            "   ......++..+..",
-            "   .@@@@.++..++.",
-            "   .@@@@.++..++.",
-            "   .@@  .++++++.",
-            "  ..@@  .++..++.",
-            "###@@@@ .++..++.",
-            "##$.@@$#.++++++.",
-            "#$#$.$$$........",
-            "#$$#######      ",
-            "#$$#$$$$$#      ",
-            "#$$#$$$$$#      ",
-            "#$$#$$$$$#      ",
-            " #$#$$$$$#      ",
-            "  ##$$$$$#      ",
-            "   #######      "};
-            """
+        return os.path.join(smWB_icons_path,'rib.xpm')
 
     def __getstate__(self):
         '''When saving the document this object gets stored using Python's json module.\
@@ -257,7 +232,8 @@ class ViewProviderWingRib:
 class CommandWingRib:
     "the WingPanel command definition"
     def GetResources(self):
-        return {'MenuText': "Create a Rib"}
+        iconpath = os.path.join(smWB_icons_path,'rib.svg')
+        return {'Pixmap': iconpath, 'MenuText': QtCore.QT_TRANSLATE_NOOP("Create_a_Rib","Create a Rib")}
 
     def IsActive(self):
         return not FreeCAD.ActiveDocument is None
