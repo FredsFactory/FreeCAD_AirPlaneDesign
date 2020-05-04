@@ -166,8 +166,8 @@ def naca4(number, n, finite_TE = False, half_cosine_spacing = False):
         xl = x
         yl = [-xx for xx in yt]
 
-        xc = xc1 + xc2
-        zc = [0]*len(xc)
+        #xc = xc1 + xc2
+        #zc = [0]*len(xc)
     else:
         yc1 = [m/pow(p,2)*xx*(2*p-xx) for xx in xc1]
         yc2 = [m/pow(1-p,2)*(1-2*p+xx)*(1-xx) for xx in xc2]
@@ -236,7 +236,7 @@ def naca5(number, n, finite_TE = False, half_cosine_spacing = False):
 
     xc1 = [xx for xx in x if xx <= p]
     xc2 = [xx for xx in x if xx > p]
-    xc = xc1 + xc2
+    #xc = xc1 + xc2
 
     if p == 0:
         xu = x
@@ -245,7 +245,7 @@ def naca5(number, n, finite_TE = False, half_cosine_spacing = False):
         xl = x
         yl = [-x for x in yt]
 
-        zc = [0]*len(xc)
+        #zc = [0]*len(xc)
     else:
         yc1 = [k1/6.0*(pow(xx,3)-3*m*pow(xx,2)+ pow(m,2)*(3-m)*xx) for xx in xc1]
         yc2 = [k1/6.0*pow(m,3)*(1-xx) for xx in xc2]
@@ -280,19 +280,19 @@ def naca5(number, n, finite_TE = False, half_cosine_spacing = False):
 ###########################
 #
 ###########################
-def generateNacaCoords(number, n, finite_TE, half_cosine_spacing,scale,posX,posY,posZ,rotX,rotY,rotZ,coords=[]):
+def generateNacaCoords(number, n, finite_TE, half_cosine_spacing,scale,posX,posY,posZ,rotX,rotY,rotZ):
     coords=[]
     if len(number)==4:
         coords=naca4(number, n, finite_TE, half_cosine_spacing)
     elif len(number)==5:
         coords=naca5(number, n, finite_TE, half_cosine_spacing)
     else:
-        raise Exception
+        raise ValueError("Invalid NACA number")
     return coords
 
 
-def generateNaca(number, n=240, finite_TE = False, half_cosine_spacing = True,scale=1,posX=0,posY=0,posZ=0,rotX=0,rotY=0,rotZ=0,useSpline=True,splitSpline=False,coords=[]):
-    coords=generateNacaCoords(number, n, finite_TE , half_cosine_spacing ,scale,posX,posY,posZ,rotX,rotY,rotZ,coords)
+def generateNaca(number, n=240, finite_TE = False, half_cosine_spacing = True,scale=1,posX=0,posY=0,posZ=0,rotX=0,rotY=0,rotZ=0,useSpline=True,splitSpline=False):
+    coords=generateNacaCoords(number, n, finite_TE , half_cosine_spacing ,scale,posX,posY,posZ,rotX,rotY,rotZ)
     if useSpline:
         if splitSpline:
             splineLower = Part.BSplineCurve()

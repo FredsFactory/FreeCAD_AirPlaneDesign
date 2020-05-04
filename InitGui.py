@@ -34,7 +34,7 @@ FreeCADGui.addLanguagePath(":/translations")
 
 smWBpath = os.path.dirname(path_locator.__file__)
 smWB_icons_path =  os.path.join( smWBpath, 'resources', 'icons')
-global main_smWB_Icon
+global main_smWB_Icon # lgtm[py/redundant-global-declaration]
 main_smWB_Icon = os.path.join( smWB_icons_path , 'appicon.svg')
 
 #def QT_TRANSLATE_NOOP(scope, text):
