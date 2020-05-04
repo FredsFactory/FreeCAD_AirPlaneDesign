@@ -41,23 +41,6 @@ def translate(context, text, disambig=None):
 if open.__module__ in ['__builtin__','io']:
     pythonopen = open
 
-def decodeName(name):
-    "decodes encoded strings"
-    try:
-        decodedName = name
-    except UnicodeDecodeError:
-        try:
-            decodedName = (name.decode("latin1"))
-        except UnicodeDecodeError:
-            try:
-                decodedName = (name.decode("utf8"))
-            except UnicodeDecodeError:
-                FreeCAD.Console.PrintWarning("AirfoilDAT: couldn't determine character encoding")
-                decodedName = name
-    return decodedName
-
-
-
 def readpointsonfile(filename):
     # The common airfoil dat format has many flavors, This code should work with almost every dialect,
     # Regex to identify data rows and throw away unused metadata
@@ -94,17 +77,17 @@ def readpointsonfile(filename):
 
     return coords
 
-def process(doc,filename,scale,posX,posY,posZ,rotX,rotY,rotZ,useSpline,splitSpline,coords=[]):
+def process(filename,scale,posX,posY,posZ,rotX,rotY,rotZ,useSpline,splitSpline,coords=[]):
     if len(coords) == 0 :
         coords = readpointsonfile(filename)
     # do we use a BSpline?
     if useSpline:
         if splitSpline: #do we split between upper and lower side?
-            if coords.__contains__(FreeCAD.Vector(0,0,0)):
+            if coords.__contains__(FreeCAD.Vector(0,0,0)): # lgtm[py/modification-of-default-value]
                 flippoint = coords.index(FreeCAD.Vector(0,0,0))
             else:
-                lenghtList=[v.Lenght for v in coords]
-                flippoint = lenghtList.index(min(xlist))
+                lenghtList=[v.Length for v in coords]
+                flippoint = lenghtList.index(min(lenghtList))
             splineLower = Part.BSplineCurve()
             splineUpper = Part.BSplineCurve()
             splineUpper.interpolate(coords[:flippoint+1])

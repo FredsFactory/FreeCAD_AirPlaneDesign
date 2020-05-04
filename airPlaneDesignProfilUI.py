@@ -83,12 +83,6 @@ class SelectObjectUI():
     def getStandardButtons(self):
         return int(QtGui.QDialogButtonBox.Ok)
     
-    def selectionChanged(self):
-        a=self.form.listProfil.currentItem()
-        item=a.text()
-        
-        return
-    
     def setupUi(self):
         # Connect Signals and Slots
         self.form.NACANumber.editingFinished.connect(self.updateRibNACA)
@@ -137,7 +131,7 @@ class SelectObjectUI():
         self.form.profilTable.setRowCount(0)
         try:
             coords=generateNacaCoords(number,self.form.nacaNbrPoint.value(),self.form.finite_TE.isChecked(),True,self.form.chord.value(),0,0,0,0,0,0)
-        except:
+        except ValueError:
             self.form.ribView.setScene(QtGui.QGraphicsScene())
             return
 
