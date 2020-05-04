@@ -29,7 +29,7 @@ import FreeCAD,FreeCADGui,os
 from PySide import QtCore
 from PySide import QtGui
 from airPlaneAirFoil import process,decodeName
-from airPlaneDesingProfilUI import SelectObjectUI
+from airPlaneDesignProfilUI import SelectObjectUI
 from airPlaneAirFoilNaca import generateNaca
 
 FreeCADGui.addLanguagePath(":/translations")
@@ -259,4 +259,4 @@ class CommandWingRib:
 
 if FreeCAD.GuiUp:
     #register the FreeCAD command
-    FreeCADGui.addCommand('airPlaneDesingWRib',CommandWingRib())
+    FreeCADGui.addCommand('airPlaneDesignWRib',CommandWingRib())

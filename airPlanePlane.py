@@ -203,4 +203,4 @@ class CommandPlane:
 
 if FreeCAD.GuiUp:
     #register the FreeCAD command
-    FreeCADGui.addCommand('airPlaneDesingPlane',CommandPlane())
+    FreeCADGui.addCommand('airPlaneDesignPlane',CommandPlane())
