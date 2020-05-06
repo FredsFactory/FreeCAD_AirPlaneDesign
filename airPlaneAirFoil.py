@@ -59,7 +59,7 @@ def readpointsonfile(filename):
             if (x < 1.01) and (z < 1) and (x > -0.01) and (z > -1):
                 coords.append(FreeCAD.Vector(x,y,z))
             else:
-                FreeCAD.Console.PrintWarning("Ignoring coordinates out of range -0.01<x<1.01 and/or -1<z<1. If this is a Lednicer format airfoil file there is nothing to worrya about.")
+                FreeCAD.Console.PrintWarning("Ignoring coordinates out of range -0.01<x<1.01 and/or -1<z<1. If this is a Lednicer format airfoil this is normal.")
         # End of if curdat != None
     # End of for lin in file
     afile.close
@@ -124,6 +124,5 @@ def process(filename,scale,posX,posY,posZ,rotX,rotY,rotZ,useSpline,splitSpline,c
                 lines.append(Part.makeLine(last_v, first_v))
         wire = Part.Wire(lines)
 
-    face = Part.Face(wire)
-    face = face.scale(scale) #Scale the foil
+    face = Part.Face(wire).scale(scale) #Scale the foil
     return face, coords

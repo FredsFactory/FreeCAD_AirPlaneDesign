@@ -331,6 +331,5 @@ def generateNaca(number, n=240, finite_TE = False, half_cosine_spacing = True,sc
                 lines.append(Part.makeLine(last_v, first_v))
         wire = Part.Wire(lines)
 
-    face = Part.Face(wire)
-    face = face.scale(scale) #Scale the foil
+    face = Part.Face(wire).scale(scale) #Scale the foil
     return face, coords
