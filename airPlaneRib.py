@@ -73,16 +73,18 @@ class WingRib:
     def execute(self, fp):
         #   Do something when doing a recomputation, this method is mandatory
         if fp.NacaProfil =="" :
-            fp.Shape,fp.Coordinates=process(fp.RibProfil,
+            face,fp.Coordinates=process(fp.RibProfil,
                                     fp.Chord,fp.Placement.Base.x,fp.Placement.Base.y,fp.Placement.Base.z,
                                     fp.xrot,fp.yrot,fp.zrot,fp.useSpline,fp.splitSpline,fp.Coordinates)
         else :
-            fp.Shape,fp.Coordinates=generateNaca(fp.NacaProfil, fp.NacaNbrPoint, fp.finite_TE,True,
+            face,fp.Coordinates=generateNaca(fp.NacaProfil, fp.NacaNbrPoint, fp.finite_TE,True,
                                     fp.Chord,fp.Placement.Base.x,fp.Placement.Base.y,fp.Placement.Base.z,
                                     fp.xrot,fp.yrot,fp.zrot,fp.useSpline,fp.splitSpline)
 
         if fp.Thickness != 0 :
-            fp.Shape = fp.Shape.extrude(FreeCAD.Base.Vector(0,fp.Thickness,0))
+            fp.Shape = face.extrude(FreeCAD.Vector(0,fp.Thickness,0))
+        else:
+            fp.Shape = face
 
         FreeCAD.Console.PrintMessage("Create Rib End\n")
 
