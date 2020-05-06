@@ -245,7 +245,7 @@ class CommandWingRib:
             if editor.form.NACANumber.text()=="" :
                 b=editor.filePath
                 a=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","wrib")
-                WingRib(a,b,False,0,editor.form.chord.value(),0,0,0,0,0,0,editor.form.thickness.value(),editor.form.useSpline.isChecked(),editor.form.splitSpline.isChecked())
+                WingRib(a,b,False,0,editor.form.chord.value(),0,0,0,0,0,0,editor.form.thickness.value(),editor.form.useSpline.isChecked(),_splitSpline=editor.form.splitSpline.isChecked())
                 ViewProviderWingRib(a.ViewObject)
             else :
                 b=editor.form.NACANumber
