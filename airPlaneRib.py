@@ -146,7 +146,6 @@ class RibTaskPanel:
         scene.addItem(item)
         self.form.ribView.setFocus()
         self.form.ribView.show()
-
         return
 
 
