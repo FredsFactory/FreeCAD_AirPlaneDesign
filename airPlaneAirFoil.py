@@ -77,7 +77,7 @@ def readpointsonfile(filename):
 
     return coords
 
-def process(filename,scale,posX,posY,posZ,rotX,rotY,rotZ,useSpline,splitSpline,coords=[]):
+def process(filename,scale,posX,posY,posZ,rotX,rotY,rotZ,rot,useSpline,splitSpline,coords=[]):
     if len(coords) == 0 :
         coords = readpointsonfile(filename)
     # do we use a BSpline?
@@ -123,11 +123,20 @@ def process(filename,scale,posX,posY,posZ,rotX,rotY,rotZ,useSpline,splitSpline,c
         if last_v != first_v:
                 lines.append(Part.makeLine(last_v, first_v))
         wire = Part.Wire(lines)
-    
+
     #face = Part.Face(wire).scale(scale) #Scale the foil, # issue31 doesn't work with v0.18
     face = Part.Face(wire)
     myScale = Base.Matrix() # issue31
     myScale.scale(scale,scale,scale)# issue31
     face=face.transformGeometry(myScale)# issue31
+
+    face.Placement.Rotation.Axis.x=rotX
+    face.Placement.Rotation.Axis.y=rotY
+    face.Placement.Rotation.Axis.z=rotZ
+    face.Placement.Rotation.Angle=rot
+
+    #face.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(rotX,rotY,rotZ),rot))
+    #face.rotate([0,0,0],FreeCAD.Vector(rotX, rotY, rotZ),rot)
+
 
     return face, coords
