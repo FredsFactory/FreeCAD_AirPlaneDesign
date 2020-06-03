@@ -66,9 +66,9 @@ class WingPanel:
         obj.addProperty("App::PropertyLength","TipChord","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Tip Chord")).TipChord=_tipChord
         obj.addProperty("App::PropertyLength","RootChord","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Root Chord")).RootChord=_rootChord
  
-        #obj.addProperty("App::PropertyLength","PanelLength","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Panel Length")).PanelLength=_panelLength
-        #obj.addProperty("App::PropertyLength","TipTwist","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Tip Twist")).TipTwist=_tipTwist
-        #obj.addProperty("App::PropertyLength","Dihedral","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Dihedral")).Dihedral=_dihedral
+        obj.addProperty("App::PropertyLength","PanelLength","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Panel Length")).PanelLength=_panelLength
+        obj.addProperty("App::PropertyAngle","TipTwist","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Tip Twist")).TipTwist=_tipTwist
+        obj.addProperty("App::PropertyAngle","Dihedral","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Dihedral")).Dihedral=_dihedral
         #obj.addProperty("App::PropertyLinkList","Ribs","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","list of ribs")).Ribs=[]         
      
         obj.addProperty("App::PropertyBool","Solid","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Solid")).Solid=True # 
@@ -88,6 +88,20 @@ class WingPanel:
     def execute(self, obj):
         '''Do something when doing a recomputation, this method is mandatory'''
         if obj.RootRib :
+          
+           obj.RootRib.Placement.Rotation.Axis.x=1
+           obj.RootRib.Placement.Rotation.Axis.y=0
+           obj.RootRib.Placement.Rotation.Axis.z=0
+           obj.RootRib.Placement.Rotation.Angle=obj.Dihedral
+           
+           obj.TipRib.Placement.Rotation.Axis.x=1
+           obj.TipRib.Placement.Rotation.Axis.y=0
+           obj.TipRib.Placement.Rotation.Axis.z=0   
+           obj.TipRib.Placement.Rotation.Angle=obj.Dihedral
+           
+           obj.TipRib.Placement.Base.y= obj.PanelLength   
+           obj.TipRib.Placement.Base.z= obj.PanelLength*math.tan(obj.Dihedral)
+           
            ribsWires=[]
            ribsWires.append(obj.RootRib.Shape.OuterWire)
            ribsWires.append(obj.TipRib.Shape.OuterWire)

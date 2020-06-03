@@ -44,6 +44,7 @@ class Plane:
         obj.Proxy = self
          
         obj.addProperty("App::PropertyLinkList", "Wings", "Base", QtCore.QT_TRANSLATE_NOOP("App::Property", "List of wings"))
+        
 
     def onChanged(self, fp, prop):
         '''Do something when a property has changed'''

@@ -111,32 +111,21 @@ class CommandWing:
     "the Wing command definition"
     def GetResources(self):
         iconpath = os.path.join(smWB_icons_path,'panel.png')
-        return {'Pixmap': iconpath, 'MenuText': QtCore.QT_TRANSLATE_NOOP("Create_a_wing","Create/Add a wing to plane")}
+        return {'Pixmap': iconpath, 'MenuText': QtCore.QT_TRANSLATE_NOOP("Create_a_wing","Create/Add a wing to plane, select a plane and clic")}
     
     def IsActive(self):
         return not FreeCAD.ActiveDocument is None
     
     def Activated(self):
-        print("---------------------------------------")
+
         print("-----------------Wing-----------------")
-        print("---------------------------------------")
        
         selection = FreeCADGui.Selection.getSelectionEx()
         if selection :
            base = FreeCAD.ActiveDocument.getObject((selection[0].ObjectName))
-        
-        #---------------------création des nervures temporaires
-        #_wPanel=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","wpanel001") 
-        #WingPanel(_wPanel,None,None,200,100,100,0,0)
-        #ViewProviderWingRib(_wPanel.ViewObject)
-       
-        #----------
-        #obj=FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroupPython","WingPanel")
-   
-    
+
         _wPanels=[]
-        #_wPanels.append(_wPanel)   
-        
+          
         obj=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","Wing")
         Wing(obj,_wPanels)
         ViewProviderWing(obj.ViewObject)
