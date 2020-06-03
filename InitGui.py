@@ -58,7 +58,8 @@ class AirPlaneDesignWorkbench(Workbench):
         import airPlanePanel
         import airPlaneRib
         import airPlanePlane
-        self.comList= ['airPlaneDesignWRib','airPlaneDesignWPanel','airPlaneDesignPlane']
+        import airPlaneWPanel
+        self.comList= ['airPlaneDesignPlane','airPlaneDesignWPanel','airPlaneDesignWingPanel','airPlaneDesignWRib']
         # creates a new toolbar with your commands
         self.appendToolbar(QT_TRANSLATE_NOOP("AirPlaneDesign", "Air Plane Design"), self.comList)
         # creates a new menu

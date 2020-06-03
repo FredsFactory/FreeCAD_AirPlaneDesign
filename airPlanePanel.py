@@ -207,6 +207,7 @@ class CommandWPanel:
              PanelTable.append(rowData)
 
           a=FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroupPython","Wing")#Path::FeaturePython","wpanel") #"Part::FeaturePython","wpanel")
+        
           #WPanel(a,editor.form.NumberOfPanel.value(),PanelTable)
           WPanel(a,editor.form.PanelTable.rowCount(),PanelTable)
           ViewProviderPanel(a.ViewObject)

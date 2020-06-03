@@ -24,7 +24,7 @@ __author__ = "F. Nivoix"
 __url__ = "https://fredsfactory.fr"
 
 
-import FreeCAD,FreeCADGui
+import FreeCAD,FreeCADGui, os
 
 from PySide import QtCore
 from PySide import QtGui
@@ -35,31 +35,15 @@ FreeCADGui.addLanguagePath(":/translations")
 def translate(context, text, disambig=None):
     return QtCore.QCoreApplication.translate(context, text, disambig)
 
+smWB_icons_path =  os.path.join( os.path.dirname(__file__), 'resources', 'icons')
+
 
 class Plane:
-    def __init__(self, obj,_profil,_nacagene,_nacaNbrPoint,_chord,_x,_y,_z,_xrot,_yrot,_zrot,_thickness=0,_useSpline = True,_finite_TE = False):
+    def __init__(self, obj):
         '''Rib properties'''
         obj.Proxy = self
-        obj.addProperty("App::PropertyFile","RibProfil","Rib",QtCore.QT_TRANSLATE_NOOP("App::Property","Profil type")).RibProfil=_profil
-        if _nacagene==True :
-            obj.addProperty("App::PropertyString","NacaProfil","NacaProfil",QtCore.QT_TRANSLATE_NOOP("App::Property","Naca Profil")).NacaProfil=_profil
-        else :
-            obj.addProperty("App::PropertyString","NacaProfil","NacaProfil",QtCore.QT_TRANSLATE_NOOP("App::Property","Naca Profil")).NacaProfil=""
-
-        obj.addProperty("App::PropertyInteger","NacaNbrPoint","NacaProfil",QtCore.QT_TRANSLATE_NOOP("App::Property","Naca Number of Points")).NacaNbrPoint=_nacaNbrPoint
-        obj.addProperty("App::PropertyBool","finite_TE","NacaProfil",QtCore.QT_TRANSLATE_NOOP("App::Property","Use a finite thickness at TE")).finite_TE=_finite_TE
-        obj.addProperty("App::PropertyBool","useSpline","Rib",QtCore.QT_TRANSLATE_NOOP("App::Property","use Spline")).useSpline =_useSpline
-        obj.addProperty("App::PropertyLength","Chord","Rib",QtCore.QT_TRANSLATE_NOOP("App::Property","Chord")).Chord=_chord
-        obj.addProperty("App::PropertyLength","Thickness","Rib",QtCore.QT_TRANSLATE_NOOP("App::Property","Thickness")).Thickness=_thickness
-        obj.addProperty("App::PropertyLength","xrot","Rib","chord").xrot=_xrot
-        obj.addProperty("App::PropertyLength","yrot","Rib","chord").yrot=_yrot
-        obj.addProperty("App::PropertyLength","zrot","Rib","chord").zrot=_zrot
-        obj.Placement.Base.x=_x
-        obj.Placement.Base.y=_y
-        obj.Placement.Base.z=_z
-        # List Geomtry to edit list of points
-        obj.addProperty("App::PropertyVectorList","Coordinates","Rib","Vector list that defines the airfoil's geometry").Coordinates=[]
-        #obj.setEditorMode("MyPropertyName", mode) #2 -- hidden
+         
+        obj.addProperty("App::PropertyLinkList", "Wings", "Base", QtCore.QT_TRANSLATE_NOOP("App::Property", "List of wings"))
 
     def onChanged(self, fp, prop):
         '''Do something when a property has changed'''
@@ -67,9 +51,24 @@ class Plane:
 
     def execute(self, fp):
         #   Do something when doing a recomputation, this method is mandatory
-
-
         FreeCAD.Console.PrintMessage("execute process\n")
+
+    def addWing(self, op, before=None, removeBefore=False):
+        group = self.obj.Wings.Group
+        if op not in group:
+            if before:
+                try:
+                    group.insert(group.index(before), op)
+                    if removeBefore:
+                        group.remove(before)
+                except Exception as e:  # pylint: disable=broad-except
+                    PathLog.error(e)
+                    group.append(op)
+            else:
+                group.append(op)
+            self.obj.Wings.Group = group
+            op.Path.Center = self.obj.Operations.Path.Center
+
 
 
 class PlaneTaskPanel: 
@@ -135,7 +134,7 @@ class ViewProviderPlane:
         '''Return the name of the default display mode. It must be defined in getDisplayModes.'''
         return "Flat Lines"
     
-    def getIcon(self):
+    def getIconold(self):
         '''Return the icon in XPM format which will appear in the tree view. This method is\
             optional and if not defined a default icon is shown.'''
         return """
@@ -166,6 +165,11 @@ class ViewProviderPlane:
             "   #######      "};
             """
     
+    def getIcon(self):
+        '''Return the icon in XPM format which will appear in the tree view. This method is\
+            optional and if not defined a default icon is shown.'''
+        return os.path.join(smWB_icons_path,'plane.xpm')
+    
     def __getstate__(self):
         '''When saving the document this object gets stored using Python's json module.\
             Since we have some un-serializable parts here -- the Coin stuff -- we must define this method\
@@ -189,14 +193,19 @@ class ViewProviderPlane:
 
 class CommandPlane:
     "the WingPanel command definition"
+ 
     def GetResources(self):
-        return {'MenuText': "Create a Plane"}
+        iconpath = os.path.join(smWB_icons_path,'plane.png')
+        return {'Pixmap': iconpath, 'MenuText': QtCore.QT_TRANSLATE_NOOP("Create_a_Plane","Create a Plane")}
     
     def IsActive(self):
         return not FreeCAD.ActiveDocument is None
     
     def Activated(self):
-        a=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","plane")
+        #a=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","plane")
+        a=FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroupPython","plane")
+        a.Group=[]
+        Plane(a)
         ViewProviderPlane(a.ViewObject)
         
         
