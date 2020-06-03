@@ -135,6 +135,11 @@ class ViewProviderPlane:
         '''Return the name of the default display mode. It must be defined in getDisplayModes.'''
         return "Flat Lines"
     
+    def getIconold(self):
+        '''Return the icon in XPM format which will appear in the tree view. This method is\
+            optional and if not defined a default icon is shown.'''
+        return os.path.join(smWB_icons_path,'plane.xpm')
+    
     def getIcon(self):
         '''Return the icon in XPM format which will appear in the tree view. This method is\
             optional and if not defined a default icon is shown.'''
