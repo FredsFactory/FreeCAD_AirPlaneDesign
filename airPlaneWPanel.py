@@ -24,9 +24,7 @@ __author__ = "F. Nivoix"
 __url__ = "https://fredsfactory.fr"
 
 
-
 import FreeCAD, FreeCADGui, Part, os
-
 from airPlaneRib import WingRib, ViewProviderWingRib
 from airPlaneWingUI import WingEditorPanel
 from PySide import QtCore
@@ -34,9 +32,6 @@ from FreeCAD import Vector
 import Part, Draft 
 from importlib import reload
 import math
-import CurvedShapes
-
-
 
 smWB_icons_path =  os.path.join( os.path.dirname(__file__), 'resources', 'icons')
 
@@ -71,20 +66,18 @@ class WingPanel:
         obj.addProperty("App::PropertyLength","TipChord","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Tip Chord")).TipChord=_tipChord
         obj.addProperty("App::PropertyLength","RootChord","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Root Chord")).RootChord=_rootChord
  
-        obj.addProperty("App::PropertyLength","PanelLength","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Panel Length")).PanelLength=_panelLength
-        obj.addProperty("App::PropertyLength","TipTwist","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Tip Twist")).TipTwist=_tipTwist
-        obj.addProperty("App::PropertyLength","Dihedral","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Dihedral")).Dihedral=_dihedral
-        obj.addProperty("App::PropertyLinkList","Ribs","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","list of ribs")).Ribs=[]         
+        #obj.addProperty("App::PropertyLength","PanelLength","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Panel Length")).PanelLength=_panelLength
+        #obj.addProperty("App::PropertyLength","TipTwist","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Tip Twist")).TipTwist=_tipTwist
+        #obj.addProperty("App::PropertyLength","Dihedral","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Dihedral")).Dihedral=_dihedral
+        #obj.addProperty("App::PropertyLinkList","Ribs","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","list of ribs")).Ribs=[]         
      
         obj.addProperty("App::PropertyBool","Solid","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Solid")).Solid=True # 
         obj.addProperty("App::PropertyBool","Surface","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Surface")).Surface=False 
         
-   
-        #obj.addProperty("App::PropertyLinkList", "Rib", "Ribs", "Ribs")
         
-        ribs=[]
-        ribs.append(obj.RootRib)
-        ribs.append(obj.TipRib)
+        #ribs=[]
+        #ribs.append(obj.RootRib)
+        #ribs.append(obj.TipRib)
         FreeCAD.ActiveDocument.recompute()
 
 
@@ -92,18 +85,17 @@ class WingPanel:
         '''Do something when a property has changed'''
         FreeCAD.Console.PrintMessage("Change property: " + str(prop) + "\n")
         
-
     def execute(self, obj):
         '''Do something when doing a recomputation, this method is mandatory'''
-        ribsWires=[]
-        ribsWires.append(obj.RootRib.Shape.OuterWire)
-        ribsWires.append(obj.TipRib.Shape.OuterWire)
-        obj.Shape=Part.makeLoft(ribsWires,True,False)#obj.rootRib,obj.tipRib,True, False)
-        
-        
+        if obj.RootRib :
+           ribsWires=[]
+           ribsWires.append(obj.RootRib.Shape.OuterWire)
+           ribsWires.append(obj.TipRib.Shape.OuterWire)
+           obj.RootRib.ViewObject.hide()
+           obj.TipRib.ViewObject.hide()
+           obj.Shape=Part.makeLoft(ribsWires,obj.Solid,False)
+
         FreeCAD.Console.PrintMessage("Recompute Python Wing feature\n")
-
-
 
 class ViewProviderPanel:
     def __init__(self, vobj):
@@ -132,17 +124,11 @@ class ViewProviderPanel:
     def __setstate__(self,state):
         return None
 
-
-
-
-
-
-
 class CommandWPanel:
     "the WingPanel command definition"
     def GetResources(self):
         iconpath = os.path.join(smWB_icons_path,'panel.png')
-        return {'Pixmap': iconpath, 'MenuText': QtCore.QT_TRANSLATE_NOOP("Create_a_wing","Create/Add a wing panel")}
+        return {'Pixmap': iconpath, 'MenuText': QtCore.QT_TRANSLATE_NOOP("Create_a_wing_Panel","Create/Add a wing panel, select a panl and clic")}
     
     def IsActive(self):
         return not FreeCAD.ActiveDocument is None
@@ -151,18 +137,10 @@ class CommandWPanel:
         print("---------------------------------------")
         print("-----------------Panel-----------------")
         print("---------------------------------------")
-        
-        
-        #FreeCADGui.doCommand("import xxxx")
- 
-        #FreeCADGui.doCommand("CurvedShapes.makeCurvedArray(%sItems=4, OffsetStart=0, OffsetEnd=0, Surface=False)"%(options))
        
         selection = FreeCADGui.Selection.getSelectionEx()
-        #FreeCADGui.doCommand("base = FreeCAD.ActiveDocument.getObject('%s')"%(selection[0].ObjectName))
-        #baseObject = selection[0]
-        #base=FreeCAD.ActiveDocument.getObject(selection[0].ObjectName)
-        
-        base = FreeCAD.ActiveDocument.getObject((selection[0].ObjectName))
+        if selection :
+           base = FreeCAD.ActiveDocument.getObject((selection[0].ObjectName))
         
         #---------------------création des nervures temporaires
         _rootRib=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","RibRoot_")
@@ -181,21 +159,21 @@ class CommandWPanel:
         WingPanel(obj,_rootRib,_tipRib,200,100,100,0,0)
         ViewProviderPanel(obj.ViewObject)
         b=[]
-        if True : #selection==None :
-           if not base.Wings :
-              base.Wings=obj
+        if selection : #selection==None :
+           if not base.WingPanels :
+              base.WingPanels=obj
            else : 
-              b=base.Wings
+              b=base.WingPanels
               b.append(obj)
-              base.Wings=b
+              base.WingPanels=b
               
-        if True :  #selection ==None:   
-           if not base.Group :
-              base.Group=obj
-           else : 
-              b=base.Group
-              b.append(obj)
-              base.Group=b
+        #if selection :  #selection ==None:   
+        #   if not base.Group :
+        #      base.Group=obj
+        #   else : 
+        #      b=base.Group
+        #      b.append(obj)
+        #      base.Group=b
            
         FreeCAD.ActiveDocument.recompute()      
         FreeCAD.Gui.activeDocument().activeView().viewAxonometric()

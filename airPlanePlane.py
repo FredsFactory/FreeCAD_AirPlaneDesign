@@ -207,8 +207,7 @@ class CommandPlane:
         a.Group=[]
         Plane(a)
         ViewProviderPlane(a.ViewObject)
-        
-        
+            
 
 if FreeCAD.GuiUp:
     #register the FreeCAD command

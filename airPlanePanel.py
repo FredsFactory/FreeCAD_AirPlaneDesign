@@ -189,7 +189,7 @@ class ViewProviderPanel:
 class CommandWPanel:
     "the WingPanel command definition"
     def GetResources(self):
-        return {'MenuText': "Create a wing"}
+        return {'MenuText': "Create a wing (old release)"}
     
     def IsActive(self):
         return not FreeCAD.ActiveDocument is None
