@@ -18,19 +18,13 @@
 # GNU Library General Public License for more details. 
 #
 ################################################
-
 __title__="FreeCAD Airplane Design"
 __author__ = "F. Nivoix"
 __url__ = "https://fredsfactory.fr"
 
-
 import FreeCAD, FreeCADGui, Part, os
 from airPlaneRib import WingRib, ViewProviderWingRib
-from airPlaneWingUI import WingEditorPanel
 from PySide import QtCore
-from FreeCAD import Vector
-import Part, Draft 
-from importlib import reload
 import math
 
 smWB_icons_path =  os.path.join( os.path.dirname(__file__), 'resources', 'icons')
@@ -55,16 +49,17 @@ class WingPanel:
         self.obj = obj
         obj.Proxy = self
         #obj.addProperty("App::PropertyLink","Base","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Tip Rib of the panel")).Base=_rootRib#
-        obj.addProperty("App::PropertyLink","TipRib","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Tip Rib of the panel")).TipRib=_tipRib#.tipRib-_tipRib
-        obj.addProperty("App::PropertyLink","RootRib","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Root Rib of the panel")).RootRib=_rootRib#.rootRib-_rootRib
+        obj.addProperty("App::PropertyLink","RootRib","Rib",QtCore.QT_TRANSLATE_NOOP("App::Property","Root Rib of the panel")).RootRib=_rootRib#.rootRib-_rootRib
+        obj.addProperty("App::PropertyLink","TipRib","Rib",QtCore.QT_TRANSLATE_NOOP("App::Property","Tip Rib of the panel")).TipRib=_tipRib#.tipRib-_tipRib
+        
         
         # leadingEdge : bord d'attaque
         obj.addProperty("App::PropertyLink","LeadingEdge","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Select the leading edge of the panal, line or Spline"))
         # trailing edge : bord de fuite
         obj.addProperty("App::PropertyLink","TrailingEdge","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Select the trailing edge of the panel, line or Spline"))
         
-        obj.addProperty("App::PropertyLength","TipChord","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Tip Chord")).TipChord=_tipChord
-        obj.addProperty("App::PropertyLength","RootChord","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Root Chord")).RootChord=_rootChord
+        obj.addProperty("App::PropertyLength","TipChord","Rib",QtCore.QT_TRANSLATE_NOOP("App::Property","Tip Chord")).TipChord=_tipChord
+        obj.addProperty("App::PropertyLength","RootChord","Rib",QtCore.QT_TRANSLATE_NOOP("App::Property","Root Chord")).RootChord=_rootChord
  
         obj.addProperty("App::PropertyLength","PanelLength","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Panel Length")).PanelLength=_panelLength
         obj.addProperty("App::PropertyAngle","TipTwist","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Tip Twist")).TipTwist=_tipTwist
@@ -73,12 +68,12 @@ class WingPanel:
      
         obj.addProperty("App::PropertyBool","Solid","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Solid")).Solid=True # 
         obj.addProperty("App::PropertyBool","Surface","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Surface")).Surface=False 
-        
+        obj.addProperty("App::PropertyBool","Structure","Design",QtCore.QT_TRANSLATE_NOOP("App::Property","Surface")).Structure=False
         
         #ribs=[]
         #ribs.append(obj.RootRib)
         #ribs.append(obj.TipRib)
-        FreeCAD.ActiveDocument.recompute()
+        #FreeCAD.ActiveDocument.recompute()
 
 
     def onChanged(self, obj, prop):
@@ -87,28 +82,31 @@ class WingPanel:
         
     def execute(self, obj):
         '''Do something when doing a recomputation, this method is mandatory'''
-        if obj.RootRib :
+        if not obj.Structure :
+           if obj.RootRib :
           
-           obj.RootRib.Placement.Rotation.Axis.x=1
-           obj.RootRib.Placement.Rotation.Axis.y=0
-           obj.RootRib.Placement.Rotation.Axis.z=0
-           obj.RootRib.Placement.Rotation.Angle=obj.Dihedral
+           #obj.RootRib.Placement.Rotation.Axis.x=1
+           #obj.RootRib.Placement.Rotation.Axis.y=0
+           #obj.RootRib.Placement.Rotation.Axis.z=0
+           #obj.RootRib.Placement.Rotation.Angle=obj.Dihedral
            
-           obj.TipRib.Placement.Rotation.Axis.x=1
-           obj.TipRib.Placement.Rotation.Axis.y=0
-           obj.TipRib.Placement.Rotation.Axis.z=0   
-           obj.TipRib.Placement.Rotation.Angle=obj.Dihedral
+           #obj.TipRib.Placement.Rotation.Axis.x=1
+           #obj.TipRib.Placement.Rotation.Axis.y=0
+           #obj.TipRib.Placement.Rotation.Axis.z=0   
+           #obj.TipRib.Placement.Rotation.Angle=obj.Dihedral
            
-           obj.TipRib.Placement.Base.y= obj.PanelLength   
-           obj.TipRib.Placement.Base.z= obj.PanelLength*math.tan(obj.Dihedral)
+              obj.TipRib.Placement.Base.y= obj.PanelLength   
+              #obj.TipRib.Placement.Base.z= obj.PanelLength*math.tan(obj.Dihedral)
            
-           ribsWires=[]
-           ribsWires.append(obj.RootRib.Shape.OuterWire)
-           ribsWires.append(obj.TipRib.Shape.OuterWire)
-           obj.RootRib.ViewObject.hide()
-           obj.TipRib.ViewObject.hide()
-           obj.Shape=Part.makeLoft(ribsWires,obj.Solid,False)
-
+              ribsWires=[]
+              ribsWires.append(obj.RootRib.Shape.OuterWire)
+              ribsWires.append(obj.TipRib.Shape.OuterWire)
+              obj.RootRib.ViewObject.hide()
+              obj.TipRib.ViewObject.hide()
+              obj.Shape=Part.makeLoft(ribsWires,obj.Solid,False)
+           else :
+              print("Wing Panel : strucutre, not implemented yet") 
+        #FreeCAD.ActiveDocument.recompute()
         FreeCAD.Console.PrintMessage("Recompute Python Wing feature\n")
 
 class ViewProviderPanel:

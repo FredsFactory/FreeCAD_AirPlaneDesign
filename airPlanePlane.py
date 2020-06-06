@@ -48,11 +48,11 @@ class Plane:
 
     def onChanged(self, fp, prop):
         '''Do something when a property has changed'''
-        #FreeCAD.Console.PrintMessage("Change property: " + str(prop) + "\n")
+        FreeCAD.Console.PrintMessage("Wing: Change property  " + str(prop) + "\n")
 
     def execute(self, fp):
         #   Do something when doing a recomputation, this method is mandatory
-        FreeCAD.Console.PrintMessage("execute process\n")
+        FreeCAD.Console.PrintMessage("Wing : execute process\n")
 
     def addWing(self, op, before=None, removeBefore=False):
         group = self.obj.Wings.Group
@@ -69,7 +69,6 @@ class Plane:
                 group.append(op)
             self.obj.Wings.Group = group
             op.Path.Center = self.obj.Operations.Path.Center
-
 
 
 class PlaneTaskPanel: 
@@ -91,21 +90,16 @@ class PlaneTaskPanel:
         return int(QtGui.QDialogButtonBox.Ok)
 
 
-
     def update(self,vobj):
-        'fills the dialog with rib properties'
+        'fills the dialog with plane properties'
         print('update')
         #self.form.thickness.setValue(vobj.Object.Thickness)
         #self.form.chord.setValue(vobj.Object.Chord)
-        #self.form.kingOfLines.setChecked(vobj.Object.useSpline)
-        
-        #self.form.fileName.setText(vobj.Object.RibProfil)
-        
+        #self.form.kingOfLines.setChecked(vobj.Object.useSpline) 
+        #self.form.fileName.setText(vobj.Object.RibProfil) 
         #self.form.NACANumber.setText(vobj.Object.NacaProfil)
         #self.form.nacaNbrPoint.setValue(vobj.Object.NacaNbrPoint)
         #self.form.finite_TE.setChecked(vobj.Object.finite_TE)
-        
-
     
     def accept(self):
         '''Update properties of Rib'''
@@ -135,37 +129,6 @@ class ViewProviderPlane:
         '''Return the name of the default display mode. It must be defined in getDisplayModes.'''
         return "Flat Lines"
     
-    def getIconold(self):
-        '''Return the icon in XPM format which will appear in the tree view. This method is\
-            optional and if not defined a default icon is shown.'''
-        return """
-            /* XPM */
-            static const char * ViewProviderBox_xpm[] = {
-            "16 16 6 1",
-            "   c None",
-            ".  c #141010",
-            "+  c #615BD2",
-            "@  c #C39D55",
-            "#  c #000000",
-            "$  c #57C355",
-            "        ........",
-            "   ......++..+..",
-            "   .@@@@.++..++.",
-            "   .@@@@.++..++.",
-            "   .@@  .++++++.",
-            "  ..@@  .++..++.",
-            "###@@@@ .++..++.",
-            "##$.@@$#.++++++.",
-            "#$#$.$$$........",
-            "#$$#######      ",
-            "#$$#$$$$$#      ",
-            "#$$#$$$$$#      ",
-            "#$$#$$$$$#      ",
-            " #$#$$$$$#      ",
-            "  ##$$$$$#      ",
-            "   #######      "};
-            """
-    
     def getIcon(self):
         '''Return the icon in XPM format which will appear in the tree view. This method is\
             optional and if not defined a default icon is shown.'''
@@ -183,14 +146,11 @@ class ViewProviderPlane:
         return None
 
     def setEdit(self,vobj,mode):
+         #airPlaneDesignPlanedialog.ui
         taskd = PlaneTaskPanel(vobj)
         FreeCADGui.Control.showDialog(taskd)
-        
-        # airPlaneDesignPlanedialog.ui
-        
-        
         return True
-
+    
 
 class CommandPlane:
     "the WingPanel command definition"
@@ -208,6 +168,7 @@ class CommandPlane:
         a.Group=[]
         Plane(a)
         ViewProviderPlane(a.ViewObject)
+        FreeCAD.ActiveDocument.recompute()
             
 
 if FreeCAD.GuiUp:

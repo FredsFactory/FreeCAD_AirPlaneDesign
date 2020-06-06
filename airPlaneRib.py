@@ -92,7 +92,6 @@ class WingRib:
 class RibTaskPanel: 
     '''A TaskPanel for the Rib'''
     def __init__(self,vobj): 
-        print("init RibTaskPanel")
         self.obj = vobj
         path_to_ui = FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/resources/ribTaskPanel.ui'  
         self.form = FreeCADGui.PySideUic.loadUi(path_to_ui)
@@ -161,8 +160,7 @@ class RibTaskPanel:
         self.form.NACANumber.setText(vobj.Object.NacaProfil)
         self.form.nacaNbrPoint.setValue(vobj.Object.NacaNbrPoint)
         self.form.finite_TE.setChecked(vobj.Object.finite_TE)
-        
-        
+             
         for row_number,row_data in enumerate(vobj.Object.Coordinates):
             self.form.profilTable.insertRow(row_number)
             for col_number, data in enumerate(row_data):
@@ -176,8 +174,7 @@ class RibTaskPanel:
         fp.Thickness=self.form.thickness.value()
         fp.Chord=self.form.chord.value()
         fp.useSpline=self.form.kingOfLines.isChecked()
-        
-        
+         
         print("-bug-------------------------------")
         fp.RibProfil=self.form.fileName.text()
         print(self.form.fileName.text())
@@ -190,7 +187,7 @@ class RibTaskPanel:
     def retranslateUi(self, TaskPanel):
         #TaskPanel.setWindowTitle(QtGui.QApplication.translate("draft", "Faces", None))
         self.addButton.setText(QtGui.QApplication.translate("draft", "Update", None))
-        print("")
+        
 
 
 class ViewProviderWingRib:
@@ -219,7 +216,7 @@ class ViewProviderWingRib:
         return None
 
     def setEdit(self,vobj,mode):
-        #print("setEdit start")
+        
         taskd = RibTaskPanel(vobj)
         #taskd.obj = vobj.Object
         #taskd.update()

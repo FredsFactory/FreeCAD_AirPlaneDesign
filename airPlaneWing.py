@@ -25,14 +25,14 @@ __url__ = "https://fredsfactory.fr"
 
 
 import FreeCAD, FreeCADGui, Part, os
-from airPlaneRib import WingRib, ViewProviderWingRib
-from airPlaneWingUI import WingEditorPanel
 from PySide import QtCore
-from FreeCAD import Vector
-import Part, Draft 
-from importlib import reload
-import math
-from airPlaneWPanel import WingPanel 
+#from airPlaneRib import WingRib, ViewProviderWingRib
+#from airPlaneWingUI import WingEditorPanel
+#from FreeCAD import Vector
+#import Part, Draft 
+#from importlib import reload
+#import math
+#from airPlaneWPanel import WingPanel 
 
 smWB_icons_path =  os.path.join( os.path.dirname(__file__), 'resources', 'icons')
 
@@ -57,13 +57,12 @@ class Wing:
         obj.Proxy = self
         
         obj.addProperty("App::PropertyLinkList","WingPanels","Wing",QtCore.QT_TRANSLATE_NOOP("App::Property","panel")).WingPanels=_wPanels
-        
+     
         obj.addProperty("App::PropertyBool","Solid","Wing",QtCore.QT_TRANSLATE_NOOP("App::Property","Solid")).Solid=True # 
-        obj.addProperty("App::PropertyBool","Surface","Wing",QtCore.QT_TRANSLATE_NOOP("App::Property","Surface")).Surface=False 
+        obj.addProperty("App::PropertyBool","Surface","Wing",QtCore.QT_TRANSLATE_NOOP("App::Property","Surface")).Surface=False
+        obj.addProperty("App::PropertyBool","Structure","Wing",QtCore.QT_TRANSLATE_NOOP("App::Property","Surface")).Structure=False
         
-        
-    
-        FreeCAD.ActiveDocument.recompute()
+        #FreeCAD.ActiveDocument.recompute()
 
 
     def onChanged(self, obj, prop):
@@ -117,9 +116,7 @@ class CommandWing:
         return not FreeCAD.ActiveDocument is None
     
     def Activated(self):
-
-        print("-----------------Wing-----------------")
-       
+        print("-----------------Wing-----------------")     
         selection = FreeCADGui.Selection.getSelectionEx()
         if selection :
            base = FreeCAD.ActiveDocument.getObject((selection[0].ObjectName))
@@ -129,6 +126,7 @@ class CommandWing:
         obj=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","Wing")
         Wing(obj,_wPanels)
         ViewProviderWing(obj.ViewObject)
+        #FreeCAD.ActiveDocument.recompute()
         b=[]
         if selection : #selection==None :
            if not base.Wings :
