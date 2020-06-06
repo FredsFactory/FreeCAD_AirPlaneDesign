@@ -2,7 +2,7 @@
 #
 # Airfoil creation - Aircraft
 # 
-# Copyright (c) F. Nivoix - 2019 - V0.1
+# Copyright (c) F. Nivoix - 2020 - V0.4
 #
 # For FreeCAD Versions = or > 0.17 Revision xxxx
 #
@@ -32,7 +32,7 @@ from airPlaneRib import WingRib, ViewProviderWingRib
 from airPlaneWingUI import WingEditorPanel
 
 #################################################
-#  This module provides tools to build a
+#  This module provides a wizard to build a
 #  wing panel
 #################################################
 if open.__module__ in ['__builtin__','io']:

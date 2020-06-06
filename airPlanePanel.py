@@ -22,7 +22,9 @@
 __title__="FreeCAD Airplane Design"
 __author__ = "F. Nivoix"
 __url__ = "https://fredsfactory.fr"
-
+#-----------------------------deprecated-----------------------------
+#-----------------------------deprecated-----------------------------
+#-----------------------------deprecated-----------------------------
 
 
 import FreeCAD

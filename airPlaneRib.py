@@ -56,9 +56,6 @@ class WingRib:
         obj.addProperty("App::PropertyBool","splitSpline","Rib",QtCore.QT_TRANSLATE_NOOP("App::Property","split spline in lower and upper side")).splitSpline=_splitSpline
         obj.addProperty("App::PropertyLength","Chord","Rib",QtCore.QT_TRANSLATE_NOOP("App::Property","Chord")).Chord=_chord
         obj.addProperty("App::PropertyLength","Thickness","Rib",QtCore.QT_TRANSLATE_NOOP("App::Property","Thickness")).Thickness=_thickness
-        obj.addProperty("App::PropertyLength","xrot","Rib","chord").xrot=_xrot
-        obj.addProperty("App::PropertyLength","yrot","Rib","chord").yrot=_yrot
-        obj.addProperty("App::PropertyLength","zrot","Rib","chord").zrot=_zrot
         obj.Placement.Base.x=_x
         obj.Placement.Base.y=_y
         obj.Placement.Base.z=_z
@@ -75,12 +72,12 @@ class WingRib:
         if fp.NacaProfil =="" :
             face,fp.Coordinates=process(fp.RibProfil,
                                     fp.Chord,fp.Placement.Base.x,fp.Placement.Base.y,fp.Placement.Base.z,
-                                    fp.xrot,fp.yrot,fp.zrot,fp.useSpline,fp.splitSpline,fp.Coordinates)
+                                    0,0,0,fp.useSpline,fp.splitSpline,fp.Coordinates)
         else :
+
             face,fp.Coordinates=generateNaca(fp.NacaProfil, fp.NacaNbrPoint, fp.finite_TE,True,
                                     fp.Chord,fp.Placement.Base.x,fp.Placement.Base.y,fp.Placement.Base.z,
-                                    fp.xrot,fp.yrot,fp.zrot,fp.useSpline,fp.splitSpline)
-
+                                    0,0,0,fp.useSpline,fp.splitSpline)
         if fp.Thickness != 0 :
             fp.Shape = face.extrude(FreeCAD.Vector(0,fp.Thickness,0))
         else:
@@ -188,8 +185,6 @@ class RibTaskPanel:
         #TaskPanel.setWindowTitle(QtGui.QApplication.translate("draft", "Faces", None))
         self.addButton.setText(QtGui.QApplication.translate("draft", "Update", None))
         
-
-
 class ViewProviderWingRib:
     def __init__(self, obj):
         '''Set this object to the proxy object of the actual view provider'''
@@ -215,13 +210,8 @@ class ViewProviderWingRib:
             Since no data were serialized nothing needs to be done here.'''
         return None
 
-    def setEdit(self,vobj,mode):
-        
+    def setEdit(self,vobj,mode):       
         taskd = RibTaskPanel(vobj)
-        #taskd.obj = vobj.Object
-        #taskd.update()
-        #self.Object.ViewObject.Visibility=False
-        #self.Object.baseObject[0].ViewObject.Visibility=True
         FreeCADGui.Control.showDialog(taskd)
         return True
 
@@ -254,5 +244,5 @@ class CommandWingRib:
             FreeCAD.Console.PrintMessage("Rib creation canceled")
 
 if FreeCAD.GuiUp:
-    #register the FreeCAD command
+    #Register the FreeCAD command
     FreeCADGui.addCommand('airPlaneDesignWRib',CommandWingRib())
