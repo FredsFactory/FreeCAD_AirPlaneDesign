@@ -70,11 +70,8 @@ class CommandWPanel:
              PanelTable.append(rowData)
         _panelInput=PanelTable
        
-        #---------------------création des nervures / ribs creation
-    
+
         _ribs=[]
-        #_ribsRoot=[]
-        _panel=[]
         _position=0
         _PanelLength=[]
         profil=[]
@@ -102,9 +99,8 @@ class CommandWPanel:
            WingPanel(obj,_ribs[i*2],_ribs[i*2+1],_row[3],_row[4],_position,0,0)
            ViewProviderPanel(obj.ViewObject)
            FreeCAD.ActiveDocument.recompute() 
-        
-        #------------------------------------------------
-        #b=[]
+           obj.ViewObject.hide()
+           #add to Wing
            if selection : #selection==None :
               if not base.WingPanels :
                  base.WingPanels=obj
@@ -112,17 +108,6 @@ class CommandWPanel:
                  b=base.WingPanels
                  b.append(obj)
                  base.WingPanels=b
-           
-
-          #a=FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroupPython","Wing")#Path::FeaturePython","wpanel") #"Part::FeaturePython","wpanel")
-          #WPanel(a,editor.form.PanelTable.rowCount(),PanelTable)
-          #ViewProviderPanel(a.ViewObject)
-          #FreeCAD.ActiveDocument.recompute()
-          #FreeCAD.Gui.activeDocument().activeView().viewAxonometric()
-          #FreeCAD.Gui.SendMsgToActiveView("ViewFit")
-
- 
-
 
 if FreeCAD.GuiUp:
     #register the FreeCAD command
