@@ -219,6 +219,11 @@ class ViewProviderWing:
 
     def __setstate__(self,state):
         return None
+    
+    def setEdit(self,vobj,mode):       
+        taskd = WingTaskPanel(vobj)
+        FreeCADGui.Control.showDialog(taskd)
+        return True
 
     def setEdit(self,vobj,mode):
         taskd = WingTaskPanel(vobj)
