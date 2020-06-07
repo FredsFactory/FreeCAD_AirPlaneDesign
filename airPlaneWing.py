@@ -78,6 +78,36 @@ class Wing:
          obj.Shape=Part.makeCompound(panelShape)
 
         FreeCAD.Console.PrintMessage("Recompute Python Wing feature\n")
+    
+class WingTaskPanel: 
+    '''A TaskPanel for the Rib'''
+    def __init__(self,vobj): 
+        self.obj = vobj
+        path_to_ui = FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/resources/airPlaneWpanelTask.ui'  
+        self.form = FreeCADGui.PySideUic.loadUi(path_to_ui)
+        self.update(vobj)
+
+    def isAllowedAlterSelection(self):
+        return True
+
+    def isAllowedAlterView(self):
+        return True
+
+    def getStandardButtons(self):
+        return int(QtGui.QDialogButtonBox.Ok)
+
+    def update(self,vobj):
+        'fills the dialog with wing properties'
+        
+    
+    def accept(self):
+        '''Update properties of wing'''
+        print("accept")
+
+    def retranslateUi(self, TaskPanel):
+        #TaskPanel.setWindowTitle(QtGui.QApplication.translate("draft", "Faces", None))
+        self.addButton.setText(QtGui.QApplication.translate("draft", "Update", None))
+
 
 class ViewProviderWing:
     def __init__(self, vobj):
@@ -105,6 +135,11 @@ class ViewProviderWing:
  
     def __setstate__(self,state):
         return None
+    
+    def setEdit(self,vobj,mode):       
+        taskd = WingTaskPanel(vobj)
+        FreeCADGui.Control.showDialog(taskd)
+        return True
 
 class CommandWing:
     "the Wing command definition"
