@@ -104,6 +104,7 @@ class WingRib:
         fp.Placement=FreeCAD.Placement(FreeCAD.Vector(fp.Placement.Base.x,fp.Placement.Base.y,fp.Placement.Base.z), FreeCAD.Rotation(FreeCAD.Vector(fp.Placement.Rotation.Axis.x,fp.Placement.Rotation.Axis.y,fp.Placement.Rotation.Axis.z),math.degrees(fp.Placement.Rotation.Angle)))#, FreeCAD.Vector(0,0,0))
         if fp.Thickness != 0 :
             fp.Shape = face.extrude(FreeCAD.Vector(0,fp.Thickness,0))
+            print("f")
         else:
             #fp.Shape = Part.Face(Part.Wire(fp.Coordinates))
             fp.Shape = face
