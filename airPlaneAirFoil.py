@@ -26,6 +26,8 @@
 #***************************************************************************
 
 import FreeCAD,FreeCADGui,Part,re
+from FreeCAD import Base
+
 FreeCADGui.addLanguagePath(":/translations")
 
 # Qt translation handling
@@ -123,6 +125,16 @@ def process(filename,scale,posX,posY,posZ,rotX,rotY,rotZ,useSpline,splitSpline,c
         if last_v != first_v:
                 lines.append(Part.makeLine(last_v, first_v))
         wire = Part.Wire(lines)
-
-    face = Part.Face(wire).scale(scale) #Scale the foil
+    
+    face = Part.Face(wire) #Scale the foil
+    myScale = Base.Matrix()
+    myScale.scale(scale,scale,scale)
+    face=face.transformGeometry(myScale)
+    
+    face=face.scale(scale)
+    print("--------Process---------")
+    print(wire)
+    print(Part.Face(wire))
+    
+    print(face)
     return face, coords

@@ -24,7 +24,7 @@ __author__ = "F. Nivoix"
 __url__ = "https://fredsfactory.fr"
 
 
-import FreeCAD,FreeCADGui,os
+import FreeCAD,FreeCADGui,Part, os
 
 from PySide import QtCore
 from PySide import QtGui
@@ -69,18 +69,23 @@ class WingRib:
 
     def execute(self, fp):
         #   Do something when doing a recomputation, this method is mandatory
+        FreeCAD.Console.PrintMessage("Execute  Rib generation\n")
         if fp.NacaProfil =="" :
-            face,fp.Coordinates=process(fp.RibProfil,
+            face, fp.Coordinates=process(fp.RibProfil,                    
                                     fp.Chord,fp.Placement.Base.x,fp.Placement.Base.y,fp.Placement.Base.z,
                                     0,0,0,fp.useSpline,fp.splitSpline,fp.Coordinates)
         else :
-
-            face,fp.Coordinates=generateNaca(fp.NacaProfil, fp.NacaNbrPoint, fp.finite_TE,True,
+            face, fp.Coordinates=generateNaca(fp.NacaProfil, fp.NacaNbrPoint, fp.finite_TE,True,
                                     fp.Chord,fp.Placement.Base.x,fp.Placement.Base.y,fp.Placement.Base.z,
                                     0,0,0,fp.useSpline,fp.splitSpline)
+        FreeCAD.Console.PrintMessage("After Rib generation\n")
+        print("Face:")
+        print(face)
         if fp.Thickness != 0 :
             fp.Shape = face.extrude(FreeCAD.Vector(0,fp.Thickness,0))
+            print("f")
         else:
+            #fp.Shape = Part.Face(Part.Wire(fp.Coordinates))
             fp.Shape = face
 
         FreeCAD.Console.PrintMessage("Create Rib End\n")
