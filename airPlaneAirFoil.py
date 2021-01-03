@@ -34,8 +34,6 @@ FreeCADGui.addLanguagePath(":/translations")
 def translate(context, text, disambig=None):
     return QtCore.QCoreApplication.translate(context, text, disambig)
 
-
-
 #################################################
 #  This module provides tools to build a
 #  wing panel

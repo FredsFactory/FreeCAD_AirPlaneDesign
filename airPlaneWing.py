@@ -25,7 +25,9 @@ __url__ = "https://fredsfactory.fr"
 
 
 import FreeCAD, FreeCADGui, Part, os
+from FreeCAD import Units
 from PySide import QtCore
+from PySide import QtGui
 #from airPlaneRib import WingRib, ViewProviderWingRib
 #from airPlaneWingUI import WingEditorPanel
 #from FreeCAD import Vector
@@ -57,16 +59,33 @@ class Wing:
         obj.Proxy = self
         
         obj.addProperty("App::PropertyLinkList","WingPanels","Wing",QtCore.QT_TRANSLATE_NOOP("App::Property","panel")).WingPanels=_wPanels
-     
+        obj.addProperty("App::PropertyLength","WingLength","Wing",QtCore.QT_TRANSLATE_NOOP("App::Property","Panel Length"))
+        obj.addProperty("App::PropertyLength","WingRootChoord","Wing",QtCore.QT_TRANSLATE_NOOP("App::Property","Wing Tip Choord"))        
+        obj.addProperty("App::PropertyLength","WingTipChoord","Wing",QtCore.QT_TRANSLATE_NOOP("App::Property","Wing Tip Choord")) 
         obj.addProperty("App::PropertyBool","Solid","Wing",QtCore.QT_TRANSLATE_NOOP("App::Property","Solid")).Solid=True # 
         obj.addProperty("App::PropertyBool","Surface","Wing",QtCore.QT_TRANSLATE_NOOP("App::Property","Surface")).Surface=False
-        obj.addProperty("App::PropertyBool","Structure","Wing",QtCore.QT_TRANSLATE_NOOP("App::Property","Surface")).Structure=False
-        
+        obj.addProperty("App::PropertyBool","Structure","Wing",QtCore.QT_TRANSLATE_NOOP("App::Property","Surface")).Structure=False        
         #FreeCAD.ActiveDocument.recompute()
 
-
+    def getWingLength(self, obj):
+        wlength=Units.Quantity(0.0,1)  # create a quantity Length 0.0 mm
+        for panel in obj.WingPanels :
+            wlength=wlength+(panel.PanelLength)   
+        obj.WingLength= wlength
+ 
+    def getRootChoord(self, obj):
+        # return the Root Choord of the Wing 
+        print(obj.WingPanels[0].RootRib)
+        obj.WingRootChoord=obj.WingPanels[0].RootRib
+         
+    def getTipChoord(self, obj):
+        # return the Tip Choord of the Wing 
+        for panel in obj.WingPanels :
+            tipRib=panel.TipRib 
+        obj.WingTipChoord=tipRib
+        
     def onChanged(self, obj, prop):
-        '''Do something when a property has changed'''
+        '''Do something when a property has changed'''        
         FreeCAD.Console.PrintMessage("Change property: " + str(prop) + "\n")
         
     def execute(self, obj):
@@ -76,7 +95,10 @@ class Wing:
             panelShape.append(panel.Shape)
         if obj.WingPanels :
          obj.Shape=Part.makeCompound(panelShape)
-
+        self.getWingLength(obj)
+        #self.getRootChoord(obj)
+        #self.getTipChoord(obj)
+        
         FreeCAD.Console.PrintMessage("Recompute Python Wing feature\n")
     
 class WingTaskPanel: 
@@ -98,7 +120,33 @@ class WingTaskPanel:
 
     def update(self,vobj):
         'fills the dialog with wing properties'
+        self.form.name.setText(vobj.Object.Label)
+        self.form.wingLength.setValue(vobj.Object.WingLength)
+        self.form.wingRootChoord.setValue(vobj.Object.WingRootChoord)
         
+        initPanelTable = [
+             ["1","Eppler207",_wingRibProfilDir+u"/naca/naca2412.dat","250","222","122","0","0","0.0","-54.","0","0","22"],
+             ["2","Eppler207",_wingRibProfilDir+u"/naca/naca2412.dat","222","196","35.","0","0","-54","-54","0","54","0"],
+             ["3","Eppler205",_wingRibProfilDir+u"/naca/naca2412.dat","196","146","456","0","0","-54","12","0","0","81"],
+             ["4","Eppler205",_wingRibProfilDir+u"/naca/naca2412.dat","146","100","10","0","0.","12","12","12","0","0"],
+             ["5","Eppler205",_wingRibProfilDir+u"/naca/naca2412.dat","100","100","10","0","0.","12","12","0","0","0"]
+                         ]
+        #self.form.PanelTable.setRowCount(0)
+        for row_number,row_data in enumerate(initPanelTable):
+            self.form.trapezeList.insertRow(row_number)
+            for col_number, data in enumerate(row_data):
+               self.form.trapezeList.setItem(row_number,col_number,QtGui.QTableWidgetItem(str(data)))#,QtGui.QTableWidgetItem(str(data)))
+               
+    def addLine(self):
+        initPanelTable = [
+             ["-","-","","","","","","",""],]
+        for row_number,row_data in enumerate(initPanelTable):
+            self.form.trapezeList.insertRow(row_number)
+            for col_number, data in enumerate(row_data):
+               self.form.trapezeList.setItem(row_number,col_number,QtGui.QTableWidgetItem(str(data)))#,QtGui.QTableWidgetItem(str(data)))   
+                          
+    def delLine(self):
+        self.form.trapezeList.removeRow(self.form.PanelTable.currentRow())
     
     def accept(self):
         '''Update properties of wing'''
@@ -107,7 +155,8 @@ class WingTaskPanel:
     def retranslateUi(self, TaskPanel):
         #TaskPanel.setWindowTitle(QtGui.QApplication.translate("draft", "Faces", None))
         self.addButton.setText(QtGui.QApplication.translate("draft", "Update", None))
-
+        self.form.tpzControllerAdd.clicked.connect(self.addLine)
+        self.form.tpzControllerDelete.clicked.connect(self.delLine)
 
 class ViewProviderWing:
     def __init__(self, vobj):
@@ -115,7 +164,7 @@ class ViewProviderWing:
         self.Object = vobj.Object
         
     def getIcon(self):    
-        return os.path.join(smWB_icons_path,'panel.xpm')
+        return os.path.join(smWB_icons_path,'wing2.xpm')
 
     def attach(self, vobj):
         self.Object = vobj.Object
@@ -144,7 +193,7 @@ class ViewProviderWing:
 class CommandWing:
     "the Wing command definition"
     def GetResources(self):
-        iconpath = os.path.join(smWB_icons_path,'panel.png')
+        iconpath = os.path.join(smWB_icons_path,'wing2.png')
         return {'Pixmap': iconpath, 'MenuText': QtCore.QT_TRANSLATE_NOOP("Create_a_wing","Create/Add a wing to plane, select a plane and clic")}
     
     def IsActive(self):

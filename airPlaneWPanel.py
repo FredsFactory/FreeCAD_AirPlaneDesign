@@ -26,6 +26,8 @@ import FreeCAD, FreeCADGui, Part, os
 from airPlaneRib import WingRib, ViewProviderWingRib
 from PySide import QtCore
 import math
+import airPlaneDesingCurvedArray
+from FreeCAD import Vector
 
 smWB_icons_path =  os.path.join( os.path.dirname(__file__), 'resources', 'icons')
 
@@ -43,20 +45,21 @@ if open.__module__ in ['__builtin__','io']:
 _wingRibProfilDir=FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/wingribprofil'
 
 class WingPanel:
-    def __init__(self, obj, _rootRib ,_tipRib ,_rootChord=200,_tipChord=100,_panelLength=100,_tipTwist=0,_dihedral=0):
-         # _parent,_NberOfPanel,_panelInput,_rootChord,_tipChord,_panelLength,_tipTwist,_dihedral):
+    def __init__(self, obj, _rootRib ,_tipRib,_leadingedge,_traillingedge ,_rootChord=200,_tipChord=100,_panelLength=100,_tipTwist=0,_dihedral=0):
+         
+        
         '''Add some custom properties to our box feature'''
         self.obj = obj
         obj.Proxy = self
         #obj.addProperty("App::PropertyLink","Base","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Tip Rib of the panel")).Base=_rootRib#
         obj.addProperty("App::PropertyLink","RootRib","Rib",QtCore.QT_TRANSLATE_NOOP("App::Property","Root Rib of the panel")).RootRib=_rootRib#.rootRib-_rootRib
         obj.addProperty("App::PropertyLink","TipRib","Rib",QtCore.QT_TRANSLATE_NOOP("App::Property","Tip Rib of the panel")).TipRib=_tipRib#.tipRib-_tipRib
-        
-        
+
         # leadingEdge : bord d'attaque
-        obj.addProperty("App::PropertyLink","LeadingEdge","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Select the leading edge of the panal, line or Spline"))
+        obj.addProperty("App::PropertyLinkList","Edges","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Select the leading edge of the panal, line or Spline")).Edges=[]
+        obj.addProperty("App::PropertyLink","LeadingEdge","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Select the leading edge of the panal, line or Spline")).LeadingEdge=_leadingedge
         # trailing edge : bord de fuite
-        obj.addProperty("App::PropertyLink","TrailingEdge","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Select the trailing edge of the panel, line or Spline"))
+        obj.addProperty("App::PropertyLink","TrailingEdge","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Select the trailing edge of the panel, line or Spline")).TrailingEdge=_traillingedge
         
         obj.addProperty("App::PropertyLength","TipChord","Rib",QtCore.QT_TRANSLATE_NOOP("App::Property","Tip Chord")).TipChord=_tipChord
         obj.addProperty("App::PropertyLength","RootChord","Rib",QtCore.QT_TRANSLATE_NOOP("App::Property","Root Chord")).RootChord=_rootChord
@@ -66,10 +69,12 @@ class WingPanel:
         obj.addProperty("App::PropertyAngle","Dihedral","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Dihedral")).Dihedral=_dihedral
         #obj.addProperty("App::PropertyLinkList","Ribs","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","list of ribs")).Ribs=[]         
      
-        obj.addProperty("App::PropertyBool","Solid","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Solid")).Solid=True # 
-        obj.addProperty("App::PropertyBool","Surface","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Surface")).Surface=False 
+        obj.addProperty("App::PropertyBool","Solid","Design",QtCore.QT_TRANSLATE_NOOP("App::Property","Solid")).Solid=True  
+        obj.addProperty("App::PropertyBool","Surface","Design",QtCore.QT_TRANSLATE_NOOP("App::Property","Surface")).Surface=False 
         obj.addProperty("App::PropertyBool","Structure","Design",QtCore.QT_TRANSLATE_NOOP("App::Property","Surface")).Structure=False
         
+        obj.Edges.append(_leadingedge)
+        obj.Edges.append(_traillingedge)
         #ribs=[]
         #ribs.append(obj.RootRib)
         #ribs.append(obj.TipRib)
@@ -80,8 +85,20 @@ class WingPanel:
         '''Do something when a property has changed'''
         FreeCAD.Console.PrintMessage("Change property: " + str(prop) + "\n")
         
+    def createLeadingEdge(self, obj):
+        print("Create LeadingEdge:")
+        
+        leadingEdge = FreeCAD.activeDocument().addObject('Sketcher::SketchObject','LeadingEdge')
+        
+        leadingEdge.Placement(FreeCAD.Vector(0.000000,0.000000,0.000000),FreeCAD.Rotation(0.000000,0.000000,0.000000,1.000000))
+        leadingEdge.addGeometry(Part.LineSegment(FreeCAD.Vector(-410.985718,84.541397,0),FreeCAD.Vector(-375.014648,308.281403,0)),False)      
+              
+              
+        
     def execute(self, obj):
         '''Do something when doing a recomputation, this method is mandatory'''
+        #self.createLeadingEdge(obj)
+        
         if not obj.Structure :
            if obj.RootRib :
           
@@ -94,8 +111,8 @@ class WingPanel:
            #obj.TipRib.Placement.Rotation.Axis.y=0
            #obj.TipRib.Placement.Rotation.Axis.z=0   
            #obj.TipRib.Placement.Rotation.Angle=obj.Dihedral
-           
-              obj.TipRib.Placement.Base.y= obj.PanelLength   
+      
+              #obj.TipRib.Placement.Base.y= obj.PanelLength   
               #obj.TipRib.Placement.Base.z= obj.PanelLength*math.tan(obj.Dihedral)
            
               ribsWires=[]
@@ -103,7 +120,25 @@ class WingPanel:
               ribsWires.append(obj.TipRib.Shape.OuterWire)
               obj.RootRib.ViewObject.hide()
               obj.TipRib.ViewObject.hide()
-              obj.Shape=Part.makeLoft(ribsWires,obj.Solid,False)
+              #obj.Shape=Part.makeLoft(ribsWires,obj.Solid,False)
+              #Hullcurves=[]          
+              #panelobj = FreeCAD.ActiveDocument.addObject("Part::FeaturePython","CurvedArray")
+              print("RootRib")
+              print(obj.RootRib)
+              print("TipRib")
+              print (obj.TipRib)
+              
+              Hullcurves=[]
+              Hullcurves.append(obj.LeadingEdge)
+              Hullcurves.append(obj.TrailingEdge)
+              
+              #panelobj.Shape=CurvedShapes.makeCurvedArray(obj.RootRib, Hullcurves)#,Vector(0,0,0), 5, 0, 0, obj.TipTwist, obj.Surface, obj.Solid, 'linear',False,False)
+       
+              cs = airPlaneDesingCurvedArray.airPlaneDesingCurvedArrayWorker(obj, obj.RootRib, Hullcurves, Vector(0,0,0), 5, 0, 0, 0, False, False, 'linear', False, False)
+              airPlaneDesingCurvedArray.airPlaneDesingCurvedArrayViewProvider(obj.ViewObject)
+              
+              FreeCAD.ActiveDocument.recompute()
+              #obj.Shape=panelobj.Shape
            else :
               print("Wing Panel : strucutre, not implemented yet") 
         #FreeCAD.ActiveDocument.recompute()
@@ -148,36 +183,60 @@ class CommandWPanel:
     def Activated(self):
         print("---------------------------------------")
         print("-----------------Panel-----------------")
-        print("---------------------------------------")
-       
+        print("---------------------------------------")      
         selection = FreeCADGui.Selection.getSelectionEx()
         if selection :
-           base = FreeCAD.ActiveDocument.getObject((selection[0].ObjectName))
-        
-        #---------------------création des nervures temporaires
-        _rootRib=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","RibRoot_")
-        WingRib(_rootRib,"/Users/fredericnivoix/Library/Preferences/FreeCAD/Mod/AirPlaneDesign/wingribprofil/naca/naca2412.dat",False,0,200,0,0,0,0,0,0) 
-        ViewProviderWingRib(_rootRib.ViewObject)
+           if len(selection)==5: 
+              base = FreeCAD.ActiveDocument.getObject((selection[0].ObjectName))
+              _rootRib=FreeCAD.ActiveDocument.getObject((selection[1].ObjectName))
+              _tipRib=FreeCAD.ActiveDocument.getObject((selection[2].ObjectName))
+              _leadingedge=FreeCAD.ActiveDocument.getObject((selection[3].ObjectName))
+              _traillingedge=FreeCAD.ActiveDocument.getObject((selection[4].ObjectName))
+              
+              obj=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","WingPanel")
+              WingPanel(obj,_rootRib,_tipRib,_leadingedge,_traillingedge,200,100,100,0,0)
+              ViewProviderPanel(obj.ViewObject)
+           else :
+              #---------------------création des nervures temporaires
+              _rootRib=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","RibRoot_")
+              WingRib(_rootRib,"/Users/fredericnivoix/Library/Preferences/FreeCAD/Mod/AirPlaneDesign/wingribprofil/naca/naca2412.dat",False,0,200,0,0,0,0,0,0) 
+              ViewProviderWingRib(_rootRib.ViewObject)
        
+              _tipRib=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","RibTip_")
+              WingRib(_tipRib,"/Users/fredericnivoix/Library/Preferences/FreeCAD/Mod/AirPlaneDesign/wingribprofil/naca/naca2412.dat",False,0,200,0,500,0,0,0,0) 
+              ViewProviderWingRib(_tipRib.ViewObject)
+              FreeCAD.ActiveDocument.recompute()     
+              #----------
+               
+              obj=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","WingPanel")
+              WingPanel(obj,_rootRib,_tipRib,None,None,200,100,100,0,0)
+              ViewProviderPanel(obj.ViewObject)
+              FreeCAD.ActiveDocument.recompute()
         
-        _tipRib=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","RibTip_")
-        WingRib(_tipRib,"/Users/fredericnivoix/Library/Preferences/FreeCAD/Mod/AirPlaneDesign/wingribprofil/naca/naca2412.dat",False,0,200,0,500,0,0,0,0) 
-        ViewProviderWingRib(_tipRib.ViewObject)
-        FreeCAD.ActiveDocument.recompute()     
+        
+
         #----------
         #obj=FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroupPython","WingPanel")
-   
-        obj=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","WingPanel")
-        WingPanel(obj,_rootRib,_tipRib,200,100,100,0,0)
-        ViewProviderPanel(obj.ViewObject)
+        
+        #obj=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","WingPanel")
+        #WingPanel(obj,_rootRib,_tipRib,200,100,100,0,0)
+        #ViewProviderPanel(obj.ViewObject)
         b=[]
         if selection : #selection==None :
-           if not base.WingPanels :
-              base.WingPanels=obj
-           else : 
-              b=base.WingPanels
-              b.append(obj)
-              base.WingPanels=b
+           try : 
+               b=base.WingPanels
+               b.append(obj)
+               base.WingPanels=b
+           except :
+               print("The selection is not a wing")
+               
+           #if not base.WingPanels :
+           #    print("The selection is not a wing")
+               #base.WingPanels=obj
+          # else : 
+          #    b=base.WingPanels
+          #    b.append(obj)
+          #    base.WingPanels=b
               
         #if selection :  #selection ==None:   
         #   if not base.Group :

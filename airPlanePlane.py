@@ -2,7 +2,7 @@
 #
 # Airfoil creation - Aircraft
 # 
-# Copyright (c) F. Nivoix - 2019 - V0.3
+# Copyright (c) F. Nivoix - 2019 - V0.4
 #
 # For FreeCAD Versions = or > 0.17 Revision xxxx
 #
@@ -42,7 +42,13 @@ class Plane:
     def __init__(self, obj):
         '''Rib properties'''
         obj.Proxy = self
-         
+        obj.addProperty("App::PropertyLength", "fuselageLength", "fuselage", QtCore.QT_TRANSLATE_NOOP("App::Property", "Fuselage Length"))
+        obj.addProperty("App::PropertyLength", "fuselageHeigth", "fuselage", QtCore.QT_TRANSLATE_NOOP("App::Property", "Fuselage Heigth"))
+        obj.addProperty("App::PropertyLength", "fuselageWidth", "fuselage", QtCore.QT_TRANSLATE_NOOP("App::Property", "Fuselage Width"))
+        
+        
+        obj.addProperty("App::PropertyFile", "_3viewsFile", "fuselage", QtCore.QT_TRANSLATE_NOOP("App::Property", "3 Views file"))
+                 
         obj.addProperty("App::PropertyLinkList", "Wings", "Base", QtCore.QT_TRANSLATE_NOOP("App::Property", "List of wings"))
         
 
@@ -93,9 +99,9 @@ class PlaneTaskPanel:
     def update(self,vobj):
         'fills the dialog with plane properties'
         print('update')
-        #self.form.thickness.setValue(vobj.Object.Thickness)
-        #self.form.chord.setValue(vobj.Object.Chord)
-        #self.form.kingOfLines.setChecked(vobj.Object.useSpline) 
+        self.form.fuselageLength.setValue(vobj.Object.fuselageLength)
+        self.form.fuselageHeigth.setValue(vobj.Object.fuselageHeigth)
+        self.form.fuselageWidth.setValue(vobj.Object.fuselageWidth) 
         #self.form.fileName.setText(vobj.Object.RibProfil) 
         #self.form.NACANumber.setText(vobj.Object.NacaProfil)
         #self.form.nacaNbrPoint.setValue(vobj.Object.NacaNbrPoint)
@@ -104,10 +110,10 @@ class PlaneTaskPanel:
     def accept(self):
         '''Update properties of Rib'''
         print("accept")
-        #fp=self.obj.Object
-        #fp.Thickness=self.form.thickness.value()
-        #fp.Chord=self.form.chord.value()
-        #fp.useSpline=self.form.kingOfLines.isChecked()
+        fp=self.obj.Object
+        fp.fuselageLength=self.form.fuselageLength.value()
+        fp.fuselageHeigth=self.form.fuselageHeigth.value()
+        fp.fuselageWidth=self.form.fuselageWidth.value()
         
         FreeCAD.ActiveDocument.recompute()
         FreeCADGui.ActiveDocument.resetEdit()
@@ -150,6 +156,11 @@ class ViewProviderPlane:
         taskd = PlaneTaskPanel(vobj)
         FreeCADGui.Control.showDialog(taskd)
         return True
+    
+    def doubleClicked(self,vobj):
+        taskd = PlaneTaskPanel(vobj)
+        FreeCADGui.Control.showDialog(taskd)
+        return(True)
     
 
 class CommandPlane:

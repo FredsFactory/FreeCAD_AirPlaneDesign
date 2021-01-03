@@ -50,7 +50,7 @@ class SelectObjectUI():
         loader=QtUiTools.QUiLoader()
         loader.registerCustomWidget(zoomableGraphic)
         self.form=loader.load(path_to_ui)
-        #self.form.setWindowFlag(QtCore.Qt.WindowMaximizeButtonHint)
+        #self.form.setWindowFlag(QtCore.Qt.WindowMaximizeButtonHint) # compatibility with Freecad V0.18
         profil_dir=FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/wingribprofil'
         self.model = QtGui.QFileSystemModel()
         self.model.setRootPath(profil_dir)

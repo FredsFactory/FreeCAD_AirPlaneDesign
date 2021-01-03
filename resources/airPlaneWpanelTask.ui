@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>667</width>
+    <width>440</width>
     <height>628</height>
    </rect>
   </property>
@@ -16,6 +16,143 @@
   <property name="currentIndex">
    <number>0</number>
   </property>
+  <widget class="QWidget" name="tab">
+   <attribute name="title">
+    <string>General</string>
+   </attribute>
+   <widget class="QWidget" name="gridLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>411</width>
+      <height>350</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_9">
+       <property name="text">
+        <string>Name</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="label_26">
+       <property name="text">
+        <string>Wing Length</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="0">
+      <widget class="QLabel" name="label_25">
+       <property name="text">
+        <string>Mean camber line</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_22">
+       <property name="text">
+        <string>Wing Length</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="0">
+      <widget class="QLabel" name="label_12">
+       <property name="text">
+        <string>------------</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QDoubleSpinBox" name="wingLength">
+       <property name="decimals">
+        <number>2</number>
+       </property>
+       <property name="maximum">
+        <double>999999999.990000009536743</double>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="label_24">
+       <property name="text">
+        <string>Shape</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="0">
+      <widget class="QLabel" name="label_23">
+       <property name="text">
+        <string>Nose Lever</string>
+       </property>
+      </widget>
+     </item>
+     <item row="12" column="0">
+      <widget class="QLabel" name="label_14">
+       <property name="text">
+        <string>-----------</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_15">
+       <property name="text">
+        <string>Wing Root Choord</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="0">
+      <widget class="QLabel" name="label_16">
+       <property name="text">
+        <string>Area</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_18">
+       <property name="text">
+        <string>Wing Tip Chord</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_11">
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_6"/>
+     </item>
+     <item row="11" column="0">
+      <widget class="QLabel" name="label_13">
+       <property name="text">
+        <string>------------</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="name"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <widget class="QWidget" name="tabGeneral">
    <property name="toolTipDuration">
     <number>-4</number>
@@ -29,26 +166,46 @@
       <item>
        <widget class="QGroupBox" name="groupBox_6">
         <property name="title">
-         <string>Panel</string>
+         <string/>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_16">
          <item>
-          <widget class="QPushButton" name="jplaneEdit">
-           <property name="text">
-            <string>Edit</string>
-           </property>
-          </widget>
-         </item>
-         <item>
           <layout class="QGridLayout" name="gridLayout_6">
-           <item row="3" column="0">
-            <widget class="QLabel" name="label_17">
+           <item row="8" column="0">
+            <widget class="QLabel" name="label_4">
              <property name="text">
-              <string>Tip Chord</string>
+              <string>Area</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="2">
+           <item row="6" column="2">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_4"/>
+           </item>
+           <item row="9" column="0">
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>Mean camber line</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_20">
+             <property name="text">
+              <string>Wing Length</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="2">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_2"/>
+           </item>
+           <item row="3" column="2">
+            <widget class="QDoubleSpinBox" name="wingTipChoord">
+             <property name="maximum">
+              <double>9999999999.989999771118164</double>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
             <spacer name="horizontalSpacer_2">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -61,26 +218,36 @@
              </property>
             </spacer>
            </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_3">
-             <property name="text">
-              <string>Name</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QDoubleSpinBox" name="fuselageWidth">
+           <item row="1" column="2">
+            <widget class="QDoubleSpinBox" name="wingRootChoord">
              <property name="maximum">
               <double>9999999999.989999771118164</double>
              </property>
             </widget>
            </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="label_20">
+           <item row="12" column="0">
+            <widget class="QLabel" name="label_7">
              <property name="text">
-              <string>Length</string>
+              <string>TextLabel</string>
              </property>
             </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_10">
+             <property name="text">
+              <string>Wing Root Choord</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_17">
+             <property name="text">
+              <string>Wing Tip Chord</string>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="2">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
            </item>
            <item row="7" column="0">
             <widget class="QLabel" name="label_19">
@@ -89,15 +256,22 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_10">
+           <item row="10" column="0">
+            <widget class="QLabel" name="label_5">
              <property name="text">
-              <string>Root Choord</string>
+              <string>TextLabel</string>
              </property>
             </widget>
            </item>
-           <item row="4" column="1">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
+           <item row="7" column="2">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_3"/>
+           </item>
+           <item row="11" column="0">
+            <widget class="QLabel" name="label_6">
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+            </widget>
            </item>
            <item row="6" column="0">
             <widget class="QLabel" name="label_21">
@@ -106,27 +280,21 @@
              </property>
             </widget>
            </item>
-           <item row="8" column="0">
-            <widget class="QLabel" name="label_4">
+           <item row="13" column="0">
+            <widget class="QLabel" name="label_8">
              <property name="text">
               <string>TextLabel</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QLineEdit" name="name"/>
-           </item>
-           <item row="1" column="1">
-            <widget class="QDoubleSpinBox" name="fuselageLength">
-             <property name="maximum">
-              <double>9999999999.989999771118164</double>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_3">
+             <property name="text">
+              <string>Name</string>
              </property>
             </widget>
            </item>
           </layout>
-         </item>
-         <item>
-          <widget class="zoomableGraphic" name="graphicsView"/>
          </item>
          <item>
           <spacer name="verticalSpacer_4">
@@ -154,183 +322,101 @@
    </attribute>
    <layout class="QVBoxLayout" name="verticalLayout_3">
     <item>
-     <widget class="QToolBox" name="wing">
-      <property name="currentIndex">
-       <number>0</number>
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>TextLabel</string>
       </property>
-      <widget class="QWidget" name="page">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>621</width>
-         <height>499</height>
-        </rect>
+     </widget>
+    </item>
+    <item>
+     <widget class="QWidget" name="widget" native="true"/>
+    </item>
+    <item>
+     <widget class="QTableWidget" name="trapezeList">
+      <attribute name="verticalHeaderVisible">
+       <bool>false</bool>
+      </attribute>
+      <column>
+       <property name="text">
+        <string>#</string>
        </property>
-       <attribute name="label">
-        <string>Wing</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_7">
-        <item>
-         <widget class="QFrame" name="frame_2">
-          <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout_6">
-           <item>
-            <widget class="QTableWidget" name="trapezeList">
-             <attribute name="verticalHeaderVisible">
-              <bool>false</bool>
-             </attribute>
-             <column>
-              <property name="text">
-               <string>#</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Corde Emplature</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Corde Saumon</string>
-              </property>
-              <property name="icon">
-               <iconset theme="object-flip-horizontal">
-                <normaloff>../../../../../../../../../FreeCAD/FreeCAD-git/src/Mod/Path/Gui/Resources/panels</normaloff>../../../../../../../../../FreeCAD/FreeCAD-git/src/Mod/Path/Gui/Resources/panels</iconset>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Length</string>
-              </property>
-              <property name="icon">
-               <iconset theme="object-flip-vertical">
-                <normaloff>../../../../../../../../../FreeCAD/FreeCAD-git/src/Mod/Path/Gui/Resources/panels</normaloff>../../../../../../../../../FreeCAD/FreeCAD-git/src/Mod/Path/Gui/Resources/panels</iconset>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Flech/BA</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Vrillage</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Diedre</string>
-              </property>
-             </column>
-            </widget>
-           </item>
-           <item>
-            <widget class="QWidget" name="widget_4" native="true">
-             <layout class="QHBoxLayout" name="horizontalLayout_2">
-              <item>
-               <widget class="QPushButton" name="tpzControllerEdit">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="text">
-                 <string>Edit</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="tpzControllerAdd">
-                <property name="text">
-                 <string>Add</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="tpzControllerDelete">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="text">
-                 <string>Remove</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="page_2">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>621</width>
-         <height>499</height>
-        </rect>
+      </column>
+      <column>
+       <property name="text">
+        <string>Corde Emplature</string>
        </property>
-       <attribute name="label">
-        <string>Default Values</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_8">
-        <item>
-         <widget class="QGroupBox" name="groupBox_3">
-          <property name="title">
-           <string>xxxx</string>
-          </property>
-          <layout class="QFormLayout" name="formLayout_2">
-           <property name="fieldGrowthPolicy">
-            <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-           </property>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_3">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-       </layout>
-      </widget>
+      </column>
+      <column>
+       <property name="text">
+        <string>Corde Saumon</string>
+       </property>
+       <property name="icon">
+        <iconset theme="object-flip-horizontal">
+         <normaloff>../../../../../../../../../FreeCAD/FreeCAD-git/src/Mod/Path/Gui/Resources/panels</normaloff>../../../../../../../../../FreeCAD/FreeCAD-git/src/Mod/Path/Gui/Resources/panels</iconset>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Length</string>
+       </property>
+       <property name="icon">
+        <iconset theme="object-flip-vertical">
+         <normaloff>../../../../../../../../../FreeCAD/FreeCAD-git/src/Mod/Path/Gui/Resources/panels</normaloff>../../../../../../../../../FreeCAD/FreeCAD-git/src/Mod/Path/Gui/Resources/panels</iconset>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Flech/BA</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Vrillage</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Diedre</string>
+       </property>
+      </column>
+     </widget>
+    </item>
+    <item>
+     <widget class="QWidget" name="widget_4" native="true">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QPushButton" name="tpzControllerDelete">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>Remove</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="tpzControllerAdd">
+         <property name="text">
+          <string>Add</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="tpzControllerEdit">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>Edit</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="tabXXX">
-   <attribute name="title">
-    <string>Defaults</string>
-   </attribute>
-   <layout class="QVBoxLayout" name="verticalLayout_11"/>
-  </widget>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>zoomableGraphic</class>
-   <extends>QGraphicsView</extends>
-   <header>zoomablegraphic.h</header>
-  </customwidget>
- </customwidgets>
- <tabstops>
-  <tabstop>tpzControllerEdit</tabstop>
-  <tabstop>tpzControllerAdd</tabstop>
-  <tabstop>tpzControllerDelete</tabstop>
- </tabstops>
  <resources>
   <include location="icons/resource.qrc"/>
   <include location="icons/resource.qrc"/>

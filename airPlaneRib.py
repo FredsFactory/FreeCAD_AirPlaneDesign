@@ -24,13 +24,24 @@ __author__ = "F. Nivoix"
 __url__ = "https://fredsfactory.fr"
 
 
-import FreeCAD,FreeCADGui,Part, os
+import FreeCAD,FreeCADGui,os
 
 from PySide import QtCore
 from PySide import QtGui
 from airPlaneAirFoil import process
 from airPlaneDesignProfilUI import SelectObjectUI
 from airPlaneAirFoilNaca import generateNaca
+
+import numpy as np
+
+
+from App.xfoil.xfoil import XFoil
+from App.xfoil.model import Airfoil
+
+from App.xfoil.test import naca0012
+
+import freecad.plot.Plot as Plot
+
 
 FreeCADGui.addLanguagePath(":/translations")
 smWB_icons_path =  os.path.join( os.path.dirname(__file__), 'resources', 'icons')
@@ -56,6 +67,7 @@ class WingRib:
         obj.addProperty("App::PropertyBool","splitSpline","Rib",QtCore.QT_TRANSLATE_NOOP("App::Property","split spline in lower and upper side")).splitSpline=_splitSpline
         obj.addProperty("App::PropertyLength","Chord","Rib",QtCore.QT_TRANSLATE_NOOP("App::Property","Chord")).Chord=_chord
         obj.addProperty("App::PropertyLength","Thickness","Rib",QtCore.QT_TRANSLATE_NOOP("App::Property","Thickness")).Thickness=_thickness
+        obj.addProperty("App::PropertyLength","wingkey","Rib",QtCore.QT_TRANSLATE_NOOP("App::Property","Wing Key"))
         obj.Placement.Base.x=_x
         obj.Placement.Base.y=_y
         obj.Placement.Base.z=_z
@@ -66,6 +78,8 @@ class WingRib:
         '''Do something when a property has changed'''
         if (str(prop) == "RibProfil") and (fp.PropertiesList.__contains__("Coordinates")):
             fp.Coordinates=[]
+        if (str(prop)=="wingkey"):
+            print("Clef d'aile")
 
     def execute(self, fp):
         #   Do something when doing a recomputation, this method is mandatory
@@ -79,6 +93,10 @@ class WingRib:
                                     fp.Chord,fp.Placement.Base.x,fp.Placement.Base.y,fp.Placement.Base.z,
                                     0,0,0,fp.useSpline,fp.splitSpline)
         FreeCAD.Console.PrintMessage("After Rib generation\n")
+        
+        #Xfoil
+    
+        
         print("Face:")
         print(face)
         if fp.Thickness != 0 :
@@ -87,7 +105,6 @@ class WingRib:
         else:
             #fp.Shape = Part.Face(Part.Wire(fp.Coordinates))
             fp.Shape = face
-
         FreeCAD.Console.PrintMessage("Create Rib End\n")
 
 
@@ -98,6 +115,7 @@ class RibTaskPanel:
         path_to_ui = FreeCAD.getUserAppDataDir()+ 'Mod/AirPlaneDesign/resources/ribTaskPanel.ui'  
         self.form = FreeCADGui.PySideUic.loadUi(path_to_ui)
         self.update(vobj)
+        self.form.xfoilSimulation.clicked.connect(self.xfoilSimulation)
 
     def isAllowedAlterSelection(self):
         return True
@@ -185,10 +203,59 @@ class RibTaskPanel:
         FreeCAD.ActiveDocument.recompute()
         FreeCADGui.ActiveDocument.resetEdit()
         return True
+    
+    def xfoilSimulation(self):
+        #naca0012 = Airfoil(x=np.array(),y=np.array)
+        xx=[]
+        yy=[]
+        for vect in self.obj.Object.Coordinates:
+            xx.append(vect[0])
+            yy.append(vect[2])
+        
+        xf = XFoil()
+        xf.airfoil  = Airfoil(np.array(xx),np.array(yy))#naca0012#
+        
+        xf.max_iter = 40
+        # Cl=Cz coefficients de portance
+        # Cd =Cx coefficients de trainée
+        # Cm coefficients de moment
+        for i in [100000,200000,500000]:
+            xf.Re = i#1000000
+            #a, cl, cd, cm, cp = xf.aseq(-20, 20, 0.5)#xf.cseq(-0.5, 0.5, 0.05)#
+            
+            cl, cd, cm, cp=xf.a(0)
+            
+            print("a")
+            #print(a)
+            print("cl")
+            print(cl)
+        # trainée / portance
+            #Plot.plot(cm,a)
+            #Plot.plot(cl,a)
+            #Plot.plot(cd,a)
+            Plot.plot(cl,cd)
+            #Plot.plot(xx,yy)
+            
+            
+            #Plot.plot(xx,yy)
+            #Plot.plot(a,cm)
+            
+        #Plot.plot(a,cl)
+       # Plot.plot(a,cd)
+       # Plot.plot(a,cm)
+       # Plot.plot(a,cp)
+        #Plot.plot(a,cm)
+        #Plot.plot(a,cd)
+        #Plot.plot(a,cl)
+       # print(a)
+        print(cl)
+        print("Profil")
+        print(naca0012)
 
     def retranslateUi(self, TaskPanel):
         #TaskPanel.setWindowTitle(QtGui.QApplication.translate("draft", "Faces", None))
         self.addButton.setText(QtGui.QApplication.translate("draft", "Update", None))
+        
         
 class ViewProviderWingRib:
     def __init__(self, obj):

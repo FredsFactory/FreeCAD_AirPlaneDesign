@@ -24,6 +24,9 @@
 
 import path_locator
 from PySide import QtCore
+import os
+import FreeCADGui as Gui
+import FreeCAD as App
 
 
 # Qt tanslation handling
@@ -78,7 +81,8 @@ class AirPlaneDesignWorkbench(Workbench):
     def ContextMenu(self, recipient):
         # This is executed whenever the user right-clicks on screen
         # "recipient" will be either "view" or "tree"
-        self.appendContextMenu("AirPlaneDesignInitPlane",self.list) # add commands to the context menu
+        self.appendContextMenu("AirPlaneDesignInitPlane",self.comlist) # add commands to the context menu
+
 
     def GetClassName(self): 
         # this function is mandatory if this is a full python workbench
