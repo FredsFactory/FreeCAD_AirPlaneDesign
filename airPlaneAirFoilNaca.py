@@ -1,21 +1,21 @@
 #################################################
 #
 # Airfoil creation - Aircraft
-# 
+#
 # Copyright (c) F. Nivoix - 2019 - V0.1
 #
 # For FreeCAD Versions = or > 0.17 Revision xxxx
 #
-# This program is free software; you can redistribute it and/or modify  
-# it under the terms of the GNU Lesser General Public License (LGPL)    
-# as published by the Free Software Foundation; either version 2 of     
-# the License, or (at your option) any later version.                   
-# for detail see the LICENCE text file.                                 
-#                                                                         
-# This program is distributed in the hope that it will be useful,       
-# but WITHOUT ANY WARRANTY; without even the implied warranty of        
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
-# GNU Library General Public License for more details. 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License (LGPL)
+# as published by the Free Software Foundation; either version 2 of
+# the License, or (at your option) any later version.
+# for detail see the LICENCE text file.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Library General Public License for more details.
 #
 ################################################
 
@@ -332,9 +332,9 @@ def generateNaca(number, n=240, finite_TE = False, half_cosine_spacing = True,sc
         wire = Part.Wire(lines)
 
     face = Part.Face(wire).scale(scale) #Scale the foil
-    face.Placement.Rotation.Axis.x=rotX
-    face.Placement.Rotation.Axis.y=rotY
-    face.Placement.Rotation.Axis.z=rotZ
-    face.Placement.Rotation.Angle=rot
-    
+    #face.Placement.Rotation.Axis.x=rotX
+    #face.Placement.Rotation.Axis.y=rotY
+    #face.Placement.Rotation.Axis.z=rotZ
+    #face.Placement.Rotation.Angle=rot
+
     return face, coords
