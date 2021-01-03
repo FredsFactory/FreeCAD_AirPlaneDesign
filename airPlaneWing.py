@@ -107,9 +107,9 @@ class Wing:
 
 
     def onChanged(self, obj, prop):
-        '''Do something when a property has changed'''        
+        '''Do something when a property has changed'''
         FreeCAD.Console.PrintMessage("Change property: " + str(prop) + "\n")
-        self.getWingLength(obj)
+
 
     def execute(self, obj):
         '''Do something when doing a recomputation, this method is mandatory'''
@@ -126,7 +126,7 @@ class Wing:
            #obj.Shape=obj.WingPanels[0].Shape
            print("wing execute multi-panels")
 
-        self.getWingLength(obj)
+        #self.getWingLength(obj)
 
 
 
@@ -219,11 +219,6 @@ class ViewProviderWing:
 
     def __setstate__(self,state):
         return None
-    
-    def setEdit(self,vobj,mode):       
-        taskd = WingTaskPanel(vobj)
-        FreeCADGui.Control.showDialog(taskd)
-        return True
 
     def setEdit(self,vobj,mode):
         taskd = WingTaskPanel(vobj)
