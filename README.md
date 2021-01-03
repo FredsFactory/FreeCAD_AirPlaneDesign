@@ -69,6 +69,8 @@ V0.4 :
 - [X] Add Preview profil and sheet
 - [X] Implement rib thickness and NACA finite TE by adrianinsaval
 - [X] Improve wing design UI
+- [X] Wing object
+- [X] Wing Panel Object
 - [ ] Improve RIB file selection 
 - [ ] Import profil from UIUC Airfoil Database
 - [ ] Add ability to translate workbench
