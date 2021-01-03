@@ -206,6 +206,54 @@ class RibTaskPanel:
         FreeCAD.ActiveDocument.recompute()
         FreeCADGui.ActiveDocument.resetEdit()
         return True
+    
+    def xfoilSimulation(self):
+        #naca0012 = Airfoil(x=np.array(),y=np.array)
+        xx=[]
+        yy=[]
+        for vect in self.obj.Object.Coordinates:
+            xx.append(vect[0])
+            yy.append(vect[2])
+        
+        xf = XFoil()
+        xf.airfoil  = Airfoil(np.array(xx),np.array(yy))#naca0012#
+        
+        xf.max_iter = 40
+        # Cl=Cz coefficients de portance
+        # Cd =Cx coefficients de trainée
+        # Cm coefficients de moment
+        for i in [100000,200000,500000]:
+            xf.Re = i#1000000
+            #a, cl, cd, cm, cp = xf.aseq(-20, 20, 0.5)#xf.cseq(-0.5, 0.5, 0.05)#
+            
+            cl, cd, cm, cp=xf.a(0)
+            
+            print("a")
+            #print(a)
+            print("cl")
+            print(cl)
+        # trainée / portance
+            #Plot.plot(cm,a)
+            #Plot.plot(cl,a)
+            #Plot.plot(cd,a)
+            Plot.plot(cl,cd)
+            #Plot.plot(xx,yy)
+            
+            
+            #Plot.plot(xx,yy)
+            #Plot.plot(a,cm)
+            
+        #Plot.plot(a,cl)
+       # Plot.plot(a,cd)
+       # Plot.plot(a,cm)
+       # Plot.plot(a,cp)
+        #Plot.plot(a,cm)
+        #Plot.plot(a,cd)
+        #Plot.plot(a,cl)
+       # print(a)
+        print(cl)
+        print("Profil")
+        print(naca0012)
 
     def xfoilSimulation(self):
         #naca0012 = Airfoil(x=np.array(),y=np.array)

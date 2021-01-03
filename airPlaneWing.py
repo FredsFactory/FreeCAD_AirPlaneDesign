@@ -107,7 +107,7 @@ class Wing:
 
 
     def onChanged(self, obj, prop):
-        '''Do something when a property has changed'''
+        '''Do something when a property has changed'''        
         FreeCAD.Console.PrintMessage("Change property: " + str(prop) + "\n")
         self.getWingLength(obj)
 
