@@ -27,7 +27,7 @@ __url__ = "https://fredsfactory.fr"
 
 import FreeCAD
 import FreeCADGui
-from airPlaneWPanel import WingPanel,ViewProviderPanel
+from airPlaneSWPanel import WingSPanel,ViewProviderPanel
 from airPlaneRib import WingRib, ViewProviderWingRib
 from airPlaneWingUI import WingEditorPanel
 
@@ -79,28 +79,31 @@ class CommandWPanel:
         #for i in range(0,obj.NberOfPanel) :
         for i in range(0,editor.form.PanelTable.rowCount()) :
            _row=_panelInput[i]
+           FreeCAD.Console.PrintMessage("Rrow:"+str(_row)+"\n")
            profil.append(_row[2])
            _PanelLength.append(float(_row[4]))
-           # Add Rib Root
+
+            # Add Rib Root
            _ribs.append(FreeCAD.ActiveDocument.addObject("Part::FeaturePython","RibRoot_"+str(i)))
            #WingRibs(obj,_profil,_nacagene,_nacaNbrPoint,_chord,_x,_y,_z,_xrot,_yrot,_zrot,_thickness=0,_useSpline = True,_finite_TE = False,_splitSpline = False):
            #def     (obj,_profil,_nacagene,_nacaNbrPoint,_chord,_x,_y,_z,_xrot,_yrot,_zrot,_rot=0,_thickness=0,_useSpline = True,_finite_TE = False,_splitSpline = False):
-           WingRib(_ribs[i*2],_row[2],False,0,_row[3],_row[6],_position,_row[8],0,0,0)
+           WingRib(_ribs[i*2],_row[2],False,0,float(_row[3]),float(_row[6]),_position,float(_row[8]),0,0,0)
            #FreeCAD.ActiveDocument.recompute()
            ViewProviderWingRib(_ribs[i*2].ViewObject)
+
            # Add Rib tip
            _position=_position+float(_row[5])
            _ribs.append(FreeCAD.ActiveDocument.addObject("Part::FeaturePython","RibTip_"+str(i)))
-           WingRib(_ribs[i*2+1],_row[2],False,0,_row[4],_row[7],_position,_row[9],0,0,0)
+           WingRib(_ribs[i*2+1],_row[2],False,0,float(_row[4]),float(_row[7]),_position,float(_row[9]),0,0,0)
            #FreeCAD.ActiveDocument.recompute()
            ViewProviderWingRib(_ribs[i*2+1].ViewObject)
            # Add wing panel
            obj=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","WingPanel")
            #WingPanel(obj, _rootRib ,_tipRib ,_rootChord=200,_tipChord=100,_panelLength=100,_tipTwist=0,_dihedral=0)
-           WingPanel(obj,_ribs[i*2],_ribs[i*2+1],_row[3],_row[4],_position,0,0)
+           WingSPanel(obj,_ribs[i*2],_ribs[i*2+1],float(_row[3]),float(_row[4]),_position,0,0)
            ViewProviderPanel(obj.ViewObject)
            FreeCAD.ActiveDocument.recompute()
-           obj.ViewObject.hide()
+           #obj.ViewObject.hide()
            #add to Wing
            if selection : #selection==None :
               if not base.WingPanels :

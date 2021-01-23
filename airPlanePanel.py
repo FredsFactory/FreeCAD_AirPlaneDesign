@@ -1,21 +1,21 @@
 #################################################
 #
 # Airfoil creation - Aircraft
-# 
+#
 # Copyright (c) F. Nivoix - 2019 - V0.1
 #
 # For FreeCAD Versions = or > 0.17 Revision xxxx
 #
-# This program is free software; you can redistribute it and/or modify  
-# it under the terms of the GNU Lesser General Public License (LGPL)    
-# as published by the Free Software Foundation; either version 2 of     
-# the License, or (at your option) any later version.                   
-# for detail see the LICENCE text file.                                 
-#                                                                         
-# This program is distributed in the hope that it will be useful,       
-# but WITHOUT ANY WARRANTY; without even the implied warranty of        
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
-# GNU Library General Public License for more details. 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License (LGPL)
+# as published by the Free Software Foundation; either version 2 of
+# the License, or (at your option) any later version.
+# for detail see the LICENCE text file.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Library General Public License for more details.
 #
 ################################################
 
@@ -65,19 +65,19 @@ class WPanel:
            #obj.addProperty("App::PropertyFloatList","PanelDelta","WingPanel","Delta").PanelDelta=[0.0,70.0]
            #obj.addProperty("App::PropertyLinkList", "RibRoot", "Ribs", "Root Ribs")
            #obj.addProperty("App::PropertyLinkList", "RibTip", "Ribs", "Tip Ribs")
-        
+
            FreeCAD.Console.PrintMessage("Panel creation : "+str(i))
            #FreeCAD.Console.PrintMessage(i)
            FreeCAD.Console.PrintMessage("\n")
-           
+
            # Add Rib Root
            FreeCAD.Console.PrintMessage("Add Rib Root")
            _ribs.append(FreeCAD.ActiveDocument.addObject("Part::FeaturePython","RibRoot_"+str(i)))
            #WingRib(_ribs[i*2],obj.PanelProfil,100,0,_position,0)
            #obj.RibRoot.append(
-           WingRib(_ribs[i*2],_row[2],False,0,_row[3],_row[6],_position,_row[8],0,0,0)
+           WingRib(_ribs[i*2],_row[2],False,0,float(_row[3]),float(_row[6]),_position,float(_row[8]),0,0,0)
            ViewProviderWingRib(_ribs[i*2].ViewObject)
-           
+
             # Add Rib tip
            FreeCAD.Console.PrintMessage("Add Rib tip")
            FreeCAD.Console.PrintMessage(i+1)
@@ -85,7 +85,7 @@ class WPanel:
            _position=_position+float(_row[5])
            _ribs.append(FreeCAD.ActiveDocument.addObject("Part::FeaturePython","RibTip_"+str(i)))
            #WingRib(_ribs[i*2+1],obj.PanelProfil,100,0,_position,0)
-           WingRib(_ribs[i*2+1],_row[2],False,0,_row[4],_row[7],_position,_row[9],0,0,0)
+           WingRib(_ribs[i*2+1],_row[2],False,0,float(_row[4]),float(_row[7]),_position,float(_row[9]),0,0,0)
            ViewProviderWingRib(_ribs[i*2+1].ViewObject)
            #obj.RibTip.append(_ribs[i*2+1])
 
@@ -103,7 +103,7 @@ class WPanel:
               _panel[i].Ruled=False
               obj.Group=a
            FreeCAD.ActiveDocument.recompute()
-        
+
         obj.Rib=_ribs
         if obj.NberOfPanel>1 :
            obj.addProperty("App::PropertyFloatList","PanelLength","WingPanel","Length of the Wing").PanelLength=_PanelLength
@@ -111,7 +111,7 @@ class WPanel:
            a=FreeCAD.activeDocument().addObject("Part::MultiFuse","Wing")
            a.Shapes = _panel
            obj.Group=a
-        
+
 
     def onChanged(self, fp, prop):
         '''Do something when a property has changed'''
@@ -141,11 +141,11 @@ class ViewProviderPanel:
         '''Set this object to the proxy object of the actual view provider'''
         obj.addProperty("App::PropertyColor","Color","Wing","Color of the wing").Color=(1.0,0.0,0.0)
         obj.Proxy = self
-    
+
     def getDefaultDisplayMode(self):
         '''Return the name of the default display mode. It must be defined in getDisplayModes.'''
         return "Flat Lines"
-    
+
     def getIcon(self):
         '''Return the icon in XPM format which will appear in the tree view. This method is\
             optional and if not defined a default icon is shown.'''
@@ -176,13 +176,13 @@ class ViewProviderPanel:
             "  ##$$$$$#      ",
             "   #######      "};
             """
-    
+
     def __getstate__(self):
         '''When saving the document this object gets stored using Python's json module.\
             Since we have some un-serializable parts here -- the Coin stuff -- we must define this method\
             to return a tuple of all serializable objects or None.'''
         return None
-    
+
     def __setstate__(self,state):
         '''When restoring the serialized object from document we have the chance to set some internals here.\
             Since no data were serialized nothing needs to be done here.'''
@@ -192,10 +192,10 @@ class CommandWPanel:
     "the WingPanel command definition"
     def GetResources(self):
         return {'MenuText': "Create a wing (old release)"}
-    
+
     def IsActive(self):
         return not FreeCAD.ActiveDocument is None
-    
+
     def Activated(self):
         PanelTable=[]
         editor = WingEditorPanel()
@@ -209,7 +209,7 @@ class CommandWPanel:
              PanelTable.append(rowData)
 
           a=FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroupPython","Wing")#Path::FeaturePython","wpanel") #"Part::FeaturePython","wpanel")
-        
+
           #WPanel(a,editor.form.NumberOfPanel.value(),PanelTable)
           WPanel(a,editor.form.PanelTable.rowCount(),PanelTable)
           ViewProviderPanel(a.ViewObject)
@@ -217,7 +217,7 @@ class CommandWPanel:
           FreeCAD.Gui.activeDocument().activeView().viewAxonometric()
           FreeCAD.Gui.SendMsgToActiveView("ViewFit")
 
- 
+
 
 
 if FreeCAD.GuiUp:
