@@ -26,6 +26,7 @@ import FreeCADGui
 import FreeCAD
 from FreeCAD import Vector
 import Part, Draft
+import WorkingPlane
 import CompoundTools.Explode
 import CurvedShapes
 import math
@@ -332,9 +333,10 @@ class WingPanel:
         #x,y,z,scalex,scaley,scalez=scaleByBoundbox2(obj.Base.Shape, bbox, self.doScaleXYZsum )
         #(obj,_profil,_nacagene,_nacaNbrPoint,_chord,_x,_y,_z,_xrot,_yrot,_zrot,_thickness=0,_useSpline = True,_finite_TE = False,_splitSpline = False)
         #(self, obj,_profil,_nacagene,_nacaNbrPoint,_chord,_x,_y,_z,_xrot,_yrot,_zrot,_rot=0,_thickness=0,_useSpline = True,_finite_TE = False,_splitSpline = False)
-        FreeCAD.Console.PrintMessage("------------ createRib.posvec:"+str(posvec)+ " ------------\n")
-        FreeCAD.Console.PrintMessage("------------ createRib.rotaxis:"+str(rotaxis)+ " ------------\n")
-        FreeCAD.Console.PrintMessage("------------ createRib.angle"+str(angle)+ " ------------\n")
+
+        #FreeCAD.Console.PrintMessage("------------ createRib.posvec:"+str(posvec)+ " ------------\n")
+        #FreeCAD.Console.PrintMessage("------------ createRib.rotaxis:"+str(rotaxis)+ " ------------\n")
+        #FreeCAD.Console.PrintMessage("------------ createRib.angle"+str(angle)+ " ------------\n")
         #FreeCAD.Console.PrintMessage("------------ createRib.scalex"+str(scalex)+ " ------------\n")
         #FreeCAD.Console.PrintMessage("------------ createRib.scaley"+str(scaley)+ " ------------\n")
         #FreeCAD.Console.PrintMessage("------------ createRib.scalez"+str(scalez)+ " ------------\n")
@@ -679,7 +681,6 @@ class CommandWPanel:
                   return
 
               nbOfPanels=len(leadInEdges)
-              direction = FreeCAD.Vector(0,1,0)
               FreeCAD.Console.PrintMessage("-------------------- Wing Panel --------------------"+ "\n")
               FreeCAD.Console.PrintMessage("  Rib :"+str(_rootRib.Label)+ "\n")
               FreeCAD.Console.PrintMessage("  Wing :"+str(base.Label)+ "\n")
@@ -718,16 +719,44 @@ class CommandWPanel:
                   FreeCAD.Console.PrintMessage("     BoundBox leadInEdges   : "+str(bbox)+ "\n")
                   FreeCAD.Console.PrintMessage("     BoundBox trailingEdges   : "+str(bbox2)+ "\n")
 
-                  FreeCADGui.activeDocument().ActiveView.setCameraOrientation(_path.Placement.Rotation)
+
+                  FreeCADGui.activateWorkbench("DraftWorkbench")
+                  plane = WorkingPlane.plane()
+                  FreeCAD.DraftWorkingPlane = plane
+
+
+                  #workplane = WorkingPlane.plane()
+                  workplane = FreeCAD.DraftWorkingPlane
+                  v1 = FreeCAD.Vector(0, 1, 0).normalize()#paths[i].tangentAt(param).normalize()
+                  v2 = FreeCAD.Vector(0, 0, 1).normalize()
+                  #workplane.alignToPointAndAxis(v1, v2, 0)
+
+                  #FreeCAD.DraftWorkingPlane.alignToPointAndAxis(v1, v2, 0)
+                  #FreeCADGui.Snapper.toggleGrid()
+
+                  FreeCAD.Console.PrintMessage("     V1   : "+str(v1)+ "\n")
+                  FreeCAD.Console.PrintMessage("     V2   : "+str(v2)+ "\n")
+
+                 # workplane.alignToPointAndAxis( v1, v2, 0)
+                  #FreeCADGui.Snapper.toggleGrid()
+                  FreeCADGui.activeDocument().activeView().setCameraOrientation(_path.Placement.Rotation)
+
+                  #paths[i].
+
+                  FreeCAD.Console.PrintMessage("     pathline   : "+str(paths[i])+ "\n")
+                  #pathline=Part.Line(paths[i].Geometry)
+
                   myObj0=Draft.makeSketch(paths[i], autoconstraints=True)
+                  #myObj1=Part.Line(paths[i].Content)
                   myObj0.Label="path"+str(i)
 
                   vec=_enveloppe.Placement.Rotation
-                  FreeCADGui.activeDocument().ActiveView.setCameraOrientation(vec)#(0,0,0,1))
+                  FreeCADGui.activeDocument().activeView().setCameraOrientation(vec)#(0,0,0,1))
                   myObj1=Draft.makeSketch(leadInEdges[i], 	name = "leadInEdges"+str(i), autoconstraints=True)
-                  #myObj1.Label="leadInEdges"+str(i)
+                  #myObj1=Part.Line()
+                  myObj1.Label="leadInEdges"+str(i)
 
-                  FreeCADGui.activeDocument().ActiveView.setCameraOrientation(vec)
+                  FreeCADGui.activeDocument().activeView().setCameraOrientation(vec)
                   myObj2=Draft.makeSketch(trailingEdges[i], autoconstraints=True)
                   myObj2.Label="trailingEdge"+str(i)
 

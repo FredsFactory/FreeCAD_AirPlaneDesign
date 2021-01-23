@@ -194,4 +194,4 @@ class CommandWPanel:
 
 if FreeCAD.GuiUp:
     #register the FreeCAD command
-    FreeCADGui.addCommand('airPlaneDesignWingPanel',CommandWPanel())
+    FreeCADGui.addCommand('airPlaneDesignSWingPanel',CommandWPanel())

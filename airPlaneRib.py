@@ -52,7 +52,7 @@ def translate(context, text, disambig=None):
 
 
 class WingRib:
-    def __init__(self, obj,_profil,_nacagene,_nacaNbrPoint,_chord,_x,_y,_z,_xrot,_yrot,_zrot,_rot=0,_thickness=0,_useSpline = True,_finite_TE = False,_splitSpline = False):
+    def __init__(self, obj,_profil,_nacagene,_nacaNbrPoint,_chord=100,_x=0,_y=0,_z=0,_xrot=0,_yrot=0,_zrot=0,_rot=0,_thickness=0,_useSpline = True,_finite_TE = False,_splitSpline = False):
         '''Rib properties'''
         obj.Proxy = self
         obj.addProperty("App::PropertyFile","RibProfil","Rib",QtCore.QT_TRANSLATE_NOOP("App::Property","Profil type")).RibProfil=_profil
@@ -68,11 +68,12 @@ class WingRib:
         obj.addProperty("App::PropertyLength","Chord","Rib",QtCore.QT_TRANSLATE_NOOP("App::Property","Chord")).Chord=_chord
         obj.addProperty("App::PropertyLength","Thickness","Rib",QtCore.QT_TRANSLATE_NOOP("App::Property","Thickness")).Thickness=_thickness
         obj.addProperty("App::PropertyLength","wingkey","Rib",QtCore.QT_TRANSLATE_NOOP("App::Property","Wing Key"))
+        obj.addProperty("App::PropertyVectorList","Coordinates","Rib","Vector list that defines the airfoil's geometry").Coordinates=[]
 
-        obj.Placement=FreeCAD.Placement(FreeCAD.Vector(_x,_y,_z), FreeCAD.Rotation(FreeCAD.Vector(_xrot,_yrot,_zrot),_rot))#, FreeCAD.Vector(0,0,0))
+        obj.Placement=FreeCAD.Placement(FreeCAD.Vector(_x,_y,_z), FreeCAD.Rotation(FreeCAD.Vector(_xrot,_yrot,_zrot),_rot), FreeCAD.Vector(0,0,0))
 
         # List Geomtry to edit list of points
-        obj.addProperty("App::PropertyVectorList","Coordinates","Rib","Vector list that defines the airfoil's geometry").Coordinates=[]
+
 
     def onChanged(self, fp, prop):
         '''Do something when a property has changed'''
@@ -206,7 +207,7 @@ class RibTaskPanel:
         FreeCAD.ActiveDocument.recompute()
         FreeCADGui.ActiveDocument.resetEdit()
         return True
-    
+
     def xfoilSimulation(self):
         #naca0012 = Airfoil(x=np.array(),y=np.array)
         xx=[]
@@ -214,10 +215,10 @@ class RibTaskPanel:
         for vect in self.obj.Object.Coordinates:
             xx.append(vect[0])
             yy.append(vect[2])
-        
+
         xf = XFoil()
         xf.airfoil  = Airfoil(np.array(xx),np.array(yy))#naca0012#
-        
+
         xf.max_iter = 40
         # Cl=Cz coefficients de portance
         # Cd =Cx coefficients de trainée
@@ -225,9 +226,9 @@ class RibTaskPanel:
         for i in [100000,200000,500000]:
             xf.Re = i#1000000
             #a, cl, cd, cm, cp = xf.aseq(-20, 20, 0.5)#xf.cseq(-0.5, 0.5, 0.05)#
-            
+
             cl, cd, cm, cp=xf.a(0)
-            
+
             print("a")
             #print(a)
             print("cl")
@@ -238,11 +239,11 @@ class RibTaskPanel:
             #Plot.plot(cd,a)
             Plot.plot(cl,cd)
             #Plot.plot(xx,yy)
-            
-            
+
+
             #Plot.plot(xx,yy)
             #Plot.plot(a,cm)
-            
+
         #Plot.plot(a,cl)
        # Plot.plot(a,cd)
        # Plot.plot(a,cm)

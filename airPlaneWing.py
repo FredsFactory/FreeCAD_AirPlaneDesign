@@ -114,7 +114,7 @@ class Wing:
     def execute(self, obj):
         '''Do something when doing a recomputation, this method is mandatory'''
         FreeCAD.Console.PrintMessage("Recompute Python Wing feature\n")
-        panelShape=[]
+        #panelShape=[]
         if len(obj.WingPanels)>1 :
            print("wingpanel execute")
            #self.wingshape(obj)

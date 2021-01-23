@@ -218,8 +218,6 @@ class CommandWPanel:
           FreeCAD.Gui.SendMsgToActiveView("ViewFit")
 
 
-
-
 if FreeCAD.GuiUp:
     #register the FreeCAD command
     FreeCADGui.addCommand('airPlaneDesignWPanel',CommandWPanel())
