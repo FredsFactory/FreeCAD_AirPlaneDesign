@@ -21,7 +21,8 @@ Naca Rib generator.
 **v0.001**: 11 July 2018: Initial version
 
 ## Prerequisites
-* FreeCAD >= v0.17
+* FreeCAD >= v0.18
+install "Plot"  & "Curved shapes" WorkBench.
 
 ## Installation
 Use the FreeCAD [Addon Manager](https://github.com/FreeCAD/FreeCAD-addons#installing) to install AirPlaneDesign Workbench.
