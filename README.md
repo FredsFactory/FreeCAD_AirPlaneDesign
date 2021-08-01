@@ -65,6 +65,9 @@ Ability to choose the:
 
 ## Roadmap
 
+V0.3 bis :
+- [ ] Add Nacelle creation function by Claude
+
 V0.4 :
 - [X] Add NACA profil generator
 - [X] Add Preview profil and sheet
