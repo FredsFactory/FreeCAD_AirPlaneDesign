@@ -14,6 +14,8 @@ New Object : Plane, Wing and WingPanel.
 New Wing generator.
 Naca Rib generator.
 
+**v0.3bis**:Nacelle Creation (thanks to Claude)
+
 **v0.3**: NACA Rib generator  
 **v0.2**: New release with parametric objects based on a dedicated UI  
 **v0.1**: Initial release based on sheet  deprecated!
