@@ -86,8 +86,8 @@ def process(filename,scale,posX,posY,posZ,rotX,rotY,rotZ,rot,useSpline,splitSpli
             if coords.__contains__(FreeCAD.Vector(0,0,0)): # lgtm[py/modification-of-default-value]
                 flippoint = coords.index(FreeCAD.Vector(0,0,0))
             else:
-                lenghtList=[v.Length for v in coords]
-                flippoint = lenghtList.index(min(lenghtList))
+                lengthList=[v.Length for v in coords]
+                flippoint = lengthList.index(min(lengthList))
             splineLower = Part.BSplineCurve()
             splineUpper = Part.BSplineCurve()
             splineUpper.interpolate(coords[:flippoint+1])
