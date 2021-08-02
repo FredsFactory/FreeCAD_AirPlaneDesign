@@ -177,7 +177,7 @@ def makeSurfaceSolid(ribs, solid):
     elif len(surfaces) > 1:
         return Part.makeCompound(surfaces)
 
-# x is in range 0 to 1. result mut be in range 0 to 1.
+# x is in range 0 to 1. result must be in range 0 to 1.
 def distribute(x, distribution, reverse = False):
     d = x   # default = 'linear'
 

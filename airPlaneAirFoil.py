@@ -54,7 +54,7 @@ def readpointsonfile(filename):
             x = float(curdat.group("xval"))
             y = 0#posY
             z = float(curdat.group("yval"))
-            #ignore points out of range, small tolerance for x value and arbitrary limit for y value, this is necesary because Lednicer
+            #ignore points out of range, small tolerance for x value and arbitrary limit for y value, this is necessary because Lednicer
             #format airfoil files include a line indicating the number of coordinates in the same format of the coordinates.
             if (x < 1.01) and (z < 1) and (x > -0.01) and (z > -1):
                 coords.append(FreeCAD.Vector(x,y,z))

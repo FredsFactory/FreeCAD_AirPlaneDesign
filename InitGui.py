@@ -29,7 +29,7 @@ import FreeCADGui as Gui
 import FreeCAD as App
 
 
-# Qt tanslation handling
+# Qt translation handling
 #from DraftGui import translate
 #from DraftGui import utf8_decode
 FreeCADGui.addLanguagePath(":/translations")

@@ -105,7 +105,7 @@ class WingSPanel:
               obj.TipRib.ViewObject.hide()
               obj.Shape=Part.makeLoft(ribsWires,obj.Solid,False)
            else :
-              print("Wing Panel : strucutre, not implemented yet")
+              print("Wing Panel : structure, not implemented yet")
         #FreeCAD.ActiveDocument.recompute()
         FreeCAD.Console.PrintMessage("Recompute Python Wing feature\n")
 
