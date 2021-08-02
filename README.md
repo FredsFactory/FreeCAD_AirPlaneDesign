@@ -25,17 +25,29 @@ Naca Rib generator.
 install "Plot"  & "Curved shapes" WorkBench.
 
 ## Installation
-Use the FreeCAD [Addon Manager](https://github.com/FreeCAD/FreeCAD-addons#installing) to install AirPlaneDesign Workbench.
+Use the FreeCAD [Addon Manager](https://github.com/FreeCAD/FreeCAD-addons#installing) from the tools menu to install AirPlaneDesign Workbench.
+You will also require Plot and CurvedShapes addons (both also available in the Addon Manager)
+
+## Quickstart
+There are various examples available. Under Windows these are in: C:\Users\USERNAME\AppData\Roaming\FreeCAD\Mod\AirPlaneDesign\examples
+
+To create your own from scratch:
+After installation a new Airplane Design menu and toolbar will be available
+You must first "Create a plane" (you can give it dimensions but it won't be visible)
+Ensure the plane is selected in the navigation window and select "Create/Add a wing to plane"
+Ensure the wing is selected in the navigation window and select "Wing Wizard"
+Click "Fill in Sheet With Example" to create the demo wing
 
 ## Usage
-After installation a new menu appears with to function :  
-1. Create a rib : you can import DAT file or generate NACA Profil.
+
+The menu contains with the following functions:  
+1. Create a rib : you can import DAT file or generate NACA Profile.
 1.1 Import a DAT File
-Simply copy the DAT File in the folde
+Simply copy the DAT File in the folder
 
 ![DAT folder](resources/Ribsfolder.png)
 1.2 Create a Rib based on a DAT file
-In the menu AiplaneDesign select create a RIB, the dialog below appears, clic on the tab "Import DAT File".
+In the menu AiplaneDesign select create a RIB, the dialog below appears, click on the tab "Import DAT File".
 
 ![DAT folder](resources/RIBSGUI1.png)
 
@@ -43,7 +55,7 @@ Select in the tree the dat file you want to use and define the chord of the rib 
 You can change directly in the GUI of the object the Dat File, the chord (in mm). 
 
 1.3 Use the NACA Generator
-You can generate Naca profil 4 or 5 digits. In the menu AiplaneDesign select create a RIB, the dialog below appears, clic on the tab "NACA Generator". Simply fil the NACA Number, the number of points you want to generate and the chord in mm. A preview is automatically generate. 
+You can generate Naca profil 4 or 5 digits. In the menu AiplaneDesign select create a RIB, the dialog below appears, click on the tab "NACA Generator". Simply fill the NACA Number, the number of points you want to generate and the chord in mm. A preview is automatically generated. 
 
 ![RibGUI](resources/RibGUI.png)
 
@@ -78,8 +90,15 @@ V0.4 :
 - [ ] Tutorials
 
 V0.5 : Some ideas....
-- [ ] Genrate RIb from Wing
+- [ ] Generate Rib from Wing
 - [ ] Xfoil integration
+- [ ] Increase the width of wizard dialog box so the rotation columns are visible
+- [ ] Add option to Automatically generate a mirror wing for the other side
+- [ ] Wing wizard remembers settings from previous wing
+- [ ] Copy and paste the wing wizard table (eg to and from a spreadsheet)
+- [ ] More "complete plane" example files (eg like the GordLoft_4 example)
+- [ ] Fuselage design module
+- [ ] Add an "open folder" or "install profile" button in the rib design dialog to make it easier to find/add extras
 - [ ] ----------
 - [ ] ----------
 
@@ -90,3 +109,5 @@ Some dicussions here : https://forum.freecadweb.org/viewtopic.php?f=3&t=41159&p=
 ## License
 LGPLv2.1  
 See [LICENSE](LICENSE) file
+
+
