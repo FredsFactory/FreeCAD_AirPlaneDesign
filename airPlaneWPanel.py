@@ -213,7 +213,7 @@ class WingPanel:
                  obj,
                  _rootRib,
                  _path,
-                 _enveloppe,
+                 _envelope,
                  _leadingedge,
                  _traillingedge,
                  _rootChord=200,
@@ -235,7 +235,7 @@ class WingPanel:
         self.obj = obj
 
         obj.addProperty("App::PropertyLink","Base","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","Tip Rib of the panel")).Base=_rootRib#
-        obj.addProperty("App::PropertyLink","Enveloppe","WPRibs",QtCore.QT_TRANSLATE_NOOP("App::Property","Eveloppe of wing")).Enveloppe=_enveloppe
+        obj.addProperty("App::PropertyLink","Envelope","WPRibs",QtCore.QT_TRANSLATE_NOOP("App::Property","Eveloppe of wing")).Envelope=_envelope
         obj.addProperty("App::PropertyLink","Path","WPRibs",QtCore.QT_TRANSLATE_NOOP("App::Property","Path of wing")).Path=_path
 
         # generated Ribs
@@ -666,8 +666,8 @@ class CommandWPanel:
               _rootRib=FreeCAD.ActiveDocument.getObject((selection[1].ObjectName))
               _path=FreeCAD.ActiveDocument.getObject((selection[2].ObjectName))
               base.WingEdges.append(_path)
-              _enveloppe=FreeCAD.ActiveDocument.getObject((selection[3].ObjectName))
-              base.WingEdges.append(_enveloppe)
+              _envelope=FreeCAD.ActiveDocument.getObject((selection[3].ObjectName))
+              base.WingEdges.append(_envelope)
               _leadingedge=FreeCAD.ActiveDocument.getObject((selection[3].ObjectName))# A netoyer en doublon
               wingsketch=FreeCAD.ActiveDocument.getObject((selection[3].ObjectName))
               # Separate leadInEdge & trailingEdge
@@ -685,8 +685,8 @@ class CommandWPanel:
               FreeCAD.Console.PrintMessage("  Rib :"+str(_rootRib.Label)+ "\n")
               FreeCAD.Console.PrintMessage("  Wing :"+str(base.Label)+ "\n")
               FreeCAD.Console.PrintMessage("  Path :"+str(_path.Label)+ "\n")
-              FreeCAD.Console.PrintMessage("  envelope :"+str(_enveloppe.Label)+ "\n")
-              FreeCAD.Console.PrintMessage("  envelope placement:"+str(_enveloppe.Placement)+ "\n")
+              FreeCAD.Console.PrintMessage("  envelope :"+str(_envelope.Label)+ "\n")
+              FreeCAD.Console.PrintMessage("  envelope placement:"+str(_envelope.Placement)+ "\n")
               FreeCAD.Console.PrintMessage("  Number of Panels :"+str(nbOfPanels)+ "\n")
 
               pmin=0
@@ -750,7 +750,7 @@ class CommandWPanel:
                   #myObj1=Part.Line(paths[i].Content)
                   myObj0.Label="path"+str(i)
 
-                  vec=_enveloppe.Placement.Rotation
+                  vec=_envelope.Placement.Rotation
                   FreeCADGui.activeDocument().activeView().setCameraOrientation(vec)#(0,0,0,1))
                   myObj1=Draft.makeSketch(leadInEdges[i], 	name = "leadInEdges"+str(i), autoconstraints=True)
                   #myObj1=Part.Line()
@@ -762,9 +762,9 @@ class CommandWPanel:
 
                   obj=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","WingPanel"+str(i))
 
-                  WingPanel(obj,_rootRib,myObj0,_enveloppe,myObj1,myObj2,200,100,100,0,0)
-                  #WingPanel(obj,_rootRib,_path,_enveloppe,myObj1,myObj2,200,100,100,0,0)
-                  #WingPanel(obj,_rootRib,_path,_enveloppe,leadInEdges[i],trailingEdges[i],200,100,100,0,0)
+                  WingPanel(obj,_rootRib,myObj0,_envelope,myObj1,myObj2,200,100,100,0,0)
+                  #WingPanel(obj,_rootRib,_path,_envelope,myObj1,myObj2,200,100,100,0,0)
+                  #WingPanel(obj,_rootRib,_path,_envelope,leadInEdges[i],trailingEdges[i],200,100,100,0,0)
 
                   #WingPanel(obj,_rootRib,_path,leadInEdges[i],trailingEdges[i],200,100,100,0,0)
                   ViewProviderPanel(obj.ViewObject)
