@@ -54,7 +54,7 @@ def readpointsonfile(filename):
             x = float(curdat.group("xval"))
             y = 0#posY
             z = float(curdat.group("yval"))
-            #ignore points out of range, small tolerance for x value and arbitrary limit for y value, this is necesary because Lednicer
+            #ignore points out of range, small tolerance for x value and arbitrary limit for y value, this is necessary because Lednicer
             #format airfoil files include a line indicating the number of coordinates in the same format of the coordinates.
             if (x < 1.01) and (z < 1) and (x > -0.01) and (z > -1):
                 coords.append(FreeCAD.Vector(x,y,z))
@@ -86,8 +86,8 @@ def process(filename,scale,posX,posY,posZ,rotX,rotY,rotZ,rot,useSpline,splitSpli
             if coords.__contains__(FreeCAD.Vector(0,0,0)): # lgtm[py/modification-of-default-value]
                 flippoint = coords.index(FreeCAD.Vector(0,0,0))
             else:
-                lenghtList=[v.Length for v in coords]
-                flippoint = lenghtList.index(min(lenghtList))
+                lengthList=[v.Length for v in coords]
+                flippoint = lengthList.index(min(lengthList))
             splineLower = Part.BSplineCurve()
             splineUpper = Part.BSplineCurve()
             splineUpper.interpolate(coords[:flippoint+1])

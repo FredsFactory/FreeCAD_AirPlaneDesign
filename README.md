@@ -107,7 +107,7 @@ V0.5 : Some ideas....
 
 ## Feedback
 Feedback can be provided via the [discussion thread in english](https://forum.freecadweb.org/viewtopic.php?f=8&t=42208) or [discussion thread in french](https://forum.freecadweb.org/viewtopic.php?f=12&t=40376) on the FreeCAD forums  
-Some dicussions here : https://forum.freecadweb.org/viewtopic.php?f=3&t=41159&p=356564#p356564
+Some discussions here : https://forum.freecadweb.org/viewtopic.php?f=3&t=41159&p=356564#p356564
 
 ## License
 LGPLv2.1  
