@@ -14,8 +14,6 @@ New Object : Plane, Wing and WingPanel.
 New Wing generator.
 Naca Rib generator.
 
-**v0.3bis**:Nacelle Creation (thanks to Claude)
-
 **v0.3**: NACA Rib generator  
 **v0.2**: New release with parametric objects based on a dedicated UI  
 **v0.1**: Initial release based on sheet  deprecated!
@@ -66,9 +64,6 @@ Ability to choose the:
  **Note:** 2 profiles are installed with the workbench ([eppler 205](wingribprofil/e205.dat) and [eppler 207](wingribprofil/e207.dat)). If you'd like to use different profile(s), simply include said .dat file(s) in to the [`wingribprofil`](wingribprofil/) directory.
 
 ## Roadmap
-
-V0.3 bis :
-- [ ] Add Nacelle creation function by Claude
 
 V0.4 :
 - [X] Add NACA profil generator
