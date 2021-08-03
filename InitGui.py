@@ -64,8 +64,6 @@ class AirPlaneDesignWorkbench(Workbench):
         import airPlaneWPanel
         import airPlaneWing
         import airPlaneWingWizard
-#        self.comList= ['airPlaneDesignPlane','airPlaneDesignWing','airPlaneDesignWingPanel','airPlaneDesignWRib','airPlaneDesignWingWizard','airPlaneDesignWPanel']
-
         import airPlaneNacelle
         self.comList= ['airPlaneDesignPlane','airPlaneDesignWing','airPlaneDesignWingPanel','airPlaneDesignWRib','airPlaneDesignWingWizard','airPlaneDesignWPanel','airPlaneDesignNacelle']
 
