@@ -1,0 +1,25 @@
+The AG2x airfoils are intended to be used on composite versions of the 
+Bubble Dancer and the Allegro-Lite.  They have very similar lift 
+characteristics to the AG3x airfoils.  The main advantage of the AG2x 
+is their thinner trailing edges, which reduces foam core volume and weight,
+especially at the tips where weight is critical.  The thinner TE's also 
+*slightly* improve the max L/D, but the difference is probably within 
+variations from manufacturing tolerances.  Finally, the faceted upper 
+surface of the AG3x airfoils is superfluous with composite construction.
+The AG2x airfoils are smooth.
+
+The direct substitutions are:
+
+AG35 -> AG24
+AG36 -> AG25
+AG37 -> AG26
+AG38 -> AG27
+
+
+Note:  The AG2x airfoils are considerably thicker and more cambered 
+than the AG1x airfoils of the original composite Allegro.  The AG2x 
+will therefore produce a slightly lower sink rate, but penetration 
+capability will be worse.  The AG2x are probably better suited for 
+a composite Allegro-E-Lite.
+
+- Mark Drela

@@ -1,0 +1,29 @@
+New SuperGee Coordinate Files (new 5/21/02)
+
+Aileron Airfoils
+
+AG455ct
+AG46ct
+AG47ct
+
+The main changes from the AG4xc DLG series are  structural. The flap has been thickened (hence the "t" in the name) to better resist flutter. These sections should not need the flap LE to be faced off if an adequate bias skin is used. Using a thicker flap required the kinks at the 70% hinge location to be reduced, so that -2 flap now gives a smooth bottom surface, and 0 flap gives a smooth top surface. Previously this range was -3..0. The coordinates are provided with the -2 flap position put in, and the entire airfoils have also been rotated by 0.6 degrees to put the TE back on the y=0 axis (hence the "r" in the filename).
+
+The center section has also been thinned and decambered slightly for more speed -- the AG455ct is roughly midway between the AG45c and AG46c sections in camber and thickness. This should have a fairly small effect on the speed performance, probably within the variations due to building tolerances.
+
+The recommended flap setting are:
+
+-2 Launch, fast penetration (this is the provided shape)
+
+0 Cruise
+
+ +2 Thermal
+
+Poly Airfoils
+
+AG12
+AG13
+AG14
+
+As usual for a poly airfoil, these were designed to balance the speed and float requirements, with a bit more emphasis on speed to reflect the general trend towards "fast and light". They should be somewhat faster than the Allegro AG16-19 airfoils. They should be comparable in speed to the Apogee AG04- 08 airfoils, but with a slightly better cruise L/D.
+
+The descriptions were provided by Mark Drela and included herein by permission.
