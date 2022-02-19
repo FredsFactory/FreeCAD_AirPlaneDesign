@@ -10,7 +10,7 @@
 
   <content>
     <workbench>
-      <classname>AirplaneDesign</classname>
+      <classname>AirPlaneDesignWorkbench</classname>
       <subdirectory>./</subdirectory>
       <icon>resources/icons/appicon.svg</icon>
       <freecadmin>0.18.0</freecadmin>
