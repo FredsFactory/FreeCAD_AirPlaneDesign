@@ -40,7 +40,7 @@ from App.xfoil.model import Airfoil
 
 from App.xfoil.test import naca0012
 
-import freecad.plot.Plot as Plot
+import freecad.plot as Plot
 
 
 FreeCADGui.addLanguagePath(":/translations")
