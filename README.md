@@ -3,6 +3,7 @@
 A FreeCAD workbench dedicated to Airplane Design  
 
 **Warning:** This is highly experimental code. Testers are welcome.
+**<br>Install also the Curved Shapes Workbench**
 
 ![AirPlaneDesign-UI-screen](resources/WingResult.png)
 
@@ -25,7 +26,6 @@ Naca Rib generator.
 
 ## Installation
 Use the FreeCAD [Addon Manager](https://github.com/FreeCAD/FreeCAD-addons#installing) to install AirPlaneDesign Workbench.
-
 ## Usage
 After installation a new menu appears with to function :  
 1. Create a rib : you can import DAT file or generate NACA Profil.
