@@ -26,9 +26,22 @@ import FreeCADGui
 import FreeCAD
 from FreeCAD import Vector
 import Part, Draft
+from PySide import QtGui, QtCore
 import WorkingPlane
 import CompoundTools.Explode
-import CurvedShapes
+try:
+    import CurvedShapes
+except ImportError:
+    #FreeCAD.Console.PrintError("The 'CurvedShapes' module is required. Please install or load it first.\n")
+    # Create a custom popup using PySide
+    msg_box = QtGui.QMessageBox()
+    msg_box.setIcon(QtGui.QMessageBox.Critical)
+    msg_box.setWindowTitle("Dependency Error")
+    msg_box.setText("The 'CurvedShapes' module is required but not found.")
+    msg_box.setInformativeText("Please install the 'CurvedShapes' module to continue.")
+    msg_box.setStandardButtons(QtGui.QMessageBox.Ok)
+    msg_box.exec_()
+    FreeCADGui.runCommand('Std_AddonMgr', 0)
 import math
 
 import os

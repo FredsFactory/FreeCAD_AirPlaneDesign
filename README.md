@@ -40,6 +40,7 @@ Ensure the plane is selected in the navigation window and select "Create/Add a w
 Ensure the wing is selected in the navigation window and select "Wing Wizard"
 Click "Fill in Sheet With Example" to create the demo wing
 
+>>>>>>> remotes/origin/master
 ## Usage
 
 The menu contains with the following functions:  
