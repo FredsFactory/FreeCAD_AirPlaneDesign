@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<package format="1">
+  <name>AirplaneDesign</name>
+  <description>A FreeCAD workbench dedicated to Airplane Design.</description>
+  <version>0.4</version>
+  <maintainer email="@fredsfactory.fr">FredsFactory</maintainer>
+  <license file="LICENSE">LGPL-2.1</license>
+  <url type="repository" branch="master">https://github.com/FredsFactory/FreeCAD_AirPlaneDesign</url>
+  <url type="readme">https://github.com/FredsFactory/FreeCAD_AirPlaneDesign/blob/master/README.md</url>
+
+  <content>
+    <workbench>
+      <classname>AirPlaneDesignWorkbench</classname>
+      <subdirectory>./</subdirectory>
+      <icon>resources/icons/appicon.svg</icon>
+      <freecadmin>0.18.0</freecadmin>
+    </workbench>
+  </content>
+
+</package>

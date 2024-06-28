@@ -43,7 +43,7 @@ class Plane:
         '''Rib properties'''
         obj.Proxy = self
         obj.addProperty("App::PropertyLength", "fuselageLength", "fuselage", QtCore.QT_TRANSLATE_NOOP("App::Property", "Fuselage Length"))
-        obj.addProperty("App::PropertyLength", "fuselageHeigth", "fuselage", QtCore.QT_TRANSLATE_NOOP("App::Property", "Fuselage Heigth"))
+        obj.addProperty("App::PropertyLength", "fuselageHeight", "fuselage", QtCore.QT_TRANSLATE_NOOP("App::Property", "Fuselage Height"))
         obj.addProperty("App::PropertyLength", "fuselageWidth", "fuselage", QtCore.QT_TRANSLATE_NOOP("App::Property", "Fuselage Width"))
 
 
@@ -100,7 +100,7 @@ class PlaneTaskPanel:
         'fills the dialog with plane properties'
         print('update')
         self.form.fuselageLength.setValue(vobj.Object.fuselageLength)
-        self.form.fuselageHeigth.setValue(vobj.Object.fuselageHeigth)
+        self.form.fuselageHeight.setValue(vobj.Object.fuselageHeight)
         self.form.fuselageWidth.setValue(vobj.Object.fuselageWidth)
         #self.form.fileName.setText(vobj.Object.RibProfil)
         #self.form.NACANumber.setText(vobj.Object.NacaProfil)
@@ -112,7 +112,7 @@ class PlaneTaskPanel:
         print("accept")
         fp=self.obj.Object
         fp.fuselageLength=self.form.fuselageLength.value()
-        fp.fuselageHeigth=self.form.fuselageHeigth.value()
+        fp.fuselageHeight=self.form.fuselageHeight.value()
         fp.fuselageWidth=self.form.fuselageWidth.value()
 
         FreeCAD.ActiveDocument.recompute()

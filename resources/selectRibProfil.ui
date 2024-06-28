@@ -88,7 +88,7 @@
      <item>
       <widget class="QCheckBox" name="splitSpline">
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If selected the spline will be splitted between the upper and lower side of the airfoil.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If selected the spline will be split between the upper and lower side of the airfoil.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
         <string>Split splines</string>

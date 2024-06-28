@@ -72,7 +72,7 @@ class WingRib:
 
         obj.Placement=FreeCAD.Placement(FreeCAD.Vector(_x,_y,_z), FreeCAD.Rotation(FreeCAD.Vector(_xrot,_yrot,_zrot),_rot), FreeCAD.Vector(0,0,0))
 
-        # List Geomtry to edit list of points
+        # List Geometry to edit list of points
 
 
     def onChanged(self, fp, prop):

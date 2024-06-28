@@ -29,7 +29,7 @@ import FreeCADGui as Gui
 import FreeCAD as App
 
 
-# Qt tanslation handling
+# Qt translation handling
 #from DraftGui import translate
 #from DraftGui import utf8_decode
 FreeCADGui.addLanguagePath(":/translations")
@@ -64,7 +64,9 @@ class AirPlaneDesignWorkbench(Workbench):
         import airPlaneWPanel
         import airPlaneWing
         import airPlaneWingWizard
-        self.comList= ['airPlaneDesignPlane','airPlaneDesignWing','airPlaneDesignWingPanel','airPlaneDesignWRib','airPlaneDesignWingWizard','airPlaneDesignWPanel']
+        import airPlaneNacelle
+        self.comList= ['airPlaneDesignPlane','airPlaneDesignWing','airPlaneDesignWingPanel','airPlaneDesignWRib','airPlaneDesignWingWizard','airPlaneDesignWPanel','airPlaneDesignNacelle']
+
         # creates a new toolbar with your commands
         self.appendToolbar(QT_TRANSLATE_NOOP("AirPlaneDesign", "Air Plane Design"), self.comList)
         # creates a new menu
