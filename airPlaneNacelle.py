@@ -167,6 +167,17 @@ class ViewProviderskNacelle:
             Since no data were serialized nothing needs to be done here.'''
         return None
 
+    def dumps(self):
+        '''When saving the document this object gets stored using Python's json module.\
+            Since we have some un-serializable parts here -- the Coin stuff -- we must define this method\
+            to return a tuple of all serializable objects or None.'''
+        return None
+
+    def loads(self, state):
+        '''When restoring the serialized object from document we have the chance to set some internals here.\
+            Since no data were serialized nothing needs to be done here.'''
+        return None
+
     def setEdit(self, vobj, mode):
          #nacelleTaskPanel.ui
         taskd = NacelleTaskPanel(vobj)

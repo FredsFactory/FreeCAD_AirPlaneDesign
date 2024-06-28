@@ -2,7 +2,7 @@
 <package format="1">
   <name>AirplaneDesign</name>
   <description>A FreeCAD workbench dedicated to Airplane Design.</description>
-  <version>0.4</version>
+  <version>0.4.1</version>
   <maintainer email="@fredsfactory.fr">FredsFactory</maintainer>
   <license file="LICENSE">LGPL-2.1</license>
   <url type="repository" branch="master">https://github.com/FredsFactory/FreeCAD_AirPlaneDesign</url>
