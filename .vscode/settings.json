@@ -1,0 +1,41 @@
+{
+    "python.defaultInterpreterPath": "/Applications/FreeCAD.app/Contents/Resources/bin/python",
+    "python.analysis.extraPaths": [
+        "/Applications/FreeCAD.app/Contents/lib",
+        "/Applications/FreeCAD.app/Contents/Resources/lib/python3.11/site-packages",
+        "/Applications/FreeCAD.app/Contents/Mod",
+        "${workspaceFolder}"
+    ],
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.autoSearchPaths": true,
+    "python.analysis.stubPath": "${workspaceFolder}",
+    "python.analysis.completeFunctionParens": true,
+    "python.linting.enabled": false,
+    "python.linting.pylintEnabled": false,
+    "python.linting.flake8Enabled": false,
+    "python.intelliSense.extraPaths": [
+        "/Applications/FreeCAD.app/Contents/lib",
+        "/Applications/FreeCAD.app/Contents/Resources/lib/python3.11/site-packages",
+        "/Applications/FreeCAD.app/Contents/Mod",
+        "${workspaceFolder}"
+    ],
+    "files.associations": {
+        "*.py": "python"
+    },
+    "python.analysis.include": [
+        "**/*.py"
+    ],
+    "python.analysis.exclude": [
+        "**/__pycache__/**"
+    ],
+    "editor.suggestSelection": "first",
+    "editor.acceptSuggestionOnCommitCharacter": false,
+    "editor.quickSuggestions": {
+        "other": true,
+        "comments": false,
+        "strings": false
+    },
+    "editor.suggest.snippetsPreventQuickSuggestions": false,
+    "python.analysis.diagnosticMode": "workspace"
+}

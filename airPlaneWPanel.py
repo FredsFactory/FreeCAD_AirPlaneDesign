@@ -22,17 +22,29 @@ __title__="FreeCAD Airplane Design"
 __author__ = "F. Nivoix"
 __url__ = "https://fredsfactory.fr"
 
-import FreeCADGui
-import FreeCAD
-from FreeCAD import Vector
-import Part, Draft
+# Import des modules FreeCAD avec autocomplétion
+try:
+    # Import direct si dans FreeCAD
+    import FreeCADGui, FreeCAD
+    from FreeCAD import Vector
+    import Part, Draft
+    # Import du module d'autocomplétion pour une meilleure expérience de développement
+    from freecad_imports import App, Gui, Console
+except ImportError:
+    # Import des stubs si hors FreeCAD (pour l'autocomplétion VS Code)
+    from freecad_imports import App, Gui, Vector, Part, Draft, Console
+    FreeCAD = App  # Alias pour compatibilité
+    FreeCADGui = Gui  # Alias pour compatibilité
+
 from PySide import QtGui, QtCore
+import math
+import os
 import WorkingPlane
 import CompoundTools.Explode
 try:
     import CurvedShapes
 except ImportError:
-    #FreeCAD.Console.PrintError("The 'CurvedShapes' module is required. Please install or load it first.\n")
+    # FreeCAD.Console.PrintError("The 'CurvedShapes' module is required. Please install or load it first.\n")
     # Create a custom popup using PySide
     msg_box = QtGui.QMessageBox()
     msg_box.setIcon(QtGui.QMessageBox.Critical)
@@ -41,7 +53,8 @@ except ImportError:
     msg_box.setInformativeText("Please install the 'CurvedShapes' module to continue.")
     msg_box.setStandardButtons(QtGui.QMessageBox.Ok)
     msg_box.exec_()
-    FreeCADGui.runCommand('Std_AddonMgr', 0)
+    if 'FreeCADGui' in globals():
+        FreeCADGui.runCommand('Std_AddonMgr', 0)
 import math
 
 import os

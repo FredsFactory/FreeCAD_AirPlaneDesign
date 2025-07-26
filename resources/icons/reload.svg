@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <g fill="none" stroke="#2196F3" stroke-width="2">
+    <!-- Flèche circulaire -->
+    <path d="M 8 16 A 8 8 0 1 1 24 16 A 8 8 0 0 1 16 24" stroke-linecap="round"/>
+    <!-- Pointe de flèche -->
+    <path d="M 20 20 L 24 16 L 20 12" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <!-- Cercle central -->
+  <circle cx="16" cy="16" r="2" fill="#2196F3"/>
+</svg>

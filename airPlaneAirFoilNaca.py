@@ -24,7 +24,7 @@ __author__ = "F. Nivoix"
 __url__ = "https://fredsfactory.fr"
 
 
-import FreeCAD,Part
+import FreeCAD, Part
 
 from math import cos, sin
 from math import atan

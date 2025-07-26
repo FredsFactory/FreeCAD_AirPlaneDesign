@@ -1,0 +1,35 @@
+{
+  "skipTerminateQuickPick": true,
+  "skipSwitchToOutput": false,
+  "skipErrorMessage": true,
+  "commands": [
+    {
+      "text": "☯ install",
+      "tooltip": "install",
+      "color": "yellow",
+      "command": "npm install",
+      "alignment": "left",
+      "skipTerminateQuickPick": false,
+      "priority": 0
+    },
+    {
+      "text": "◆",
+      "tooltip": "Proxy On",
+      "color": "yellow",
+      "command": "git config --global http.proxy http://cosmos-vip.intra.renault.fr:3128",
+      "alignment": "left",
+      "skipTerminateQuickPick": false,
+      "priority": 0
+    },
+    {
+      "text": "◇",
+      "tooltip": "Proxy Off",
+      "color": "yellow",
+      "command": "git config --global --unset http.proxy",
+      "alignment": "left",
+      "skipTerminateQuickPick": false,
+      "priority": 0
+    }
+
+    ]
+}

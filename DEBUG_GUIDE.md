@@ -110,9 +110,36 @@ Si vous voulez que FreeCAD attende la connexion du débogueur, décommentez cett
 - **Redémarrage** : Parfois, redémarrer FreeCAD peut résoudre les problèmes de connexion.
 - **Extensions VS Code** : Assurez-vous d'avoir l'extension Python installée dans VS Code.
 
-## 📂 Fichiers de configuration
+## � Rechargement du Workbench (NOUVEAU)
+
+### Rechargement manuel
+Pour recharger le workbench sans redémarrer FreeCAD après une modification :
+
+#### Méthodes disponibles :
+1. **Console FreeCAD** : `reload_workbench.reload()` ou `reload_workbench.rl()`
+2. **Raccourci clavier** : `Ctrl+R`
+3. **Bouton dans la toolbar** : Cliquez sur l'icône de rechargement
+4. **Menu** : Development > Recharger le Workbench
+
+#### Rechargement automatique :
+- **Console** : `reload_workbench.setup_auto_reload()`
+- **Raccourci** : `Ctrl+Shift+R`
+- **Bouton** : Icône auto-rechargement dans la toolbar
+
+### Workflow de développement recommandé :
+1. Activez l'auto-rechargement au début de votre session
+2. Modifiez votre code dans VS Code
+3. Le workbench se recharge automatiquement
+4. Testez vos modifications dans FreeCAD
+5. Placez des points d'arrêt si nécessaire
+6. Connectez le débogueur VS Code
+
+## �📂 Fichiers de configuration
 
 - `InitGui.py` : Configuration du serveur de débogage
 - `.vscode/launch.json` : Configuration VS Code
 - `install_debugpy.sh` : Script d'installation
+- `reload_workbench.py` : Module de rechargement
+- `reload_commands.py` : Commandes FreeCAD pour le rechargement
+- `keyboard_shortcuts.py` : Raccourcis clavier
 - `DEBUG_GUIDE.md` : Ce guide

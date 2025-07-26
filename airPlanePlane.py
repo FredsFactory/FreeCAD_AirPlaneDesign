@@ -23,13 +23,13 @@ __title__="FreeCAD airPlane Plane"
 __author__ = "F. Nivoix"
 __url__ = "https://fredsfactory.fr"
 
-
 import FreeCAD,FreeCADGui, os
 
 from PySide import QtCore
 from PySide import QtGui
 
 FreeCADGui.addLanguagePath(":/translations")
+ 
 
 # Qt translation handling
 def translate(context, text, disambig=None):

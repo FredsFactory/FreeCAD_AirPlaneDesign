@@ -65,6 +65,18 @@ def setup_debug():
 # Démarrer le débogage
 setup_debug()
 
+# Importer le module de rechargement pour le développement
+try:
+    import reload_workbench
+    print("🔄 Module de rechargement disponible")
+    print("💡 Tapez 'reload_workbench.reload()' ou 'reload_workbench.rl()' dans la console pour recharger")
+    
+    # Configurer les raccourcis clavier
+    import keyboard_shortcuts
+    
+except Exception as e:
+    print(f"⚠️ Module de rechargement non disponible : {e}")
+
 # Qt translation handling
 #from DraftGui import translate
 #from DraftGui import utf8_decode
@@ -94,7 +106,7 @@ class AirPlaneDesignWorkbench(Workbench):
     def Initialize(self):
         def QT_TRANSLATE_NOOP(scope, text):
           return text
-        print(f"Intit workbench ")
+        print("Initialisation workbench")
         #"This function is executed when FreeCAD starts"
         import airPlanePanel
         import airPlaneRib
@@ -103,12 +115,31 @@ class AirPlaneDesignWorkbench(Workbench):
         import airPlaneWing
         import airPlaneWingWizard
         import airPlaneNacelle
+        
+        # Importer les commandes de rechargement pour le développement
+        try:
+            import reload_commands
+            print("🔧 Commandes de rechargement chargées")
+        except Exception as e:
+            print(f"⚠️ Commandes de rechargement non disponibles : {e}")
+        
+        # Liste des commandes principales
         self.comList= ['airPlaneDesignPlane','airPlaneDesignWing','airPlaneDesignWingPanel','airPlaneDesignWRib','airPlaneDesignWingWizard','airPlaneDesignWPanel','airPlaneDesignNacelle']
+        
+        # Liste des commandes de développement
+        self.devComList = ['ReloadWorkbench', 'ToggleAutoReload']
 
         # creates a new toolbar with your commands
         self.appendToolbar(QT_TRANSLATE_NOOP("AirPlaneDesign", "Air Plane Design"), self.comList)
+        
+        # Toolbar de développement (optionnel)
+        self.appendToolbar(QT_TRANSLATE_NOOP("AirPlaneDesign", "Development"), self.devComList)
+        
         # creates a new menu
         self.appendMenu([QT_TRANSLATE_NOOP("AirPlaneDesign","Air Plane Design")],self.comList)
+        
+        # Menu de développement
+        self.appendMenu([QT_TRANSLATE_NOOP("AirPlaneDesign","Development")], self.devComList)
        
 
     def Activated(self):
@@ -122,7 +153,7 @@ class AirPlaneDesignWorkbench(Workbench):
     def ContextMenu(self, recipient):
         # This is executed whenever the user right-clicks on screen
         # "recipient" will be either "view" or "tree"
-        self.appendContextMenu("AirPlaneDesignInitPlane",self.comlist) # add commands to the context menu
+        self.appendContextMenu("AirPlaneDesignInitPlane", self.comList) # add commands to the context menu
 
 
     def GetClassName(self): 
