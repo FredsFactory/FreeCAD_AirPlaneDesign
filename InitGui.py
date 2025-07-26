@@ -29,6 +29,42 @@ import FreeCADGui as Gui
 import FreeCAD as App
 
 
+def setup_debug():
+    """Configuration du débogueur VS Code pour FreeCAD"""
+    try:
+        import debugpy
+        
+        # Port pour le débogage
+        debug_port = 5678
+        
+        # Vérifier si debugpy est déjà en écoute
+        if not debugpy.is_client_connected():
+            # Configurer debugpy
+            debugpy.configure(python="python")
+            
+            # Démarrer le serveur de débogage
+            debugpy.listen(("localhost", debug_port))
+            print(f"🔧 Serveur de débogage démarré sur le port {debug_port}")
+            print("📋 Instructions pour se connecter :")
+            print("   1. Dans VS Code, ouvrez Command Palette (Cmd+Shift+P)")
+            print("   2. Tapez 'Python: Attach using Process ID' ou utilisez la configuration launch.json")
+            print("   3. Ou utilisez 'Python: Attach to Local Process' et sélectionnez FreeCAD")
+            print("⏳ En attente de la connexion du débogueur...")
+            
+            # Optionnel : attendre la connexion (décommentez si nécessaire)
+            # debugpy.wait_for_client()
+            # print("✅ Débogueur VS Code connecté à FreeCAD")
+        else:
+            print("✅ Débogueur déjà connecté")
+            
+    except ImportError:
+        print("⚠️ debugpy n'est pas installé. Installez-le avec : pip install debugpy")
+    except Exception as e:
+        print(f"⚠️ Erreur lors de l'initialisation du débogueur : {e}")
+
+# Démarrer le débogage
+setup_debug()
+
 # Qt translation handling
 #from DraftGui import translate
 #from DraftGui import utf8_decode
@@ -53,10 +89,12 @@ class AirPlaneDesignWorkbench(Workbench):
         self.__class__.Icon = main_smWB_Icon
         self.__class__.MenuText = "AirPlaneDesign"
         self.__class__.ToolTip = "A description of my workbench"
+      
 
     def Initialize(self):
         def QT_TRANSLATE_NOOP(scope, text):
           return text
+        print(f"Intit workbench ")
         #"This function is executed when FreeCAD starts"
         import airPlanePanel
         import airPlaneRib
@@ -71,6 +109,7 @@ class AirPlaneDesignWorkbench(Workbench):
         self.appendToolbar(QT_TRANSLATE_NOOP("AirPlaneDesign", "Air Plane Design"), self.comList)
         # creates a new menu
         self.appendMenu([QT_TRANSLATE_NOOP("AirPlaneDesign","Air Plane Design")],self.comList)
+       
 
     def Activated(self):
         #This function is executed when the workbench is activated
