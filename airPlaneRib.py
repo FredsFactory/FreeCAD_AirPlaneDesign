@@ -23,9 +23,12 @@ __title__="FreeCAD airPlaneRib"
 __author__ = "F. Nivoix"
 __url__ = "https://fredsfactory.fr"
 
+import freecad_imports
+
 # Import des modules FreeCAD avec autocomplétion
 try:
     # Import direct si dans FreeCAD
+ 
     import FreeCAD, FreeCADGui, os, math
     from freecad_imports import App, Gui, Vector, Console  # Pour l'autocomplétion
 except ImportError:
@@ -36,7 +39,7 @@ except ImportError:
 from PySide import QtCore
 from PySide import QtGui
 from airPlaneAirFoil import process
-from airPlaneDesignProfilUI import SelectObjectUI
+from App.modules.airPlaneRib.airPlaneDesignProfilUI import SelectObjectUI
 from airPlaneAirFoilNaca import generateNaca
 
 import numpy as np

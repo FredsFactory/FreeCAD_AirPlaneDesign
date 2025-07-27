@@ -58,7 +58,7 @@ except ImportError:
 import math
 
 import os
-from airPlaneRib import WingRib, ViewProviderWingRib
+from App.modules.airPlaneRib.airPlaneRib import WingRib, ViewProviderWingRib
 from PySide import QtCore
 
 #import airPlaneDesingCurvedArray

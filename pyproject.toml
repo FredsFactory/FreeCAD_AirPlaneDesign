@@ -1,0 +1,35 @@
+[tool.black]
+line-length = 88
+target-version = ['py311']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # Exclure certains dossiers
+  __pycache__
+  | \.git
+  | \.venv
+  | examples
+  | wingribprofil
+  | resources
+  | translations
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+known_first_party = ["freecad_imports", "freecad_stubs"]
+known_third_party = ["FreeCAD", "FreeCADGui", "Part", "Draft", "PySide"]
+
+[tool.flake8]
+max-line-length = 88
+ignore = ["E203", "W503"]
+exclude = [
+    "__pycache__",
+    ".git",
+    "examples",
+    "wingribprofil",
+    "resources",
+    "translations"
+]

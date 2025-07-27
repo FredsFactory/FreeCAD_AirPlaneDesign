@@ -4,16 +4,47 @@
         "/Applications/FreeCAD.app/Contents/lib",
         "/Applications/FreeCAD.app/Contents/Resources/lib/python3.11/site-packages",
         "/Applications/FreeCAD.app/Contents/Mod",
-        "${workspaceFolder}"
+        "${workspaceFolder}",
+        "/Applications/FreeCAD.app/lib",
+        "/Users/frederic.nivoix/Library/Application Support/FreeCAD/Mod",
+        "/Applications/FreeCAD.app/Contents/Resources/Mod",
+        "/Applications/FreeCAD.app/Contents/Resources/bin",
+        "./App/modules/airPlaneWing"
     ],
     "python.analysis.autoImportCompletions": true,
     "python.analysis.typeCheckingMode": "basic",
     "python.analysis.autoSearchPaths": true,
     "python.analysis.stubPath": "${workspaceFolder}",
     "python.analysis.completeFunctionParens": true,
-    "python.linting.enabled": false,
+    "python.linting.enabled": true,
     "python.linting.pylintEnabled": false,
-    "python.linting.flake8Enabled": false,
+    "python.linting.flake8Enabled": true,
+    "python.linting.flake8Args": [
+        "--max-line-length=88",
+        "--ignore=E203,W503"
+    ],
+    
+    // Configuration Black Formatter
+    "python.formatting.provider": "black",
+    "python.formatting.blackArgs": [
+        "--line-length=88",
+        "--target-version=py311"
+    ],
+    
+    // Configuration de l'éditeur pour le formatage
+    "editor.formatOnSave": true,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 4,
+    
+    // Configuration spécifique Python
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnSave": true,
+        "editor.rulers": [88],
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+        }
+    },
     "python.intelliSense.extraPaths": [
         "/Applications/FreeCAD.app/Contents/lib",
         "/Applications/FreeCAD.app/Contents/Resources/lib/python3.11/site-packages",

@@ -1,0 +1,32 @@
+[
+    {
+        "key": "cmd+shift+c",
+        "command": "workbench.action.tasks.runTask",
+        "args": "🧹 Clean Python Cache - All",
+        "when": "inTasksView || editorTextFocus"
+    },
+    {
+        "key": "cmd+shift+t",
+        "command": "workbench.action.tasks.runTask",
+        "args": "🧪 Run All Tests",
+        "when": "inTasksView || editorTextFocus"
+    },
+    {
+        "key": "cmd+shift+i",
+        "command": "workbench.action.tasks.runTask",
+        "args": "🔍 Test Imports",
+        "when": "inTasksView || editorTextFocus"
+    },
+    {
+        "key": "cmd+shift+f",
+        "command": "workbench.action.tasks.runTask",
+        "args": "🚀 Launch FreeCAD with Debug",
+        "when": "inTasksView || editorTextFocus"
+    },
+    {
+        "key": "cmd+shift+s",
+        "command": "workbench.action.tasks.runTask",
+        "args": "📋 Show Project Structure",
+        "when": "inTasksView || editorTextFocus"
+    }
+]
