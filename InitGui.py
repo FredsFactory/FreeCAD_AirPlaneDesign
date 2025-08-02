@@ -60,16 +60,6 @@ def setup_debug():
 
             # Démarrer le serveur de débogage
             debugpy.listen(("localhost", debug_port))
-            print(f"🔧 Serveur de débogage démarré sur le port {debug_port}")
-            print("📋 Instructions pour se connecter :")
-            print("   1. Dans VS Code, ouvrez Command Palette (Cmd+Shift+P)")
-            print(
-                "   2. Tapez 'Python: Attach using Process ID' ou utilisez la configuration launch.json"
-            )
-            print(
-                "   3. Ou utilisez 'Python: Attach to Local Process' et sélectionnez FreeCAD"
-            )
-            print("⏳ En attente de la connexion du débogueur...")
 
             print(f"🔧 Debug server started on port {debug_port}")
             print("📋 Instructions to connect:")

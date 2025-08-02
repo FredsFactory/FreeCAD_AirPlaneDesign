@@ -69,17 +69,16 @@ class WPanel:
         # obj.addProperty("App::PropertyLinkList", "RibTip", "Ribs", "Tip Ribs")
 
         _ribs = []
-        # _ribsRoot=[]
         _panel = []
         _position = 0
-        _PanelLength = []
+        _panel_length = []
         profil = []
         # for i in range(0,obj.NberOfPanel) :
         for i in range(0, obj.NberOfPanel):
             _row = _panelInput[i]
             profil.append(_row[2])
             # _wingRibProfilDir+u"/e207.dat"
-            _PanelLength.append(float(_row[4]))
+            _panel_length.append(float(_row[4]))
             # obj.addProperty("App::PropertyFloatList","PanelDelta","WingPanel","Delta").PanelDelta=[0.0,70.0]
             # obj.addProperty("App::PropertyLinkList", "RibRoot", "Ribs", "Root Ribs")
             # obj.addProperty("App::PropertyLinkList", "RibTip", "Ribs", "Tip Ribs")
@@ -161,7 +160,7 @@ class WPanel:
                 "PanelLength",
                 "WingPanel",
                 "Length of the Wing",
-            ).PanelLength = _PanelLength
+            ).PanelLength = _panel_length
             obj.addProperty(
                 "App::PropertyStringList", "PanelProfil", "WingPanel", "Profil type"
             ).PanelProfil = profil

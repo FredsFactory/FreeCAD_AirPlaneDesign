@@ -1,5 +1,8 @@
 {
     "python.defaultInterpreterPath": "/Applications/FreeCAD.app/Contents/Resources/bin/python",
+    "python.autoComplete.extraPaths": [
+    "/Applications/FreeCAD.app/Contents/Resources/lib/python3.10/site-packages"
+    ],
     "python.analysis.extraPaths": [
         "/Applications/FreeCAD.app/Contents/lib",
         "/Applications/FreeCAD.app/Contents/Resources/lib/python3.11/site-packages",

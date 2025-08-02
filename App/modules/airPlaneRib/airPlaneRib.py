@@ -67,7 +67,12 @@ def translate(context, text, disambig=None):
     return QtCore.QCoreApplication.translate(context, text, disambig)
 
 
+APP_CONTEXT_PROPERTY = "App::Property"
+APP_PROPERTY_BOOL = "App::PropertyBool"
+
+
 class WingRib:
+
     def __init__(
         self,
         obj,
@@ -93,66 +98,68 @@ class WingRib:
             "App::PropertyFile",
             "RibProfil",
             "Rib",
-            QtCore.QT_TRANSLATE_NOOP("App::Property", "Profil type"),
+            QtCore.QT_TRANSLATE_NOOP(APP_CONTEXT_PROPERTY, "Profil type"),
         ).RibProfil = _profil
         if _nacagene == True:
             obj.addProperty(
                 "App::PropertyString",
                 "NacaProfil",
                 "NacaProfil",
-                QtCore.QT_TRANSLATE_NOOP("App::Property", "Naca Profil"),
+                QtCore.QT_TRANSLATE_NOOP(APP_CONTEXT_PROPERTY, "Naca Profil"),
             ).NacaProfil = _profil
         else:
             obj.addProperty(
                 "App::PropertyString",
                 "NacaProfil",
                 "NacaProfil",
-                QtCore.QT_TRANSLATE_NOOP("App::Property", "Naca Profil"),
+                QtCore.QT_TRANSLATE_NOOP(APP_CONTEXT_PROPERTY, "Naca Profil"),
             ).NacaProfil = ""
 
         obj.addProperty(
             "App::PropertyInteger",
             "NacaNbrPoint",
             "NacaProfil",
-            QtCore.QT_TRANSLATE_NOOP("App::Property", "Naca Number of Points"),
+            QtCore.QT_TRANSLATE_NOOP(APP_CONTEXT_PROPERTY, "Naca Number of Points"),
         ).NacaNbrPoint = _nacaNbrPoint
         obj.addProperty(
-            "App::PropertyBool",
+            APP_PROPERTY_BOOL,
             "finite_TE",
             "NacaProfil",
-            QtCore.QT_TRANSLATE_NOOP("App::Property", "Use a finite thickness at TE"),
+            QtCore.QT_TRANSLATE_NOOP(
+                APP_CONTEXT_PROPERTY, "Use a finite thickness at TE"
+            ),
         ).finite_TE = _finite_TE
         obj.addProperty(
-            "App::PropertyBool",
+            APP_PROPERTY_BOOL,
             "useSpline",
             "Rib",
-            QtCore.QT_TRANSLATE_NOOP("App::Property", "use Spline"),
+            QtCore.QT_TRANSLATE_NOOP(APP_CONTEXT_PROPERTY, "use Spline"),
         ).useSpline = _useSpline
         obj.addProperty(
-            "App::PropertyBool",
+            APP_PROPERTY_BOOL,
             "splitSpline",
             "Rib",
             QtCore.QT_TRANSLATE_NOOP(
-                "App::Property", "split spline in lower and upper side"
+                APP_CONTEXT_PROPERTY, "split spline in lower and upper side"
             ),
         ).splitSpline = _splitSpline
         obj.addProperty(
             "App::PropertyLength",
             "Chord",
             "Rib",
-            QtCore.QT_TRANSLATE_NOOP("App::Property", "Chord"),
+            QtCore.QT_TRANSLATE_NOOP(APP_CONTEXT_PROPERTY, "Chord"),
         ).Chord = _chord
         obj.addProperty(
             "App::PropertyLength",
             "Thickness",
             "Rib",
-            QtCore.QT_TRANSLATE_NOOP("App::Property", "Thickness"),
+            QtCore.QT_TRANSLATE_NOOP(APP_CONTEXT_PROPERTY, "Thickness"),
         ).Thickness = _thickness
         obj.addProperty(
             "App::PropertyLength",
             "wingkey",
             "Rib",
-            QtCore.QT_TRANSLATE_NOOP("App::Property", "Wing Key"),
+            QtCore.QT_TRANSLATE_NOOP(APP_CONTEXT_PROPERTY, "Wing Key"),
         )
         obj.addProperty(
             "App::PropertyVectorList",
