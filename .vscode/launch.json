@@ -18,7 +18,7 @@
             "pathMappings": [
                 {
                     "localRoot": "${workspaceFolder}",
-                    "remoteRoot": "/Users/frederic.nivoix/Library/Application Support/FreeCAD/Mod/AirPlaneDesign"
+                    "remoteRoot": "${env:HOME}/Library/Application Support/FreeCAD/Mod/AirPlaneDesign"
                 }
             ],
             "justMyCode": false,
