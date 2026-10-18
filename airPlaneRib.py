@@ -43,7 +43,8 @@ from App.xfoil.test import naca0012
 import FreeCAD.Plot as Plot
 
 
-FreeCADGui.addLanguagePath(":/translations")
+if FreeCAD.GuiUp:
+    FreeCADGui.addLanguagePath(":/translations")
 smWB_icons_path =  os.path.join( os.path.dirname(__file__), 'resources', 'icons')
 
 # Qt translation handling
