@@ -27,6 +27,7 @@
 
 import FreeCAD,FreeCADGui,Part,re
 from FreeCAD import Base
+from PySide import QtCore
 
 FreeCADGui.addLanguagePath(":/translations")
 
@@ -62,7 +63,7 @@ def readpointsonfile(filename):
                 FreeCAD.Console.PrintWarning("Ignoring coordinates out of range -0.01<x<1.01 and/or -1<z<1. If this is a Lednicer format airfoil this is normal.")
         # End of if curdat != None
     # End of for lin in file
-    afile.close
+    afile.close()
 
     if len(coords) < 3:
         FreeCAD.Console.PrintError('Did not find enough coordinates\n')
