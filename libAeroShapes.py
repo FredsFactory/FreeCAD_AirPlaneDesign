@@ -22,7 +22,8 @@ __author__ = "Claude GUTH"
 
 import FreeCAD
 import Draft
-import DraftTools
+if FreeCAD.GuiUp:
+    import DraftTools
 import Part
 import math
 
