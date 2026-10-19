@@ -23,7 +23,8 @@ from PySide import QtCore, QtGui, QtUiTools
 from airPlaneAirFoilNaca import generateNacaCoords
 from airPlaneAirFoil import readpointsonfile
 
-FreeCADGui.addLanguagePath(":/translations")
+if FreeCAD.GuiUp:
+    FreeCADGui.addLanguagePath(":/translations")
 
 # Qt translation handling
 def translate(context, text, disambig=None):

@@ -29,7 +29,8 @@ import FreeCAD,FreeCADGui,Part,re
 from FreeCAD import Base
 from PySide import QtCore
 
-FreeCADGui.addLanguagePath(":/translations")
+if FreeCAD.GuiUp:
+    FreeCADGui.addLanguagePath(":/translations")
 
 # Qt translation handling
 def translate(context, text, disambig=None):

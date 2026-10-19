@@ -16,7 +16,8 @@ import os
 from PySide import QtCore
 from PySide import QtGui
 
-FreeCADGui.addLanguagePath(":/translations")
+if FreeCAD.GuiUp:
+    FreeCADGui.addLanguagePath(":/translations")
 # Qt translation handling
 def translate(context, text, disambig=None):
     return QtCore.QCoreApplication.translate(context, text, disambig)

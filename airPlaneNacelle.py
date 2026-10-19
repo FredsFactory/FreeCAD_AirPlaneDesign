@@ -43,7 +43,8 @@ apWB_icons_path= os.path.join(apWB_resources_path, 'icons')
 apWB_icon_png= os.path.join(apWB_icons_path,'nacelle.png')
 apWB_icon_xpm= os.path.join(apWB_icons_path,'nacelle.xpm')
 apWB_ui_file= os.path.join( os.path.dirname(__file__), 'resources', 'nacelleTaskPanel.ui')
-FreeCADGui.addLanguagePath(":/translations")
+if FreeCAD.GuiUp:
+    FreeCADGui.addLanguagePath(":/translations")
 
 
 class Nacelle:
