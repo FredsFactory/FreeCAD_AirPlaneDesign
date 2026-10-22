@@ -37,7 +37,7 @@
       <rect>
        <x>0</x>
        <y>40</y>
-       <width>1121</width>
+       <width>1000</width>
        <height>421</height>
       </rect>
      </property>
@@ -60,7 +60,7 @@
       <number>0</number>
      </property>
      <property name="columnCount">
-      <number>14</number>
+      <number>15</number>
      </property>
      <attribute name="horizontalHeaderCascadingSectionResizes">
       <bool>true</bool>
@@ -133,6 +133,11 @@
      <column>
       <property name="text">
        <string>Ribs number</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Cavity wall</string>
       </property>
      </column>
     </widget>
