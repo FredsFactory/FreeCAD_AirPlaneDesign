@@ -117,6 +117,14 @@ for name, label, shape in (("Skin", "OuterSkin", outer),
     obj.Label = label
     obj.Shape = shape
 doc.recompute()
+if FreeCAD.GuiUp:  # display state is stored inside the saved FCStd; headless skips this
+    _disp = {"Skin": ((0.80, 0.80, 0.80), False),
+             "CavityVoid": ((1.00, 0.20, 0.20), False),
+             "Shell": ((0.20, 0.50, 0.90), True)}
+    for _o in doc.Objects:
+        _c, _v = _disp[_o.Name]
+        _o.ViewObject.ShapeColor = _c
+        _o.ViewObject.Visibility = _v
 fcstd = "cavity-void-example.FCStd"
 step = "cavity-void-example.step"
 doc.saveAs(fcstd)
@@ -125,8 +133,8 @@ print("   wrote %s (%d bytes)" % (os.path.abspath(fcstd),
                                   os.path.getsize(fcstd)))
 print("   wrote %s (%d bytes)" % (os.path.abspath(step),
                                   os.path.getsize(step)))
-# colors need a ViewObject, which freecadcmd does not have - open the
-# FCStd in the GUI and color OuterSkin / CavityVoid / HollowShell there
+# colors need a ViewObject, which freecadcmd does not have - the GuiUp
+# block above sets them when this runs inside the FreeCAD GUI
 FreeCAD.closeDocument(doc.Name)
-print("done - open cavity-void-example.FCStd in FreeCAD and hide the "
-      "OuterSkin to see the cavity")
+print("done - open cavity-void-example.FCStd in FreeCAD (HollowShell is "
+      "shown; switch on OuterSkin / CavityVoid in the tree to see them)")

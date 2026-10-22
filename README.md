@@ -85,6 +85,7 @@ Nacelle feature :
 
 
 * Headless cavity void (no UI, usable from `freecadcmd` scripts): `import airPlaneCavity`, then `void = airPlaneCavity.makeCavityVoid([(coords, chord, placement), ...], wall)` lofts a root->tip schedule of inward-offset section wires (e.g. `coords` from `generateNacaCoords`) into a cavity void solid ready to cut from a wing envelope.
+* Runnable example: `examples/cavity-void-example.py` builds a NACA 0015 wing and cuts its cavity void (`freecadcmd examples/cavity-void-example.py` - artifacts are written to the current directory). `examples/cavity-void-example.FCStd` is a ready-made demo document: it opens with the HollowShell visible - switch on the OuterSkin or CavityVoid in the tree to see them (headless re-runs reproduce the geometry; the saved document's colors and visibility come from a GUI save).
 
 ## Roadmap
 
