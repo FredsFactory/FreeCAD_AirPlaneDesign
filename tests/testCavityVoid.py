@@ -1,4 +1,24 @@
 #!/usr/bin/env freecadcmd
+#################################################
+#
+# Cavity void core tests - Aircraft
+#
+# Copyright (c) RedxHerring - 2026 - V0.1
+#
+# For FreeCAD Versions = or > 0.17 Revision xxxx
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License (LGPL)
+# as published by the Free Software Foundation; either version 2 of
+# the License, or (at your option) any later version.
+# for detail see the LICENCE text file.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Library General Public License for more details.
+#
+################################################
 """Gate test for airPlaneCavity.  Run from the repo root, NO arguments:
 
     freecadcmd tests/testCavityVoid.py
@@ -11,6 +31,10 @@ All gates are BOOLEAN-FREE (no common/cut volume checks): OCC booleans against
 lofted wing solids are measured garbage; isInside, distToShape and
 isValid/isClosed/Volume are the trustworthy operations.
 """
+__title__ = "FreeCAD airPlaneCavity tests"
+__author__ = "RedxHerring"
+__url__ = "https://fredsfactory.fr"
+
 import os
 import sys
 import traceback
@@ -57,7 +81,9 @@ SCHEDULE = [(COORDS, chord,
 
 def outerWire(coords, chord, placement):
     """Reference outer wire: closed polygon through the profile points at the
-    quarter-chord origin (same convention as the module's measurement wire)."""
+    quarter-chord origin (same convention as the module's measurement wire).
+    Intentionally independent of the library implementation - a test must
+    not share code with what it verifies."""
     pts = [placement.multVec(FreeCAD.Vector((p.x - 0.25) * chord, 0.0,
                                             p.z * chord))
            for p in coords]
