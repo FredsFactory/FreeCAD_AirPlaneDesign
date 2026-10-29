@@ -32,6 +32,7 @@ You will also require Plot and CurvedShapes addons (both also available in the A
 
 ## Quickstart
 There are various examples available. Under Windows these are in: C:\Users\USERNAME\AppData\Roaming\FreeCAD\Mod\AirPlaneDesign\examples
+Tutorials: [Wing Panel](tutorials/wing-panel.md) — building a multi-panel wing from path and envelope sketches.
 
 To create your own from scratch:
 After installation a new Airplane Design menu and toolbar will be available
@@ -40,7 +41,6 @@ Ensure the plane is selected in the navigation window and select "Create/Add a w
 Ensure the wing is selected in the navigation window and select "Wing Wizard"
 Click "Fill in Sheet With Example" to create the demo wing
 
->>>>>>> remotes/origin/master
 ## Usage
 
 The menu contains with the following functions:  
@@ -99,7 +99,7 @@ V0.4 :
 - [ ] Improve RIB file selection 
 - [ ] Import profil from UIUC Airfoil Database
 - [ ] Add ability to translate workbench
-- [ ] Tutorials
+- [ ] Tutorials (first: [Wing Panel](tutorials/wing-panel.md))
 
 V0.5 : Some ideas....
 - [ ] Generate Rib from Wing
