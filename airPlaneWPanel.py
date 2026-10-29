@@ -211,6 +211,45 @@ def distribute(x, distribution, reverse = False):
 
     return d
 
+
+# Chord (mm) below which a "rib" is numerical garbage: scaleByBoundbox2
+# clamps a collapsed bbox to 1e-7, and lofting over such sections raises or
+# segfaults BRepFill_CompatibleWires depending on the OCCT build.
+_minRibChord = 1e-3
+
+
+def _teStationWindow(pathEdge, leEdge, teObj):
+    """Spanwise arc-length window [lo, hi] on the panel leading edge within
+    which the rib slice plane (through the LE point at that arc length,
+    normal = path tangent) still crosses the trailing edge. Near a panel end
+    the plane can fall entirely forward of the finite TE segment;
+    boundbox_from_intersect then silently collapses the bbox onto the LE
+    point (its `found` flag is shared across hull curves) and the rib gets a
+    zero chord. Spacing stations inside this window prevents that.
+
+    Returns None when no window can be derived; caller keeps its own range.
+
+    ponytail: the window linearises the LE at its start tangent and samples
+    the TE every ~1/32 of each edge, so it is exact for straight sketch
+    segments and approximate for splines - leaks are caught by the
+    per-rib _minRibChord guard, so exactness is not required here.
+    """
+    teShape = getattr(teObj, "Shape", None)
+    if teShape is None or teShape.isNull() or not teShape.Edges:
+        return None
+
+    d = pathEdge.tangentAt(pathEdge.getParameterByLength(pathEdge.Length / 2.0))
+    tproj = leEdge.tangentAt(leEdge.FirstParameter).dot(d)
+    if abs(tproj) < 1e-6:  # chord has no extent along the path: no window
+        return None
+    le0 = leEdge.valueAt(leEdge.FirstParameter).dot(d)
+    projs = [e.valueAt(e.FirstParameter + (e.LastParameter - e.FirstParameter) * i / 32.0).dot(d)
+             for e in teShape.Edges for i in range(33)]
+
+    lo = (min(projs) - le0) / tproj
+    hi = (max(projs) - le0) / tproj
+    return (lo, hi) if lo <= hi else (hi, lo)
+
 #################################################
 #
 #  This module provides tools to build a wing panel
@@ -409,10 +448,34 @@ class WingPanel:
         FreeCAD.ActiveDocument.removeObject("myObjectName")
 
     def wingpshape(self, obj) :
+        # Only loft over sections OCCT survives: null/empty/sub-micron shapes
+        # and coincident duplicates (legacy ribs stacked by the old plen
+        # clamp) make makeSurfaceSolid's Part.makeLoft raise or segfault
+        # BRepFill_CompatibleWires. Warn, skip, loft the rest - this also
+        # self-heals documents saved with such ribs (update path).
         a=[]
+        skipped=[]
+        lastCenter=None
         for i in obj.Ribs :
-            a.append(i.Shape)
-
+            s = i.Shape
+            if s.isNull() or len(s.Edges) == 0 or s.BoundBox.DiagonalLength < _minRibChord:
+                skipped.append(i.Label)
+                continue
+            center = s.BoundBox.Center
+            if lastCenter is not None and (center - lastCenter).Length < 1e-6:
+                skipped.append(i.Label + " (duplicate position)")
+                continue
+            lastCenter = center
+            a.append(s)
+        if skipped:
+            FreeCAD.Console.PrintWarning(
+                "  " + str(obj.Label) + " : skin skipped " + str(len(skipped))
+                + " degenerate rib(s): " + ", ".join(skipped)
+                + " - check their Chord and the trailing-edge coverage.\n")
+        if len(a) < 2:
+            FreeCAD.Console.PrintWarning(
+                "  " + str(obj.Label) + " : skin not built - fewer than 2 valid ribs remain.\n")
+            return
         obj.Shape = CurvedShapes.makeSurfaceSolid(a, False)
 
 
@@ -470,11 +533,45 @@ class WingPanel:
 
             maxlen=obj.LeadingEdge.Shape.Length
 
+            # Space the stations over the span where the rib slice plane
+            # actually crosses the trailing edge, trimmed by the user's
+            # OffsetStart/OffsetEnd (see _teStationWindow). A station past
+            # that window collapses to a zero chord.
+            pmin = obj.OffsetStart
+            pmax = maxlen - obj.OffsetEnd
+            if edges:
+                win = _teStationWindow(edges[0], leadingedge_edges[0], obj.TrailingEdge)
+                if win is not None:
+                    wlo, whi = max(win[0], 0.0), min(win[1], maxlen)
+                    lo, hi = max(pmin, wlo), min(pmax, whi)
+                    if hi - lo > epsilon:
+                        pmin, pmax = lo, hi
+                    elif whi - wlo > epsilon:
+                        pmin, pmax = wlo, whi
+                        FreeCAD.Console.PrintWarning(
+                            "  " + str(obj.Label) + " : OffsetStart/OffsetEnd trim away the whole"
+                            " span the trailing edge covers; stations re-spread over"
+                            " [%.2f, %.2f].\n" % (wlo, whi))
+                    # degenerate window: keep the offsets, every rib then
+                    # trips the per-rib chord-skip warning below.
+
+            # A plen past the positioning edge is clamped onto the edge end,
+            # stacking ribs on one point - Part.makeLoft then dies on the
+            # duplicate profiles. Spread the stations over the edge that
+            # positions them instead.
+            if edges and edges[0].Length < pmax:
+                if edges[0].Length < pmax - epsilon:
+                    FreeCAD.Console.PrintWarning(
+                        "  " + str(obj.Label) + " : path sketch segment is shorter than the panel,"
+                        " last rib moves inboard to its end at %.2f mm.\n" % edges[0].Length)
+                pmax = edges[0].Length
+                pmin = min(pmin, pmax)
+
             for n in range(0, int(obj.Items)):
                 FreeCAD.Console.PrintMessage("  Rib number                 : --- "+str(n)+ " ---\n")
-                plen = obj.OffsetStart
+                plen = pmin
                 if obj.Items > 1:
-                    plen += (maxlen - obj.OffsetStart - obj.OffsetEnd) * n / (float(obj.Items) - 1)
+                    plen += (pmax - pmin) * n / (float(obj.Items) - 1)
 
                 for edge in edges:
                     if plen > edge.Length:
@@ -550,6 +647,18 @@ class WingPanel:
                               bbox = CurvedShapes.boundbox_from_intersect(obj.Hullcurves, posvec_leadingedge, direction, self.doScaleXYZ,False)
                               if  bbox:
                                     x,y,z,scalex,scaley,scalez=scaleByBoundbox2(obj.Base.Shape, bbox, self.doScaleXYZsum )
+                                    if scalex < _minRibChord:
+                                        # bbox collapsed onto one hull curve:
+                                        # this plane missed the other (usually
+                                        # the TE). Skip instead of lofting a
+                                        # 1e-7 section.
+                                        FreeCAD.Console.PrintWarning(
+                                            "      Skipping rib "+str(n)+" of "+str(obj.Label)
+                                            +" : chord "+str(scalex)+" mm at plen="
+                                            +str(round(plen, 2))+" - the slice plane crossed the"
+                                            " leading edge but not the trailing edge. Lengthen or"
+                                            " shift the trailing-edge segment.\n")
+                                        continue
                                     FreeCAD.Console.PrintMessage("      scalex"+str(scalex)+ " \n")
                                     FreeCAD.Console.PrintMessage("      scaley"+str(scaley)+ " \n")
                                     FreeCAD.Console.PrintMessage("      scalez"+str(scalez)+ " \n")
@@ -559,7 +668,10 @@ class WingPanel:
                                     if rib :
                                        ribs.append(rib)
                               else :
-                                    FreeCAD.Console.PrintMessage("      Error : not bbox ------------\n")
+                                    FreeCAD.Console.PrintWarning(
+                                        "      Rib "+str(n)+" of "+str(obj.Label)+" skipped : the"
+                                        " slice plane at plen="+str(round(plen, 2))
+                                        +" missed the hull curves entirely.\n")
 
         if len(ribs)>1 :
            FreeCAD.Console.PrintMessage("     Number of rib created : "+str(len(ribs))+"\n")
