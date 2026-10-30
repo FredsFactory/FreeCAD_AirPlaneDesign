@@ -185,6 +185,62 @@ def gateWall():
           % (100.0 * worst))
 
 
+def gateNoseFold():
+    # PR #62 report: NACA 2412 panel, root chord 104 mm, wall 3.4 mm died
+    # with "wall 3 mm not reached ... gap 2.80 mm (built at 5.13 mm)".
+    # Root cause: a wall deeper than the LE radius of curvature
+    # (1.1019*(t/c)^2*chord = 1.7 mm for 2412 at 104 mm) folds the offset
+    # chains over each other at the nose, the fold sits inside the wall,
+    # and the measured loop chases the ever-shrinking gap.  The nose is now
+    # trimmed like the TE, so walls build up to the station's inscribed
+    # radius (6.2 mm at the root, 2.4 mm at the 39.5 mm tip here).
+    sm = generateNacaCoords("2412", 40, False, True,
+                            1, 0, 0, 0, 0, 0, 0)
+    root, tip = 104.0, 39.5
+    ident = FreeCAD.Placement(FreeCAD.Vector(0.0, 0.0, 0.0),
+                              FreeCAD.Rotation())
+    for wall in (2.5, 3.4, 4.5):  # every one of these failed pre-fix
+        wire = airPlaneCavity.offsetSectionWire(sm, root, wall)
+        assert len(wire.Edges) == 3 and wire.isValid() and wire.isClosed(), \
+            "root wall %.1f mm: the nose trim broke the 3-edge inner wire" \
+            % wall
+        gap = outerWire(sm, root, ident).distToShape(wire)[0]
+        assert wall <= gap <= 1.10 * wall, \
+            "root wall %.1f mm measured gap %.2f mm outside [wall, 1.10 x " \
+            "wall]" % (wall, gap)
+    # the 39.5 mm tip is 4.7 mm thick: a 6.8 mm double wall does not fit
+    # anywhere, so 3.4 mm must STILL raise - but the message must name the
+    # ceiling, and the ceiling must be the geometry's, not the fold's
+    try:
+        airPlaneCavity.offsetSectionWire(sm, tip, 3.4)
+        assert False, "wall 3.4 mm built on a 4.7 mm thick tip section - " \
+                      "the swallow gate is dead"
+    except ValueError as err:
+        msg = str(err)
+        assert "builds is ~" in msg, \
+            "error carries no max-wall hint: %s" % msg
+        hint = float(msg.split("builds is ~")[1].split(" mm")[0])
+        assert 1.8 <= hint <= 2.6, \
+            "max-wall hint %.2f mm outside the tip inscribed-radius band " \
+            "[1.8, 2.6] - hinting above the ceiling would loop the user" \
+            % hint
+        print("      fold fix: root builds 2.5-4.5 mm; tip 3.4 mm raises "
+              "with hint ~%.2f mm" % hint)
+    # the user story: the whole 104 -> 39.5 mm panel at a uniform 2.0 mm
+    # wall (pre-fix the tip failed above ~0.8 mm), void structurally sound
+    plTip = FreeCAD.Placement(FreeCAD.Vector(0.0, 430.0, 0.0),
+                              FreeCAD.Rotation())
+    void = airPlaneCavity.makeCavityVoid([(sm, root, ident),
+                                          (sm, tip, plTip)], 2.0)
+    assert void.isValid() and len(void.Solids) == 1 \
+            and void.Shells[0].isClosed() and void.Volume > 0.0, \
+        "2.0 mm wall over the 104/39.5 mm panel did not loft a closed void"
+    outerSolid = Part.makeLoft([outerWire(sm, root, ident),
+                                outerWire(sm, tip, plTip)], True, False)
+    assert outerSolid.isInside(void.CenterOfMass, 1e-6, True), \
+        "the thin-panel cavity void is not inside its outer loft"
+
+
 def gateSwallow():
     thin = generateNacaCoords("0012", 40, False, True,
                               1, 0, 0, 0, 0, 0, 0)
@@ -236,6 +292,8 @@ def main():
         ("watertight non-empty void", gateWatertight),
         ("probes inside void (self-check) and outer", gateInsideOuter),
         ("wall thickness (gap + mid-chord pointwise)", gateWall),
+        ("LE-fold trim: thick walls on small chords build; hint on impossible",
+         gateNoseFold),
         ("swallow tripwire raises ValueError", gateSwallow),
         ("volume vs analytic AREA_K bound", gateVolume),
     ]
