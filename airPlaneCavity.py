@@ -37,7 +37,11 @@ interpolant rings into the wall (measured 2-40 mm) and it is the wire type
 OCC integrates wrongly.  Why the wall is MEASURED and not assumed: the spline
 interpolant cuts toward the skin by an amount that depends on the point set,
 so offsetSectionWire() asks the exact geometry for the deficit and adds it
-back, bounded.
+back, bounded.  Why the nose is TRIMMED exactly like the tail: an offset
+deeper than the leading-edge radius of curvature folds the chains over
+each other inside the wall, so offsetProfileCoords() pops the crossed
+heads and rejoins them at the point where the cavity pinches shut - the
+inner nose.
 """
 
 __title__="FreeCAD airPlaneCavity"
@@ -147,6 +151,59 @@ def _popCrossed(up, low):
         low.pop(0)
 
 
+def _popCrossedNose(up, low):
+    """
+    Drop nose points where the two offset chains fold over each other.
+
+    The MIRROR of _popCrossed at the other end of the section.  A NACA nose
+    is an arc of radius 1.1019*(t/c)^2*chord (1.7 mm for NACA 2412 at a
+    104 mm chord); an inward normal offset deeper than that radius wraps the
+    chains past the centre of curvature - the upper chain dives BELOW the
+    lower - and the fold sits INSIDE the wall (measured: 1.27 mm clearance
+    at a 3.0 mm wall, NACA 0010 c=104 mm), so the measured-gap loop gates
+    on the fold, ever more tightly as the wall grows.  Both RAW chains run
+    into the nose here (upper tail->nose, lower nose->tail), so while the
+    upper head sits at or below the lower head, both pop in lockstep.
+    Chain-vs-chain, as at the TE: camber needs no special case.  Below the
+    nose radius the rule is a no-op and the shared-nose wire is produced
+    unchanged.  Returns True if anything was popped; the caller closes the
+    nose opening at the pinch point (see _noseApex).
+    """
+    popped = False
+    while len(up) > 1 and len(low) > 1 and up[-1][1] <= low[0][1]:
+        up.pop()
+        low.pop(0)
+        popped = True
+    return popped
+
+
+def _noseApex(u0, u1, l0, l1):
+    """
+    The point where the trimmed offset chains rejoin into the shared nose:
+    the two head secants (u0->u1 and l1->l0, both running noseward) meet
+    where a circle of radius `wall` touches the upper AND lower skin at
+    once - the point at which the cavity closes, i.e. the true inner nose.
+    Parallel secants, a meeting point behind a chain head, or one further
+    than 2x the opening width from the heads all mean the chains are
+    straying, not pinching: fall back to the opening midpoint, which is
+    always inside the pocket the chains bounded before they crossed.
+    """
+    ux, uz = u1[0] - u0[0], u1[1] - u0[1]
+    lx, lz = l0[0] - l1[0], l0[1] - l1[1]
+    mid = (0.5 * (u1[0] + l0[0]), 0.5 * (u1[1] + l0[1]))
+    opening = hypot(u1[0] - l0[0], u1[1] - l0[1])
+    den = ux * lz - uz * lx
+    if abs(den) < 1e-12 or opening <= 0.0:
+        return mid
+    px, pz = l0[0] - u1[0], l0[1] - u1[1]
+    t = (px * lz - pz * lx) / den
+    s = (px * uz - pz * ux) / den
+    if t < 0.0 or s < 0.0 or t * hypot(ux, uz) > 2.0 * opening \
+            or s * hypot(lx, lz) > 2.0 * opening:
+        return mid
+    return (u1[0] + t * ux, u1[1] + t * uz)
+
+
 def offsetProfileCoords(coords, chord, wall, nPts=41):
     """
     Cavity-wall inward normal offset of a closed section - pure math, no Part.
@@ -166,7 +223,10 @@ def offsetProfileCoords(coords, chord, wall, nPts=41):
     lower runs nose -> trailing edge, and lower[0] is upper[-1] (the nose
     point is shared, which is what closes the caller's wire).  Tail points
     where the two offset chains cross are popped; the blunt inner trailing
-    edge is left open for the caller (see offsetSectionWire).
+    edge is left open for the caller (see offsetSectionWire).  Nose points
+    where the chains fold over each other (wall beyond the LE radius of
+    curvature) are popped too and replaced by one shared pinch apex - the
+    inner nose - so the wire type and the loft structure never change.
 
     Raises ValueError if the wall swallows the section or nPts is too small
     to resample a surface.
@@ -194,6 +254,15 @@ def offsetProfileCoords(coords, chord, wall, nPts=41):
         # inward normal of the counter-clockwise loop = (-tv, tu)
         pnt = (mm[i][0] - wall * tv / ln, mm[i][1] + wall * tu / ln)
         (up if i <= nose else low).append(pnt)
+    # nose fold (walls deeper than the LE radius of curvature): trim the
+    # crossed heads and rejoin them at the pinch, so the shared nose point
+    # is the true inner nose and never a fold inside the wall
+    if _popCrossedNose(up, low):
+        if len(up) > 1 and len(low) > 1:
+            up.append(_noseApex(up[-2], up[-1], low[0], low[1]))
+        else:  # the pop ate a chain: the swallow check below raises
+            up.append((0.5 * (up[-1][0] + low[0][0]),
+                       0.5 * (up[-1][1] + low[0][1])))
     low = [up[-1]] + low  # share the nose point
     lowR = low[::-1]      # both chains tail->nose for the pop rule
     _popCrossed(up, lowR)
@@ -225,6 +294,44 @@ def _outerWire(pts, chord, placement):
     return Part.makePolygon(pts3 + [pts3[0]])
 
 
+def _buildStationWire(coords, chord, wall, placement=None, nPts=41):
+    """
+    The measured-gap loop, workhorse of offsetSectionWire().  Returns
+    (wire, gap, built); wire is None when the station will not hold the
+    wall - swallowed chains, or a gap that stays under the wall after the
+    3 passes, or a gap that SHRANK while the wall grew.  That last early
+    stop is the runaway guard: a deficit from the spline interpolant
+    shrinking toward the skin closes as the wall grows, but a geometric
+    pinch (LE fold, cavity swallowed at the tail) closes HARDER - pass 2
+    then measures below pass 1, and growing further only chases the fold.
+    """
+    pts = _profilePoints(coords)
+    outer = _outerWire(pts, chord, placement)
+    built = wall
+    gap = 0.0
+    prev = None
+    for _ in range(3):
+        try:
+            up, low = offsetProfileCoords(coords, chord, built, nPts)
+        except ValueError:
+            return (None, gap, built)  # the built wall swallows the section
+        splineUp = Part.BSplineCurve()
+        splineUp.interpolate([_to3d(p, placement) for p in up])
+        splineLow = Part.BSplineCurve()
+        splineLow.interpolate([_to3d(p, placement) for p in low])
+        wire = Part.Wire([splineUp.toShape(), splineLow.toShape(),
+                          Part.makeLine(_to3d(low[-1], placement),
+                                        _to3d(up[0], placement))])
+        gap = outer.distToShape(wire)[0]
+        if gap >= wall:
+            return (wire, gap, built)
+        if prev is not None and gap <= prev:
+            return (None, gap, built)
+        prev = gap
+        built += wall - gap + 0.05
+    return (None, gap, built)
+
+
 def offsetSectionWire(coords, chord, wall, placement=None, nPts=41):
     """
     One cavity station as a closed 3-EDGE Part.Wire: upper-surface spline,
@@ -240,31 +347,46 @@ def offsetSectionWire(coords, chord, wall, placement=None, nPts=41):
     asked how far the interpolant actually cut, and the deficit is added back
     (plus a 0.05 mm convergence nudge), at most 3 passes.  These anchors are
     the measured ones from the source project - do not tighten them toward
-    epsilon.
+    epsilon.  The loop stops EARLY once growing the wall stops growing the
+    gap (see _buildStationWire): past the station's ceiling the residual is
+    a geometric pinch no growth can fix.
 
-    Raises ValueError if the wall swallows the section, or if the measured
-    gap stays below the wall after 3 passes.
+    Raises ValueError naming maxFeasibleWall() if the station will not hold
+    the wall.
+    """
+    wire, gap, built = _buildStationWire(coords, chord, wall, placement, nPts)
+    if wire is not None:
+        return wire
+    raise ValueError("station wall %.0f mm not reached after 3 measured "
+                     "passes: gap %.2f mm (built at %.2f mm); the most this "
+                     "station builds is ~%.2f mm - lower the wall below that"
+                     % (wall, gap, built,
+                        maxFeasibleWall(coords, chord, nPts)))
+
+
+def maxFeasibleWall(coords, chord, nPts=41):
+    """
+    The largest wall (mm) offsetSectionWire() still accepts at this station:
+    bisection on buildability to ~0.05 mm, capped by the station's bounding
+    half-height (no wall fits where no circle of that radius fits).  This is
+    the CEILING THIS MODULE BUILDS - interpolant sag and the LE/TE pinches
+    sit inside it, so it answers "what can I actually type here" rather than
+    the ideal inscribed radius.  placement is irrelevant (distances are
+    rigid-invariant), so none is taken.  ~10 wire builds: call it on failure
+    paths, not per station per pass.
     """
     pts = _profilePoints(coords)
-    outer = _outerWire(pts, chord, placement)
-    built = wall
-    gap = 0.0
-    for _ in range(3):
-        up, low = offsetProfileCoords(coords, chord, built, nPts)
-        splineUp = Part.BSplineCurve()
-        splineUp.interpolate([_to3d(p, placement) for p in up])
-        splineLow = Part.BSplineCurve()
-        splineLow.interpolate([_to3d(p, placement) for p in low])
-        wire = Part.Wire([splineUp.toShape(), splineLow.toShape(),
-                          Part.makeLine(_to3d(low[-1], placement),
-                                        _to3d(up[0], placement))])
-        gap = outer.distToShape(wire)[0]
-        if gap >= wall:
-            return wire
-        built += wall - gap + 0.05
-    raise ValueError("station wall %.0f mm not reached after 3 measured "
-                     "passes: gap %.2f mm (built at %.2f mm)"
-                     % (wall, gap, built))
+    zs = [z for _, z in pts]
+    lo, hi = 0.0, 0.5 * (max(zs) - min(zs)) * chord
+    for _ in range(10):
+        if hi - lo <= 0.05:
+            break
+        mid = 0.5 * (lo + hi)
+        if _buildStationWire(coords, chord, mid, None, nPts)[0] is not None:
+            lo = mid
+        else:
+            hi = mid
+    return lo
 
 
 def makeCavityVoid(schedule, wall, nPts=41):
