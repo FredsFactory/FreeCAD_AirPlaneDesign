@@ -211,6 +211,45 @@ def distribute(x, distribution, reverse = False):
 
     return d
 
+
+# Chord (mm) below which a "rib" is numerical garbage: scaleByBoundbox2
+# clamps a collapsed bbox to 1e-7, and lofting over such sections raises or
+# segfaults BRepFill_CompatibleWires depending on the OCCT build.
+_minRibChord = 1e-3
+
+
+def _teStationWindow(pathEdge, leEdge, teObj):
+    """Spanwise arc-length window [lo, hi] on the panel leading edge within
+    which the rib slice plane (through the LE point at that arc length,
+    normal = path tangent) still crosses the trailing edge. Near a panel end
+    the plane can fall entirely forward of the finite TE segment;
+    boundbox_from_intersect then silently collapses the bbox onto the LE
+    point (its `found` flag is shared across hull curves) and the rib gets a
+    zero chord. Spacing stations inside this window prevents that.
+
+    Returns None when no window can be derived; caller keeps its own range.
+
+    ponytail: the window linearises the LE at its start tangent and samples
+    the TE every ~1/32 of each edge, so it is exact for straight sketch
+    segments and approximate for splines - leaks are caught by the
+    per-rib _minRibChord guard, so exactness is not required here.
+    """
+    teShape = getattr(teObj, "Shape", None)
+    if teShape is None or teShape.isNull() or not teShape.Edges:
+        return None
+
+    d = pathEdge.tangentAt(pathEdge.getParameterByLength(pathEdge.Length / 2.0))
+    tproj = leEdge.tangentAt(leEdge.FirstParameter).dot(d)
+    if abs(tproj) < 1e-6:  # chord has no extent along the path: no window
+        return None
+    le0 = leEdge.valueAt(leEdge.FirstParameter).dot(d)
+    projs = [e.valueAt(e.FirstParameter + (e.LastParameter - e.FirstParameter) * i / 32.0).dot(d)
+             for e in teShape.Edges for i in range(33)]
+
+    lo = (min(projs) - le0) / tproj
+    hi = (max(projs) - le0) / tproj
+    return (lo, hi) if lo <= hi else (hi, lo)
+
 #################################################
 #
 #  This module provides tools to build a wing panel
@@ -270,6 +309,9 @@ class WingPanel:
         obj.addProperty("App::PropertyLink","TrailingEdge","WingEdges",QtCore.QT_TRANSLATE_NOOP("App::Property","Select the trailing edge of the panel, line or Spline")).TrailingEdge=_traillingedge
 
 
+        # twist(f) = Twist + TipTwist * f (f: 0 root -> 1 tip), right-hand
+        # about the rib normal (+Y), airPlaneCavity's sign: negative
+        # TipTwist = washout.  Dihedral unimplemented (tutorials/wing-panel.md).
         obj.addProperty("App::PropertyAngle","TipTwist","Design",QtCore.QT_TRANSLATE_NOOP("App::Property","Tip Twist")).TipTwist=_tipTwist
         obj.addProperty("App::PropertyAngle","Dihedral","Design",QtCore.QT_TRANSLATE_NOOP("App::Property","Dihedral")).Dihedral=_dihedral
         #obj.addProperty("App::PropertyLinkList","Ribs","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","list of ribs")).Ribs=[]
@@ -295,12 +337,36 @@ class WingPanel:
         obj.Proxy = self
 
 
+    def __getstate__(self):
+        # FreeCAD >=1.x stores this as JSON; a link in it (obj) breaks the
+        # save outright - that is how pre-hook docs ended up with empty state.
+        return {'extract': getattr(self, 'extract', False)}
+
+    def __setstate__(self, state):
+        # Restore never runs __init__; for docs saved before these hooks
+        # existed the state was empty and FreeCAD skips this call entirely,
+        # so nothing here may be assumed to have run (see _adopt).
+        if state:
+            self.__dict__.update(state)
+        self.obj = None
+        self.doScaleXYZ = []
+        self.doScaleXYZsum = [False, False, False]
+
+    def _adopt(self, obj):
+        # re-link the feature after a restore.  getattr, not `self.obj`:
+        # an old-format restore never reached __setstate__, so obj is
+        # MISSING (not None) and plain access is the GUI AttributeError.
+        if getattr(self, 'obj', None) is None:
+            self.obj = obj
+
     def onChanged(self, obj, prop):
         '''Do something when a property has changed'''
         FreeCAD.Console.PrintMessage("******* onChanged routine *********************\n"+" Change property: " + str(prop) + "\n")
+        # a restored proxy may carry no attributes at all; adopt before the rib wipe
+        self._adopt(obj)
         proplist = ["Base", "Hullcurves",
                     "Axis", "Items", "OffsetStart",
-                    "OffsetEnd", "Twist", "Surface",
+                    "OffsetEnd", "Twist", "TipTwist", "Surface",
                     "Solid",
                     "LeadingEdge", "TrailingEdge"
                     ,"DistributionReverse"] #,"Ribs"
@@ -310,13 +376,12 @@ class WingPanel:
                 return
 
         if prop in proplist:
-             if obj.Items!=len(obj.Ribs):
-                 print("Need to delete and recreate all Ribs")
-                 if len(obj.Ribs)>0 : self.deleteAllRib(obj)
-                 self.execute(obj,False)
-             else :
-                 print("Just need an update of all Ribs")
-                 self.execute(obj,True)
+             # No count check: the old "update" branch left ribs at their old
+             # stations (dead updateRib calls), so every tracked change wipes
+             # and rebuilds; plain recomputes re-skin via execute()'s forcing.
+             print("Need to delete and recreate all Ribs")
+             if len(obj.Ribs)>0 : self.deleteAllRib(obj)
+             self.execute(obj,False)
 
 
     def createLeadingEdge(self, obj):
@@ -333,14 +398,15 @@ class WingPanel:
         #__license__ = "LGPL 2.1"
         #
         #----------------------------------------------------------------------
-    def createRib(self, obj,chord, posvec,direction, rotaxis, angle):
-        #basebbox = obj.RootRib.Shape.BoundBox,basepl = obj.RootRib.Placement, print("Create Rib new release")
-
-        #bbox = CurvedShapes.boundbox_from_intersect(obj.Hullcurves, posvec, direction, self.doScaleXYZ)
+    def createRib(self, obj,chord, posvec,direction, rotaxis, angle, twist=0.0):
         FreeCAD.Console.PrintMessage("------------ createRib ------------\n")
-        #if not bbox:
-        #      FreeCAD.Console.PrintMessage("------------ not bbox ------------\n")
-        #          return None
+        if _minRibChord > chord:
+            # a collapsed section poisons lofts/cavity downstream - refuse at source
+            FreeCAD.Console.PrintWarning(
+                "  Rib skipped : computed chord %.3g mm is below the %.3g mm"
+                " minimum - check the hull curves and offsets.\n"
+                % (chord, _minRibChord))
+            return None
         _rib=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","Rib")
         #calcul du facteur d'échelle de la nervure
         #x,y,z,scalex,scaley,scalez=scaleByBoundbox2(obj.Base.Shape, bbox, self.doScaleXYZsum )
@@ -369,7 +435,7 @@ class WingPanel:
                     obj.Base.splitSpline)
 
         else :
-            WingRib(_rib,obj.Base.RibProfil,
+            WingRib(_rib,obj.Base.NacaProfil or obj.Base.RibProfil,
                     True,
                     obj.Base.NacaNbrPoint,
                     chord,
@@ -382,37 +448,53 @@ class WingPanel:
                     obj.Base.splitSpline)
             #obj.addProperty("App::PropertyString","NacaProfil","NacaProfil",QtCore.QT_TRANSLATE_NOOP("App::Property","Naca Profil")).NacaProfil=""
 
-        ViewProviderWingRib(_rib.ViewObject)
-        return _rib
+        if abs(twist) > 1e-9:
+            # rib-plane rotation: about local +Y (section plane is local XZ),
+            # right-multiplied after the alignment rotation, hinged at the LE.
+            # Placement only; Coordinates keeps the untwisted unit chord.
+            _rib.Placement = FreeCAD.Placement(
+                _rib.Placement.Base,
+                _rib.Placement.Rotation.multiply(
+                    FreeCAD.Rotation(Vector(0, 1, 0), twist)))
 
-    def updateRib(self, obj,chord, posvec,direction, rotaxis, angle,item):
-        #(self, obj, posvec,rotaxis, angle,item):
-        #basebbox = obj.RootRib.Shape.BoundBox
-        #basepl = obj.RootRib.Placement
-        #print("makeRib nouvelle version")
-        bbox = CurvedShapes.boundbox_from_intersect(obj.Hullcurves, posvec, obj.Axis, self.doScaleXYZ)
-        if not bbox:
-              return None
-        x,y,z,scalex,scaley,scalez=scaleByBoundbox2(obj.Base.Shape, bbox, self.doScaleXYZsum)
-        obj.Ribs[item].Chord=scalex
-        #WingRib(_rib,"/Users/fredericnivoix/Library/Preferences/FreeCAD/Mod/AirPlaneDesign/wingribprofil/naca/naca2412.dat",False,0,scalex,0,0,0,0,0,0)
-        #ViewProviderWingRib(_rib.ViewObject)
-        obj.Ribs[item].Placement.Base.x=x
-        obj.Ribs[item].Placement.Base.y=y
-        obj.Ribs[item].Placement.Base.z=z
-        #return obj.Ribs[item]
+        if _rib.ViewObject:   # headless (freecadcmd): cosmetic provider only
+            ViewProviderWingRib(_rib.ViewObject)
+        return _rib
 
     def deleteAllRib(self, obj):
         #print("Delete a rib")
         for rib in obj.Ribs :
           FreeCAD.ActiveDocument.removeObject(rib.Label)
-        FreeCAD.ActiveDocument.removeObject("myObjectName")
 
     def wingpshape(self, obj) :
+        # Only loft over sections OCCT survives: null/empty/sub-micron shapes
+        # and coincident duplicates (legacy ribs stacked by the old plen
+        # clamp) make makeSurfaceSolid's Part.makeLoft raise or segfault
+        # BRepFill_CompatibleWires. Warn, skip, loft the rest - this also
+        # self-heals documents saved with such ribs (update path).
         a=[]
+        skipped=[]
+        lastCenter=None
         for i in obj.Ribs :
-            a.append(i.Shape)
-
+            s = i.Shape
+            if s.isNull() or len(s.Edges) == 0 or s.BoundBox.DiagonalLength < _minRibChord:
+                skipped.append(i.Label)
+                continue
+            center = s.BoundBox.Center
+            if lastCenter is not None and (center - lastCenter).Length < 1e-6:
+                skipped.append(i.Label + " (duplicate position)")
+                continue
+            lastCenter = center
+            a.append(s)
+        if skipped:
+            FreeCAD.Console.PrintWarning(
+                "  " + str(obj.Label) + " : skin skipped " + str(len(skipped))
+                + " degenerate rib(s): " + ", ".join(skipped)
+                + " - check their Chord and the trailing-edge coverage.\n")
+        if len(a) < 2:
+            FreeCAD.Console.PrintWarning(
+                "  " + str(obj.Label) + " : skin not built - fewer than 2 valid ribs remain.\n")
+            return
         obj.Shape = CurvedShapes.makeSurfaceSolid(a, False)
 
 
@@ -422,12 +504,6 @@ class WingPanel:
         ribs = []
         if update==True :
             FreeCAD.Console.PrintMessage("MakeRibs update ------------------------------------\n")
-            #for i in range(0,len(obj.Ribs)) :
-            #    direction=FreeCAD.Vector([0,0,0])
-            #    chord=obj.Ribs[i].Chord
-            ###    angle=obj.Ribs[i].Placement.Rotation.Angle
-                #self.updateRib(obj, obj.Ribs[i].Chord, obj.Ribs[i].Placement.Base,direction ,obj.Ribs[i].Placement.Rotation.Angle,i)
-                #self.updateRib(obj, chord, posvecrib,direction, rotaxis,angle,i)
             ribs=obj.Ribs
         else :
             FreeCAD.Console.PrintMessage("MakeRibs create ------------------------------------\n")
@@ -470,11 +546,45 @@ class WingPanel:
 
             maxlen=obj.LeadingEdge.Shape.Length
 
+            # Space the stations over the span where the rib slice plane
+            # actually crosses the trailing edge, trimmed by the user's
+            # OffsetStart/OffsetEnd (see _teStationWindow). A station past
+            # that window collapses to a zero chord.
+            pmin = obj.OffsetStart
+            pmax = maxlen - obj.OffsetEnd
+            if edges:
+                win = _teStationWindow(edges[0], leadingedge_edges[0], obj.TrailingEdge)
+                if win is not None:
+                    wlo, whi = max(win[0], 0.0), min(win[1], maxlen)
+                    lo, hi = max(pmin, wlo), min(pmax, whi)
+                    if hi - lo > epsilon:
+                        pmin, pmax = lo, hi
+                    elif whi - wlo > epsilon:
+                        pmin, pmax = wlo, whi
+                        FreeCAD.Console.PrintWarning(
+                            "  " + str(obj.Label) + " : OffsetStart/OffsetEnd trim away the whole"
+                            " span the trailing edge covers; stations re-spread over"
+                            " [%.2f, %.2f].\n" % (wlo, whi))
+                    # degenerate window: keep the offsets, every rib then
+                    # trips the per-rib chord-skip warning below.
+
+            # A plen past the positioning edge is clamped onto the edge end,
+            # stacking ribs on one point - Part.makeLoft then dies on the
+            # duplicate profiles. Spread the stations over the edge that
+            # positions them instead.
+            if edges and edges[0].Length < pmax:
+                if edges[0].Length < pmax - epsilon:
+                    FreeCAD.Console.PrintWarning(
+                        "  " + str(obj.Label) + " : path sketch segment is shorter than the panel,"
+                        " last rib moves inboard to its end at %.2f mm.\n" % edges[0].Length)
+                pmax = edges[0].Length
+                pmin = min(pmin, pmax)
+
             for n in range(0, int(obj.Items)):
                 FreeCAD.Console.PrintMessage("  Rib number                 : --- "+str(n)+ " ---\n")
-                plen = obj.OffsetStart
+                plen = pmin
                 if obj.Items > 1:
-                    plen += (maxlen - obj.OffsetStart - obj.OffsetEnd) * n / (float(obj.Items) - 1)
+                    plen += (pmax - pmin) * n / (float(obj.Items) - 1)
 
                 for edge in edges:
                     if plen > edge.Length:
@@ -550,22 +660,56 @@ class WingPanel:
                               bbox = CurvedShapes.boundbox_from_intersect(obj.Hullcurves, posvec_leadingedge, direction, self.doScaleXYZ,False)
                               if  bbox:
                                     x,y,z,scalex,scaley,scalez=scaleByBoundbox2(obj.Base.Shape, bbox, self.doScaleXYZsum )
+                                    if scalex < _minRibChord:
+                                        # bbox collapsed onto one hull curve:
+                                        # this plane missed the other (usually
+                                        # the TE). Skip instead of lofting a
+                                        # 1e-7 section.
+                                        FreeCAD.Console.PrintWarning(
+                                            "      Skipping rib "+str(n)+" of "+str(obj.Label)
+                                            +" : chord "+str(scalex)+" mm at plen="
+                                            +str(round(plen, 2))+" - the slice plane crossed the"
+                                            " leading edge but not the trailing edge. Lengthen or"
+                                            " shift the trailing-edge segment.\n")
+                                        continue
                                     FreeCAD.Console.PrintMessage("      scalex"+str(scalex)+ " \n")
                                     FreeCAD.Console.PrintMessage("      scaley"+str(scaley)+ " \n")
                                     FreeCAD.Console.PrintMessage("      scalez"+str(scalez)+ " \n")
                                     chord=scalex
-                                    rib = self.createRib(obj,chord ,posvecrib, direction, rotaxis, angle)# posvec_leadingedge
-                                    FreeCAD.Console.PrintMessage("      Rib.Label         : "+str(rib.Label )+ "\n")
+                                    # f = span fraction inside the real rib window
+                                    # [pmin,pmax]: offsets/TE-trim must not skew the ramp
+                                    fspan = (plen - pmin) / (pmax - pmin) if pmax > pmin else 0.0
+                                    twist = float(obj.Twist) + float(obj.TipTwist) * fspan
+                                    rib = self.createRib(obj,chord ,posvecrib, direction, rotaxis, angle, twist)# posvec_leadingedge
                                     if rib :
+                                       FreeCAD.Console.PrintMessage("      Rib.Label         : "+str(rib.Label )+ "\n")
                                        ribs.append(rib)
                               else :
-                                    FreeCAD.Console.PrintMessage("      Error : not bbox ------------\n")
+                                    FreeCAD.Console.PrintWarning(
+                                        "      Rib "+str(n)+" of "+str(obj.Label)+" skipped : the"
+                                        " slice plane at plen="+str(round(plen, 2))
+                                        +" missed the hull curves entirely.\n")
 
         if len(ribs)>1 :
            FreeCAD.Console.PrintMessage("     Number of rib created : "+str(len(ribs))+"\n")
-           self.wingpshape(obj)
+           # the ribs are still Touched (null Shape) and recompute() inside
+           # execute() trips the recursion guard: build the shapes directly.
+           # generateNaca ignores positional args, so carry the Placement.
+           for _rib in ribs:
+               if _rib.Shape.isNull():
+                   from airPlaneAirFoilNaca import generateNaca
+                   _face, _coords = generateNaca(
+                       _rib.NacaProfil, _rib.NacaNbrPoint, _rib.finite_TE,
+                       True, float(_rib.Chord), 0, 0, 0, 0, 0, 0, 0,
+                       _rib.useSpline, _rib.splitSpline)
+                   _face.Placement = _rib.Placement
+                   _rib.Coordinates = _coords
+                   _rib.Shape = _face
+           # wingpshape lofts obj.Ribs: fresh ribs must be linked before the
+           # loft or it sees an empty schedule and refuses
            if update==False :
                obj.Ribs=ribs
+           self.wingpshape(obj)
 
         print("------------End of makeRibs function------------" )
 
@@ -574,6 +718,8 @@ class WingPanel:
 
         FreeCAD.Console.PrintMessage("  update  : "+str(update)+ "\n")
 
+        # restored proxies never ran __init__ (nor, for old-format docs, __setstate__)
+        self._adopt(prop)
         if not(self.obj.Ribs) :
             update=False
         else :
@@ -585,6 +731,7 @@ class WingPanel:
 
         self.doScaleXYZ = []
         self.doScaleXYZsum = [False, False, False]
+        sumbbox = None   # empty Hullcurves left this unbound for `if sumbbox`
         # Pour le bord d'attaque et le bord de fuite calcul de la BoundBox
         for h in prop.Hullcurves:
 
