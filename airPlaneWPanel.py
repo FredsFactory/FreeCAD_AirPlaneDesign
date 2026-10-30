@@ -349,13 +349,13 @@ class WingPanel:
                 return
 
         if prop in proplist:
-             if obj.Items!=len(obj.Ribs):
-                 print("Need to delete and recreate all Ribs")
-                 if len(obj.Ribs)>0 : self.deleteAllRib(obj)
-                 self.execute(obj,False)
-             else :
-                 print("Just need an update of all Ribs")
-                 self.execute(obj,True)
+             # No count check: the old "update" branch kept ribs at their old
+             # stations (its updateRib calls were dead), so every tracked
+             # change wipes and rebuilds. Plain recomputes still reach the
+             # re-skin path through execute()'s update forcing.
+             print("Need to delete and recreate all Ribs")
+             if len(obj.Ribs)>0 : self.deleteAllRib(obj)
+             self.execute(obj,False)
 
 
     def createLeadingEdge(self, obj):
@@ -408,7 +408,7 @@ class WingPanel:
                     obj.Base.splitSpline)
 
         else :
-            WingRib(_rib,obj.Base.RibProfil,
+            WingRib(_rib,obj.Base.NacaProfil or obj.Base.RibProfil,
                     True,
                     obj.Base.NacaNbrPoint,
                     chord,
@@ -424,28 +424,10 @@ class WingPanel:
         ViewProviderWingRib(_rib.ViewObject)
         return _rib
 
-    def updateRib(self, obj,chord, posvec,direction, rotaxis, angle,item):
-        #(self, obj, posvec,rotaxis, angle,item):
-        #basebbox = obj.RootRib.Shape.BoundBox
-        #basepl = obj.RootRib.Placement
-        #print("makeRib nouvelle version")
-        bbox = CurvedShapes.boundbox_from_intersect(obj.Hullcurves, posvec, obj.Axis, self.doScaleXYZ)
-        if not bbox:
-              return None
-        x,y,z,scalex,scaley,scalez=scaleByBoundbox2(obj.Base.Shape, bbox, self.doScaleXYZsum)
-        obj.Ribs[item].Chord=scalex
-        #WingRib(_rib,"/Users/fredericnivoix/Library/Preferences/FreeCAD/Mod/AirPlaneDesign/wingribprofil/naca/naca2412.dat",False,0,scalex,0,0,0,0,0,0)
-        #ViewProviderWingRib(_rib.ViewObject)
-        obj.Ribs[item].Placement.Base.x=x
-        obj.Ribs[item].Placement.Base.y=y
-        obj.Ribs[item].Placement.Base.z=z
-        #return obj.Ribs[item]
-
     def deleteAllRib(self, obj):
         #print("Delete a rib")
         for rib in obj.Ribs :
           FreeCAD.ActiveDocument.removeObject(rib.Label)
-        FreeCAD.ActiveDocument.removeObject("myObjectName")
 
     def wingpshape(self, obj) :
         # Only loft over sections OCCT survives: null/empty/sub-micron shapes
@@ -485,12 +467,6 @@ class WingPanel:
         ribs = []
         if update==True :
             FreeCAD.Console.PrintMessage("MakeRibs update ------------------------------------\n")
-            #for i in range(0,len(obj.Ribs)) :
-            #    direction=FreeCAD.Vector([0,0,0])
-            #    chord=obj.Ribs[i].Chord
-            ###    angle=obj.Ribs[i].Placement.Rotation.Angle
-                #self.updateRib(obj, obj.Ribs[i].Chord, obj.Ribs[i].Placement.Base,direction ,obj.Ribs[i].Placement.Rotation.Angle,i)
-                #self.updateRib(obj, chord, posvecrib,direction, rotaxis,angle,i)
             ribs=obj.Ribs
         else :
             FreeCAD.Console.PrintMessage("MakeRibs create ------------------------------------\n")
