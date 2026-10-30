@@ -309,6 +309,10 @@ class WingPanel:
         obj.addProperty("App::PropertyLink","TrailingEdge","WingEdges",QtCore.QT_TRANSLATE_NOOP("App::Property","Select the trailing edge of the panel, line or Spline")).TrailingEdge=_traillingedge
 
 
+        # twist(f) = Twist + TipTwist * f (f: 0 root -> 1 tip), right-hand
+        # rotation about the rib normal (+Y; section plane is local XZ) =
+        # airPlaneCavity's station axis, so negative TipTwist = washout.
+        # Dihedral is unimplemented (see tutorials/wing-panel.md).
         obj.addProperty("App::PropertyAngle","TipTwist","Design",QtCore.QT_TRANSLATE_NOOP("App::Property","Tip Twist")).TipTwist=_tipTwist
         obj.addProperty("App::PropertyAngle","Dihedral","Design",QtCore.QT_TRANSLATE_NOOP("App::Property","Dihedral")).Dihedral=_dihedral
         #obj.addProperty("App::PropertyLinkList","Ribs","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","list of ribs")).Ribs=[]
@@ -334,12 +338,41 @@ class WingPanel:
         obj.Proxy = self
 
 
+    def __getstate__(self):
+        # FreeCAD >=1.x persists this as JSON text (json.dumps of the state).
+        # Keep links/transients out: obj is a DocumentObject, and json.dumps
+        # failing on the old implicit __dict__ is exactly what made pre-fix
+        # saves store an EMPTY proxy state.
+        return {'extract': getattr(self, 'extract', False)}
+
+    def __setstate__(self, state):
+        # Restore never runs __init__.  FreeCAD allocates the proxy with
+        # __new__ and calls this with the JSON state - but NOT for documents
+        # saved before this hook existed: their stored value is empty and
+        # FreeCAD skips __setstate__ entirely, leaving __dict__ bare.  So
+        # reset transient state here, and never assume this ran (_adopt).
+        if state:
+            self.__dict__.update(state)
+        self.obj = None
+        self.doScaleXYZ = []
+        self.doScaleXYZsum = [False, False, False]
+
+    def _adopt(self, obj):
+        # re-link the feature on first use after a restore.  getattr, not
+        # `self.obj is None`: an old-format restore never reached
+        # __setstate__, so the proxy has NO obj attribute at all and plain
+        # access raises AttributeError (the GUI crash this guard stops).
+        if getattr(self, 'obj', None) is None:
+            self.obj = obj
+
     def onChanged(self, obj, prop):
         '''Do something when a property has changed'''
         FreeCAD.Console.PrintMessage("******* onChanged routine *********************\n"+" Change property: " + str(prop) + "\n")
+        # a restored proxy may carry no attributes at all; adopt before the rib wipe
+        self._adopt(obj)
         proplist = ["Base", "Hullcurves",
                     "Axis", "Items", "OffsetStart",
-                    "OffsetEnd", "Twist", "Surface",
+                    "OffsetEnd", "Twist", "TipTwist", "Surface",
                     "Solid",
                     "LeadingEdge", "TrailingEdge"
                     ,"DistributionReverse"] #,"Ribs"
@@ -372,14 +405,15 @@ class WingPanel:
         #__license__ = "LGPL 2.1"
         #
         #----------------------------------------------------------------------
-    def createRib(self, obj,chord, posvec,direction, rotaxis, angle):
-        #basebbox = obj.RootRib.Shape.BoundBox,basepl = obj.RootRib.Placement, print("Create Rib new release")
-
-        #bbox = CurvedShapes.boundbox_from_intersect(obj.Hullcurves, posvec, direction, self.doScaleXYZ)
+    def createRib(self, obj,chord, posvec,direction, rotaxis, angle, twist=0.0):
         FreeCAD.Console.PrintMessage("------------ createRib ------------\n")
-        #if not bbox:
-        #      FreeCAD.Console.PrintMessage("------------ not bbox ------------\n")
-        #          return None
+        if _minRibChord > chord:
+            # a collapsed section poisons lofts/cavity downstream - refuse at source
+            FreeCAD.Console.PrintWarning(
+                "  Rib skipped : computed chord %.3g mm is below the %.3g mm"
+                " minimum - check the hull curves and offsets.\n"
+                % (chord, _minRibChord))
+            return None
         _rib=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","Rib")
         #calcul du facteur d'échelle de la nervure
         #x,y,z,scalex,scaley,scalez=scaleByBoundbox2(obj.Base.Shape, bbox, self.doScaleXYZsum )
@@ -421,7 +455,17 @@ class WingPanel:
                     obj.Base.splitSpline)
             #obj.addProperty("App::PropertyString","NacaProfil","NacaProfil",QtCore.QT_TRANSLATE_NOOP("App::Property","Naca Profil")).NacaProfil=""
 
-        ViewProviderWingRib(_rib.ViewObject)
+        if abs(twist) > 1e-9:
+            # rib-plane rotation: about local +Y (section plane is local XZ),
+            # right-multiplied after the alignment rotation, hinged at the LE.
+            # Placement only; Coordinates keeps the untwisted unit chord.
+            _rib.Placement = FreeCAD.Placement(
+                _rib.Placement.Base,
+                _rib.Placement.Rotation.multiply(
+                    FreeCAD.Rotation(Vector(0, 1, 0), twist)))
+
+        if _rib.ViewObject:   # headless (freecadcmd): cosmetic provider only
+            ViewProviderWingRib(_rib.ViewObject)
         return _rib
 
     def deleteAllRib(self, obj):
@@ -639,9 +683,14 @@ class WingPanel:
                                     FreeCAD.Console.PrintMessage("      scaley"+str(scaley)+ " \n")
                                     FreeCAD.Console.PrintMessage("      scalez"+str(scalez)+ " \n")
                                     chord=scalex
-                                    rib = self.createRib(obj,chord ,posvecrib, direction, rotaxis, angle)# posvec_leadingedge
-                                    FreeCAD.Console.PrintMessage("      Rib.Label         : "+str(rib.Label )+ "\n")
+                                    # f = span fraction inside the actual rib
+                                    # window [pmin,pmax], so offsets/TE-trim
+                                    # do not skew the twist ramp
+                                    fspan = (plen - pmin) / (pmax - pmin) if pmax > pmin else 0.0
+                                    twist = float(obj.Twist) + float(obj.TipTwist) * fspan
+                                    rib = self.createRib(obj,chord ,posvecrib, direction, rotaxis, angle, twist)# posvec_leadingedge
                                     if rib :
+                                       FreeCAD.Console.PrintMessage("      Rib.Label         : "+str(rib.Label )+ "\n")
                                        ribs.append(rib)
                               else :
                                     FreeCAD.Console.PrintWarning(
@@ -651,9 +700,24 @@ class WingPanel:
 
         if len(ribs)>1 :
            FreeCAD.Console.PrintMessage("     Number of rib created : "+str(len(ribs))+"\n")
-           self.wingpshape(obj)
+           # the ribs are still Touched (null Shape) and recompute() inside
+           # execute() trips the recursion guard: build the shapes directly.
+           # generateNaca ignores positional args, so carry the Placement.
+           for _rib in ribs:
+               if _rib.Shape.isNull():
+                   from airPlaneAirFoilNaca import generateNaca
+                   _face, _coords = generateNaca(
+                       _rib.NacaProfil, _rib.NacaNbrPoint, _rib.finite_TE,
+                       True, float(_rib.Chord), 0, 0, 0, 0, 0, 0, 0,
+                       _rib.useSpline, _rib.splitSpline)
+                   _face.Placement = _rib.Placement
+                   _rib.Coordinates = _coords
+                   _rib.Shape = _face
+           # wingpshape lofts obj.Ribs: fresh ribs must be linked before the
+           # loft or it sees an empty schedule and refuses
            if update==False :
                obj.Ribs=ribs
+           self.wingpshape(obj)
 
         print("------------End of makeRibs function------------" )
 
@@ -662,6 +726,8 @@ class WingPanel:
 
         FreeCAD.Console.PrintMessage("  update  : "+str(update)+ "\n")
 
+        # restored proxies never ran __init__ (nor, for old-format docs, __setstate__)
+        self._adopt(prop)
         if not(self.obj.Ribs) :
             update=False
         else :
@@ -673,6 +739,7 @@ class WingPanel:
 
         self.doScaleXYZ = []
         self.doScaleXYZsum = [False, False, False]
+        sumbbox = None   # empty Hullcurves left this unbound for `if sumbbox`
         # Pour le bord d'attaque et le bord de fuite calcul de la BoundBox
         for h in prop.Hullcurves:
 
