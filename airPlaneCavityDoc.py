@@ -278,6 +278,14 @@ def addCavityToPanel(doc, panel, wall, nPts=41):
     if outer.isNull():
         raise ValueError("panel '%s' has no shape (recompute it first)"
                          % panel.Label)
+    if not outer.Solids:
+        # curved WingPanel lofts a FACE (makeSurfaceSolid(..., False)):
+        # cutting a void out of a face yields a Shell with negative
+        # volume and 0 solids - a silently unprintable "HollowShell".
+        raise ValueError("panel '%s' is a surface (Shape has no Solids): "
+                         "a cavity needs a solid panel to shell; thicken "
+                         "the panel first or use the wizard's Cavity wall "
+                         "column for a solid panel" % panel.Label)
     shell = outer.cut(void)
     return addCavityObjects(doc, outer, void, shell,
                             label_prefix=panel.Label)

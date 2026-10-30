@@ -302,6 +302,39 @@ def gateEndToEnd():
         FreeCAD.closeDocument(doc.Name)
 
 
+def gateSurfacePanelRefused():
+    # curved WingPanel lofts a FACE: addCavityToPanel must REFUSE with an
+    # actionable message, not silently produce a 0-solid negative-volume
+    # "HollowShell" (PR #61's example panel made this path reachable)
+    doc = FreeCAD.newDocument("tsurf")
+    try:
+        panel = loftedWizardPanel(doc, "surf", 3000.0, 1500.0, 8000.0, 0.0)
+        # rebuild the same loft as a FACE (solid=False), like
+        # WingPanel.wingpshape's makeSurfaceSolid(..., False)
+        pts = [[rib.Placement.multVec(FreeCAD.Vector(
+                    p.x * float(rib.Chord), 0.0, p.z * float(rib.Chord)))
+                for p in COORDS] for rib in (panel.RootRib, panel.TipRib)]
+        for pl in pts:
+            if pl[0].sub(pl[-1]).Length < 1e-9:
+                pl.pop()
+        wires = [Part.makePolygon(pl + [pl[0]]) for pl in pts]
+        panel.Shape = Part.makeLoft(wires, False, False)
+        assert not panel.Shape.Solids, "test fixture is not a face"
+        try:
+            airPlaneCavityDoc.addCavityToPanel(doc, panel, 20.0)
+            raise AssertionError("face panel did not raise")
+        except ValueError as err:
+            msg = str(err)
+            assert "surf" in msg and "surface" in msg and "solid" in msg, \
+                "refusal not actionable: %s" % msg
+            assert not [o for o in doc.Objects
+                        if o.Name.startswith("HollowShell")], \
+                "objects created despite refusal"
+            print("      face-panel refusal: %s" % msg)
+    finally:
+        FreeCAD.closeDocument(doc.Name)
+
+
 def gateMultiPanelLabels():
     # N4: a multi-panel wing must not produce four identical "HollowShell"
     # labels - addCavityToPanel qualifies each with the panel's Label
@@ -337,6 +370,8 @@ def main():
         ("import purity (no PySide / FreeCADGui)", gatePurity),
         ("addCavityToPanel end-to-end on a fake wizard panel",
          gateEndToEnd),
+        ("face (surface-only) panel refused with actionable message",
+         gateSurfacePanelRefused),
         ("multi-panel objects get distinct panel-qualified labels",
          gateMultiPanelLabels),
     ]
