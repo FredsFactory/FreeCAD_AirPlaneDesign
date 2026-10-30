@@ -132,15 +132,11 @@ def gateSaveReopenTouchRecompute():
 
 
 def gateRestoreWithoutSetstate():
-    # THE GUI REGRESSION: docs saved before the persistence hooks existed.
-    # FreeCAD >=1.x writes the Proxy as JSON of __getstate__() (or of the
-    # instance __dict__ when absent); the old class had neither, so its dict
-    # (containing the obj LINK) made json.dumps fail and the file stored an
-    # EMPTY value.  On open FreeCAD allocates the proxy with __new__ and,
-    # because the value is empty, SKIPS __setstate__ entirely: the proxy has
-    # no attributes at all - `self.obj` then raises AttributeError inside
-    # _adopt, killing rebuilds (the panel went Touched/Invalid, TipTwist
-    # did nothing).  getattr(self, 'obj', None) is the load-bearing fix.
+    # THE GUI REGRESSION: pre-hook docs stored an EMPTY proxy state (its obj
+    # link broke the JSON dump), so on open FreeCAD allocates via __new__ and
+    # skips __setstate__ outright - the proxy has no attributes at all and
+    # `self.obj` raises AttributeError in _adopt, wedging every rebuild
+    # (panel Touched/Invalid, TipTwist inert).  getattr is the load-bearing fix.
     #
     # part 1: bare __new__, no __setstate__ call, empty __dict__
     proxy = wp.WingPanel.__new__(wp.WingPanel)

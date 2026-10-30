@@ -310,9 +310,8 @@ class WingPanel:
 
 
         # twist(f) = Twist + TipTwist * f (f: 0 root -> 1 tip), right-hand
-        # rotation about the rib normal (+Y; section plane is local XZ) =
-        # airPlaneCavity's station axis, so negative TipTwist = washout.
-        # Dihedral is unimplemented (see tutorials/wing-panel.md).
+        # about the rib normal (+Y), airPlaneCavity's sign: negative
+        # TipTwist = washout.  Dihedral unimplemented (tutorials/wing-panel.md).
         obj.addProperty("App::PropertyAngle","TipTwist","Design",QtCore.QT_TRANSLATE_NOOP("App::Property","Tip Twist")).TipTwist=_tipTwist
         obj.addProperty("App::PropertyAngle","Dihedral","Design",QtCore.QT_TRANSLATE_NOOP("App::Property","Dihedral")).Dihedral=_dihedral
         #obj.addProperty("App::PropertyLinkList","Ribs","WingPanel",QtCore.QT_TRANSLATE_NOOP("App::Property","list of ribs")).Ribs=[]
@@ -339,18 +338,14 @@ class WingPanel:
 
 
     def __getstate__(self):
-        # FreeCAD >=1.x persists this as JSON text (json.dumps of the state).
-        # Keep links/transients out: obj is a DocumentObject, and json.dumps
-        # failing on the old implicit __dict__ is exactly what made pre-fix
-        # saves store an EMPTY proxy state.
+        # FreeCAD >=1.x stores this as JSON; a link in it (obj) breaks the
+        # save outright - that is how pre-hook docs ended up with empty state.
         return {'extract': getattr(self, 'extract', False)}
 
     def __setstate__(self, state):
-        # Restore never runs __init__.  FreeCAD allocates the proxy with
-        # __new__ and calls this with the JSON state - but NOT for documents
-        # saved before this hook existed: their stored value is empty and
-        # FreeCAD skips __setstate__ entirely, leaving __dict__ bare.  So
-        # reset transient state here, and never assume this ran (_adopt).
+        # Restore never runs __init__; for docs saved before these hooks
+        # existed the state was empty and FreeCAD skips this call entirely,
+        # so nothing here may be assumed to have run (see _adopt).
         if state:
             self.__dict__.update(state)
         self.obj = None
@@ -358,10 +353,9 @@ class WingPanel:
         self.doScaleXYZsum = [False, False, False]
 
     def _adopt(self, obj):
-        # re-link the feature on first use after a restore.  getattr, not
-        # `self.obj is None`: an old-format restore never reached
-        # __setstate__, so the proxy has NO obj attribute at all and plain
-        # access raises AttributeError (the GUI crash this guard stops).
+        # re-link the feature after a restore.  getattr, not `self.obj`:
+        # an old-format restore never reached __setstate__, so obj is
+        # MISSING (not None) and plain access is the GUI AttributeError.
         if getattr(self, 'obj', None) is None:
             self.obj = obj
 
@@ -382,10 +376,9 @@ class WingPanel:
                 return
 
         if prop in proplist:
-             # No count check: the old "update" branch kept ribs at their old
-             # stations (its updateRib calls were dead), so every tracked
-             # change wipes and rebuilds. Plain recomputes still reach the
-             # re-skin path through execute()'s update forcing.
+             # No count check: the old "update" branch left ribs at their old
+             # stations (dead updateRib calls), so every tracked change wipes
+             # and rebuilds; plain recomputes re-skin via execute()'s forcing.
              print("Need to delete and recreate all Ribs")
              if len(obj.Ribs)>0 : self.deleteAllRib(obj)
              self.execute(obj,False)
@@ -683,9 +676,8 @@ class WingPanel:
                                     FreeCAD.Console.PrintMessage("      scaley"+str(scaley)+ " \n")
                                     FreeCAD.Console.PrintMessage("      scalez"+str(scalez)+ " \n")
                                     chord=scalex
-                                    # f = span fraction inside the actual rib
-                                    # window [pmin,pmax], so offsets/TE-trim
-                                    # do not skew the twist ramp
+                                    # f = span fraction inside the real rib window
+                                    # [pmin,pmax]: offsets/TE-trim must not skew the ramp
                                     fspan = (plen - pmin) / (pmax - pmin) if pmax > pmin else 0.0
                                     twist = float(obj.Twist) + float(obj.TipTwist) * fspan
                                     rib = self.createRib(obj,chord ,posvecrib, direction, rotaxis, angle, twist)# posvec_leadingedge
